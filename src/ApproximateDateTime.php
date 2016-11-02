@@ -60,7 +60,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	 * {@inheritDoc}
 	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getEarliest()
 	 */
-	public function getEarliest() : DateTime {
+	public function getEarliest() : DateTimeInterface {
 
 		$this->processClues();
 
@@ -80,7 +80,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	 * {@inheritDoc}
 	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLatest()
 	 */
-	public function getLatest() : DateTime {
+	public function getLatest() : DateTimeInterface {
 
 		$this->processClues();
 
@@ -143,7 +143,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	 * {@inheritDoc}
 	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLuckyShot()
 	 */
-	public function getLuckyShot() : DateTime {
+	public function getLuckyShot() : DateTimeInterface {
 		return $this->getEarliest();
 	}
 

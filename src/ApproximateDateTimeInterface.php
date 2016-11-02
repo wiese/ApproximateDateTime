@@ -23,18 +23,18 @@ interface ApproximateDateTimeInterface {
 	public function getClues() : array;
 
 	/**
-	 * Get the last valid moment described by the clues
+	 * Get the first valid moment described by the clues
 	 *
-	 * @return DateTime
+	 * @return DateTimeInterface
 	 */
-	public function getEarliest() : DateTime;
+	public function getEarliest() : DateTimeInterface;
 
 	/**
 	 * Get the last valid moment described by the clues
 	 *
-	 * @return DateTime
+	 * @return DateTimeInterface
 	 */
-	public function getLatest() : DateTime;
+	public function getLatest() : DateTimeInterface;
 
 	/**
 	 * Get the interval in between earliest and latest possible moment
@@ -47,14 +47,14 @@ interface ApproximateDateTimeInterface {
 	public function getInterval() : DateInterval;
 
 	/**
-	 * Get all valid periods, i.e. start & interval, described by the clues
+	 * Get all valid periods, i.e. start & interval, matching the clues
 	 *
 	 * @return DatePeriod[]
 	 */
 	public function getPossibilites() : array;
 
 	/**
-	 * Check if the given DateTime is withing the allowable range described
+	 * Check if the given DateTime is within the allowable range described
 	 *
 	 * @param DateTimeInterface $scrutinize
 	 * @return bool
@@ -64,7 +64,7 @@ interface ApproximateDateTimeInterface {
 	/**
 	 * Make an educated guess for a respresentative of all possible moments
 	 *
-	 * @return DateTime
+	 * @return DateTimeInterface
 	 */
-	public function getLuckyShot() : DateTime;
+	public function getLuckyShot() : DateTimeInterface;
 }
