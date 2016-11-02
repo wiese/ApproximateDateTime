@@ -29,10 +29,17 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	 */
 	protected $timezone;
 
+	/**
+	 * @param string $timezone
+	 */
 	public function __construct(string $timezone = self::DEFAULT_TIMEZONE) {
 		$this->timezone = new DateTimeZone($timezone);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::addClue()
+	 */
 	public function addClue(string $clue) : ApproximateDateTimeInterface {
 
 		$this->resetProcessedClues();
@@ -42,14 +49,16 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	}
 
 	/**
-	 * @return string[]
+	 * {@inheritDoc}
+	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getClues()
 	 */
 	public function getClues() : array {
 		return $this->clues;
 	}
 
 	/**
-	 * @return DateTime
+	 * {@inheritDoc}
+	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getEarliest()
 	 */
 	public function getEarliest() : DateTime {
 
@@ -68,7 +77,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	}
 
 	/**
-	 * @return DateTime
+	 * {@inheritDoc}
+	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLatest()
 	 */
 	public function getLatest() : DateTime {
 
@@ -87,7 +97,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	}
 
 	/**
-	 * Does this make sense when there is separate valid bits? (e.g. May or July)
+	 * {@inheritDoc}
+	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getInterval()
 	 */
 	public function getInterval() : DateInterval {
 
@@ -99,8 +110,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	}
 
 	/**
-	 * 
-	 * @return DatePeriod[] List of compatible periods (start + interval)
+	 * {@inheritDoc}
+	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getPossibilites()
 	 */
 	public function getPossibilites() : array {
 
@@ -114,9 +125,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	/**
 	 * @todo So far only works with one single, consecutive interval
 	 *
-	 * @param DateTimeInterface $scrutinize
-	 *
-	 * @return bool
+	 * {@inheritDoc}
+	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::isPossible()
 	 */
 	public function isPossible(DateTimeInterface $scrutinize) : bool {
 
@@ -129,6 +139,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 		return $verdict;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLuckyShot()
+	 */
 	public function getLuckyShot() : DateTime {
 		return $this->getEarliest();
 	}
@@ -159,6 +173,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	 * Convert a single provided clue into internal information
 	 *
 	 * @param string $input
+	 *
 	 * @return NULL|\wiese\ApproximateDateTime\Clue
 	 */
 	protected function processClue(string $input) : ? Clue {
