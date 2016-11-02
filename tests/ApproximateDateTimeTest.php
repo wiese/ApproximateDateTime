@@ -65,31 +65,29 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(59, $sut->getInterval()->i);
 		$this->assertEquals(59, $sut->getInterval()->s);
 	}
-/*
 
-	public function testDefault() {
-		$sut = new ApproximateDateTime\ApproximateDateTime();
-		$this->assertEquals([new DateTime('today', new DateTimeZone('UTC'))], $sut->getPossibilites());
+	public function testWinterHolidayPicture() {
+		$sut = new ApproximateDateTime();
+		$this->assertEquals($sut, $sut->addClue('2016'));
+		$this->assertEquals($sut, $sut->addClue('Weekend'));
+		$this->assertEquals($sut, $sut->addClue('afternoon'));
+		$this->assertEquals($sut, $sut->addClue('<April'));
+		$this->assertEquals($sut, $sut->addClue('>February-04'));
+		$this->assertEquals($sut, $sut->addClue('!2016-03-14'));
+		$this->assertCount(6, $sut->getClues());
+		$this->assertEquals(new DateTime('2016-02-05 00:00:00'), $sut->getEarliest());
+		$this->assertEquals(new DateTime('2016-13-31 23:59:59'), $sut->getLatest());
 	}
 
-	public function testWinterPicture() {
-		$sut = new ApproximateDate();
-		$sut->addClue('2016');
-		$sut->addClue('Weekend');
-		$sut->addClue('afternoon');
-		$sut->addClue('<April');
-		$sut->addClue('>February-04');
-		$sut->addClue('!2016-03-14');
-	}
-
-	public function testMoreClues() {
-		$sut = new ApproximateDate();
-		$sut->addClue('!1985-03');
+	public function testWorkday() {
+		$sut = new ApproximateDateTime();
+		$sut->addClue('2001');
+		$sut->addClue('Tuesday');
+		$sut->addClue('!October');
 		// $sut->addClue('Summer'); // boo - needs geo-awareness
-		$sut->addClue('!May');
-		$sut->addClue('Thursday');
-		$sut->addClue('Wednesday');
+		$this->assertCount(45, $sut->getPossibilites());
+		$this->assertEquals(new DateTime('2001-01-02 00:00:00'), $sut->getEarliest());
+		$this->assertEquals(new DateTime('2001-12-25 23:59:59'), $sut->getLatest());
 	}
-*/
 }
 
