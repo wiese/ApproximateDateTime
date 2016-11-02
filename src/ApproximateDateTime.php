@@ -15,9 +15,12 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	const RULE_YEAR = '/^\d{1,4}$/';
 
 	/**
-	 * @var Clue[]
+	 * @var string[]
 	 */
 	protected $clues = [];
+	/**
+	 * @var Clue[]
+	 */
 	protected $processedClues = [];
 	
 	/**
@@ -27,9 +30,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 
 	public function __construct(string $timezone = self::DEFAULT_TIMEZONE) {
 		$this->timezone = new DateTimeZone($timezone);
-		
-		// WTF?
-		//$this->defaultDate = new DateTime('today', new DateTimeZone($this->timezone));
 	}
 
 	public function addClue(string $clue) : ApproximateDateTimeInterface {
@@ -41,7 +41,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	}
 
 	/**
-	 *
+	 * @return string[]
 	 */
 	public function getClues() : array {
 		return $this->clues;
