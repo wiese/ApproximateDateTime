@@ -12,27 +12,16 @@ use DateTimeZone;
 
 class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
 
-	public function testCastClue() {
-		$sut = new ApproximateDateTime();
-
-		$class = new ReflectionClass($sut);
-		$method = $class->getMethod('processClue');
-		$method->setAccessible(true);
-
-		$clue = new Clue;
-		$clue->type = 'y';
-		$clue->value = 2014;
-		$clue->first = new DateTime("2014-01-01T00:00:00+0000");
-		$clue->last = new DateTime("2014-12-31T23:59:59+0000");
-
-		$this->assertEquals($clue, $method->invoke($sut, '2014'));
-	}
-
-
 	public function testOneYear() {
 		$sut = new ApproximateDateTime();
-		$this->assertEquals($sut, $sut->addClue('1985'));
-		$this->assertEquals(['1985'], $sut->getClues());
+		
+		$clue = $clue = new Clue;
+		$clue->type = 'y';
+		$clue->value = 1985;
+		$clue->first = new DateTime("1985-01-01T00:00:00+0000");
+		$clue->last = new DateTime("1985-12-31T23:59:59+0000");
+
+		$sut->setClues([$clue]);
 		$this->assertEquals(new DateTimeZone('UTC'), $sut->getTimezone());
 		$this->assertEquals(new DateTime('1985-01-01 00:00:00'), $sut->getEarliest());
 		$this->assertEquals(new DateTime('1985-12-31 23:59:59'), $sut->getLatest());
@@ -50,9 +39,20 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
 	
 	public function testTwoYears() {
 		$sut = new ApproximateDateTime();
-		$this->assertEquals($sut, $sut->addClue('1985'));
-		$this->assertEquals($sut, $sut->addClue('1986'));
-		$this->assertEquals(['1985', '1986'], $sut->getClues());
+		
+		$clue1= new Clue;
+		$clue1->type = 'y';
+		$clue1->value = 1985;
+		$clue1->first = new DateTime("1985-01-01T00:00:00+0000");
+		$clue1->last = new DateTime("1985-12-31T23:59:59+0000");
+		
+		$clue2 = $clue = new Clue;
+		$clue2->type = 'y';
+		$clue2->value = 1986;
+		$clue2->first = new DateTime("1986-01-01T00:00:00+0000");
+		$clue2->last = new DateTime("1986-12-31T23:59:59+0000");
+		
+		$sut->setClues([$clue1, $clue2]);
 		$this->assertEquals(new DateTime('1985-01-01 00:00:00'), $sut->getEarliest());
 		$this->assertEquals(new DateTime('1986-12-31 23:59:59'), $sut->getLatest());
 		$luckyShot = $sut->getLuckyShot();

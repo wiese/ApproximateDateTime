@@ -8,19 +8,19 @@ use \DateTime;
 use \DateInterval;
 
 interface ApproximateDateTimeInterface {
-	
+
 	/**
 	 * Add a clue to (further) describe the date and time
 	 *
 	 * @param string $clue
 	 * @return self
 	 */
-	public function addClue(string $clue) : self;
+//	public function addClue(string $clue) : self;
 
 	/**
 	 * @return string[]
 	 */
-	public function getClues() : array;
+//	public function getClues() : array;
 
 	/**
 	 * Get the first valid moment described by the clues

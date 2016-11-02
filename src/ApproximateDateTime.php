@@ -11,23 +11,16 @@ use \DateTimeZone;
 class ApproximateDateTime implements ApproximateDateTimeInterface {
 
 	const DEFAULT_TIMEZONE = 'UTC';
-
-	const RULE_YEAR = '/^\d{1,4}$/';
-
-	/**
-	 * @var string[]
-	 */
-	protected $clues = [];
-
-	/**
-	 * @var Clue[]
-	 */
-	protected $processedClues = [];
 	
 	/**
 	 * @var DateTimeZone
 	 */
 	protected $timezone;
+
+	/**
+	 * @var Clue[]
+	 */
+	protected $processedClues = [];
 
 	/**
 	 * @param string $timezone
@@ -37,39 +30,21 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::addClue()
-	 */
-	public function addClue(string $clue) : ApproximateDateTimeInterface {
-
-		$this->resetProcessedClues();
-		$this->clues[] = $clue;
-
-		return $this;
-	}
-
-	/**
 	 * @return DateTimeZone
 	 */
 	public function getTimezone() : DateTimeZone {
 		return $this->timezone;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getClues()
-	 */
-	public function getClues() : array {
-		return $this->clues;
+	public function setClues(array $clues) {
+		$this->processedClues = $clues;
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getEarliest()
 	 */
 	public function getEarliest() : DateTimeInterface {
-
-		$this->processClues();
 
 		$moment = null;
 
@@ -89,8 +64,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	 */
 	public function getLatest() : DateTimeInterface {
 
-		$this->processClues();
-
 		$moment = null;
 
 		foreach ($this->processedClues as $clue) {
@@ -109,8 +82,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	 */
 	public function getInterval() : DateInterval {
 
-		$this->processClues();
-
 		$diff = $this->getEarliest()->diff($this->getLatest());
 		
 		return $diff;
@@ -123,8 +94,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	public function getPossibilites() : array {
 
 		$periods = [];
-
-		$this->processClues();
 
 		return $periods;
 	}
@@ -139,8 +108,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 
 		$verdict = false;
 
-		$this->processClues();
-
 		$verdict = ($scrutinize >= $this->getEarliest() && $scrutinize <= $this->getLatest());
 
 		return $verdict;
@@ -152,53 +119,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	 */
 	public function getLuckyShot() : DateTimeInterface {
 		return $this->getEarliest();
-	}
-
-	/**
-	 * Void machine-readable internal information to maintain consistent state
-	 */
-	protected function resetProcessedClues() {
-		$this->processedClues = [];
-	}
-
-	/**
-	 * Convert provided clues to machine-readable internal information
-	 *
-	 * @return boolean If processing was done (true) or cache could be used
-	 */
-	protected function processClues() {
-
-		if (!empty($this->processedClues)) {
-			return false;
-		}
-
-		foreach ($this->clues as $key => $clue) {
-			$this->processedClues[$key] = $this->processClue($clue);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Convert a single provided clue into internal information
-	 *
-	 * @param string $rawClue
-	 *
-	 * @return NULL|\wiese\ApproximateDateTime\Clue
-	 */
-	protected function processClue(string $rawClue) : ? Clue {
-		
-		$clue = null;
-
-		if (preg_match(self::RULE_YEAR, $rawClue)) {
-			$clue = new Clue;
-			$clue->type = 'y';
-			$clue->value = $rawClue;
-			$clue->first = new DateTime("$rawClue-01-01T00:00:00", $this->timezone);
-			$clue->last = new DateTime("$rawClue-12-31T23:59:59", $this->timezone);
-		}
-
-		return $clue;
 	}
 }
 
