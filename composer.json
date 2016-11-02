@@ -1,0 +1,19 @@
+{
+    "name": "wiese/approximate-datetime",
+    "description": "Library to handle dates that are not precisely defined",
+    "type": "library",
+    "require": {
+        "php": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "@stable"
+    },
+    "autoload": {
+	"psr-4": {
+            "wiese\\ApproximateDateTime\\":        "src/",
+            "wiese\\ApproximateDateTime\\Tests\\": "tests/"
+        }
+    },
+    "license": "MIT",
+    "minimum-stability": "dev"
+}
