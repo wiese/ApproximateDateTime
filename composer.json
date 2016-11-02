@@ -6,10 +6,11 @@
         "php": "^7.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "@stable"
+        "phpunit/phpunit": "@stable",
+        "squizlabs/php_codesniffer": "@stable"
     },
     "autoload": {
-	"psr-4": {
+        "psr-4": {
             "wiese\\ApproximateDateTime\\":        "src/",
             "wiese\\ApproximateDateTime\\Tests\\": "tests/"
         }
