@@ -8,6 +8,7 @@ use \wiese\ApproximateDateTime\Clue;
 use PHPUnit_Framework_TestCase;
 use ReflectionClass;
 use DateTime;
+use DateTimeZone;
 
 class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
 
@@ -32,6 +33,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
 		$sut = new ApproximateDateTime();
 		$this->assertEquals($sut, $sut->addClue('1985'));
 		$this->assertEquals(['1985'], $sut->getClues());
+		$this->assertEquals(new DateTimeZone('UTC'), $sut->getTimezone());
 		$this->assertEquals(new DateTime('1985-01-01 00:00:00'), $sut->getEarliest());
 		$this->assertEquals(new DateTime('1985-12-31 23:59:59'), $sut->getLatest());
 		$luckyShot = $sut->getLuckyShot();

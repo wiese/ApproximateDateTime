@@ -49,6 +49,13 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	}
 
 	/**
+	 * @return DateTimeZone
+	 */
+	public function getTimezone() : DateTimeZone {
+		return $this->timezone;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getClues()
 	 */
