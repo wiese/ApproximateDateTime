@@ -28,7 +28,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
 	}
 
 
-	public function testYearOnly() {
+	public function testOneYear() {
 		$sut = new ApproximateDateTime();
 		$this->assertEquals($sut, $sut->addClue('1985'));
 		$this->assertEquals(['1985'], $sut->getClues());
@@ -38,8 +38,29 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(new DateTime('1985-01-01 00:00:00'), $luckyShot);
 		$this->assertTrue($sut->isPossible($luckyShot));
 		$this->assertTrue($sut->isPossible(new DateTime('1985-04-03')));
-		$this->assertFalse($sut->isPossible(new DateTime('1986-12-31')));
+		$this->assertFalse($sut->isPossible(new DateTime('1986-01-02')));
+		$this->assertFalse($sut->isPossible(new DateTime('1984-12-31')));
 		$this->assertEquals(364, $sut->getInterval()->days);
+		$this->assertEquals(23, $sut->getInterval()->h);
+		$this->assertEquals(59, $sut->getInterval()->i);
+		$this->assertEquals(59, $sut->getInterval()->s);
+	}
+	
+	public function testTwoYears() {
+		$sut = new ApproximateDateTime();
+		$this->assertEquals($sut, $sut->addClue('1985'));
+		$this->assertEquals($sut, $sut->addClue('1986'));
+		$this->assertEquals(['1985', '1986'], $sut->getClues());
+		$this->assertEquals(new DateTime('1985-01-01 00:00:00'), $sut->getEarliest());
+		$this->assertEquals(new DateTime('1986-12-31 23:59:59'), $sut->getLatest());
+		$luckyShot = $sut->getLuckyShot();
+		$this->assertEquals(new DateTime('1985-01-01 00:00:00'), $luckyShot);
+		$this->assertTrue($sut->isPossible($luckyShot));
+		$this->assertTrue($sut->isPossible(new DateTime('1985-04-03')));
+		$this->assertTrue($sut->isPossible(new DateTime('1986-12-31')));
+		$this->assertFalse($sut->isPossible(new DateTime('1984-01-03')));
+		$this->assertFalse($sut->isPossible(new DateTime('1990-07-12')));
+		$this->assertEquals(729, $sut->getInterval()->days);
 		$this->assertEquals(23, $sut->getInterval()->h);
 		$this->assertEquals(59, $sut->getInterval()->i);
 		$this->assertEquals(59, $sut->getInterval()->s);
