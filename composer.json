@@ -3,7 +3,7 @@
     "description": "Library to handle dates that are not precisely defined",
     "type": "library",
     "require": {
-        "php": "^7.0"
+        "php": "^7.1"
     },
     "require-dev": {
         "phpunit/phpunit": "@stable"

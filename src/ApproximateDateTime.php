@@ -18,6 +18,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 	 * @var string[]
 	 */
 	protected $clues = [];
+
 	/**
 	 * @var Clue[]
 	 */
@@ -47,6 +48,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 		return $this->clues;
 	}
 
+	/**
+	 * @return DateTime
+	 */
 	public function getEarliest() : DateTime {
 
 		$this->processClues();
@@ -63,6 +67,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 		return $moment;
 	}
 
+	/**
+	 * @return DateTime
+	 */
 	public function getLatest() : DateTime {
 
 		$this->processClues();
@@ -104,6 +111,13 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 		return $periods;
 	}
 
+	/**
+	 * @todo So far only works with one single, consecutive interval
+	 *
+	 * @param DateTimeInterface $scrutinize
+	 *
+	 * @return bool
+	 */
 	public function isPossible(DateTimeInterface $scrutinize) : bool {
 
 		$verdict = false;
@@ -123,6 +137,11 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 		$this->processedClues = [];
 	}
 
+	/**
+	 * Convert provided clues to machine-readable internal information
+	 *
+	 * @return boolean If processing was done (true) or cache could be used
+	 */
 	protected function processClues() {
 
 		if (!empty($this->processedClues)) {
@@ -136,7 +155,13 @@ class ApproximateDateTime implements ApproximateDateTimeInterface {
 		return true;
 	}
 
-	protected function processClue($input) {
+	/**
+	 * Convert a single provided clue into internal information
+	 *
+	 * @param string $input
+	 * @return NULL|\wiese\ApproximateDateTime\Clue
+	 */
+	protected function processClue(string $input) : ? Clue {
 		
 		$clue = null;
 
