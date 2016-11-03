@@ -10,9 +10,11 @@ use ReflectionClass;
 use DateTime;
 use DateTimeZone;
 
-class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
+class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
+{
 
-    public function testOneYear() {
+    public function testOneYear()
+    {
         $sut = new ApproximateDateTime();
 
         $clue = $clue = new Clue;
@@ -37,7 +39,8 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(59, $sut->getInterval()->s);
     }
 
-    public function testTwoYears() {
+    public function testTwoYears()
+    {
         $sut = new ApproximateDateTime();
 
         $clue1= new Clue;
@@ -68,7 +71,8 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(59, $sut->getInterval()->s);
     }
 
-    public function testWinterHolidayPicture() {
+    public function testWinterHolidayPicture()
+    {
         $sut = new ApproximateDateTime();
 
         $clue1 = new Clue;
@@ -104,7 +108,8 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(new DateTime('2016-13-31 23:59:59'), $sut->getLatest());
     }
 
-    public function testWorkday() {
+    public function testWorkday()
+    {
         $sut = new ApproximateDateTime();
         $sut->addClue('2001');
         $sut->addClue('Tuesday');
@@ -115,4 +120,3 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(new DateTime('2001-12-25 23:59:59'), $sut->getLatest());
     }
 }
-

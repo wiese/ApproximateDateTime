@@ -11,8 +11,8 @@ use ReflectionClass;
 use DateTime;
 use DateTimeZone;
 
-class ClueParserTest extends PHPUnit_Framework_TestCase {
-
+class ClueParserTest extends PHPUnit_Framework_TestCase
+{
     public function testCastClue()
     {
         $sut = new ClueParser();
