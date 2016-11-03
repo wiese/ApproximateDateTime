@@ -8,117 +8,126 @@ use \DateTime;
 use \DateInterval;
 use \DateTimeZone;
 
-class ApproximateDateTime implements ApproximateDateTimeInterface {
+class ApproximateDateTime implements ApproximateDateTimeInterface
+{
 
-	const DEFAULT_TIMEZONE = 'UTC';
-	
-	/**
-	 * @var DateTimeZone
-	 */
-	protected $timezone;
+    const DEFAULT_TIMEZONE = 'UTC';
 
-	/**
-	 * @var Clue[]
-	 */
-	protected $processedClues = [];
+    /**
+     * @var DateTimeZone
+     */
+    protected $timezone;
 
-	/**
-	 * @param string $timezone
-	 */
-	public function __construct(string $timezone = self::DEFAULT_TIMEZONE) {
-		$this->timezone = new DateTimeZone($timezone);
-	}
+    /**
+     * @var Clue[]
+     */
+    protected $processedClues = [];
 
-	/**
-	 * @return DateTimeZone
-	 */
-	public function getTimezone() : DateTimeZone {
-		return $this->timezone;
-	}
+    /**
+     * @param string $timezone
+     */
+    public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
+    {
+        $this->timezone = new DateTimeZone($timezone);
+    }
 
-	public function setClues(array $clues) {
-		$this->processedClues = $clues;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getEarliest()
-	 */
-	public function getEarliest() : DateTimeInterface {
+    /**
+     * @return DateTimeZone
+     */
+    public function getTimezone() : DateTimeZone
+    {
+        return $this->timezone;
+    }
 
-		$moment = null;
+    public function setClues(array $clues)
+    {
+        $this->processedClues = $clues;
+    }
 
-		foreach ($this->processedClues as $clue) {
-			$clueMoment = $clue->first;
-			if (is_null($moment) || $clueMoment < $moment) {
-				$moment = $clueMoment;
-			}
-		}
+    /**
+     * {@inheritDoc}
+     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getEarliest()
+     */
+    public function getEarliest() : DateTimeInterface
+    {
 
-		return $moment;
-	}
+        $moment = null;
 
-	/**
-	 * {@inheritDoc}
-	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLatest()
-	 */
-	public function getLatest() : DateTimeInterface {
+        foreach ($this->processedClues as $clue) {
+            $clueMoment = $clue->first;
+            if (is_null($moment) || $clueMoment < $moment) {
+                $moment = $clueMoment;
+            }
+        }
 
-		$moment = null;
+        return $moment;
+    }
 
-		foreach ($this->processedClues as $clue) {
-			$clueMoment = $clue->last;
-			if (is_null($moment) || $clueMoment > $moment) {
-				$moment = $clueMoment;
-			}
-		}
+    /**
+     * {@inheritDoc}
+     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLatest()
+     */
+    public function getLatest() : DateTimeInterface
+    {
 
-		return $moment;
-	}
+        $moment = null;
 
-	/**
-	 * {@inheritDoc}
-	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getInterval()
-	 */
-	public function getInterval() : DateInterval {
+        foreach ($this->processedClues as $clue) {
+            $clueMoment = $clue->last;
+            if (is_null($moment) || $clueMoment > $moment) {
+                $moment = $clueMoment;
+            }
+        }
 
-		$diff = $this->getEarliest()->diff($this->getLatest());
-		
-		return $diff;
-	}
+        return $moment;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getPossibilites()
-	 */
-	public function getPossibilites() : array {
+    /**
+     * {@inheritDoc}
+     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getInterval()
+     */
+    public function getInterval() : DateInterval
+    {
 
-		$periods = [];
+        $diff = $this->getEarliest()->diff($this->getLatest());
 
-		return $periods;
-	}
+        return $diff;
+    }
 
-	/**
-	 * @todo So far only works with one single, consecutive interval
-	 *
-	 * {@inheritDoc}
-	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::isPossible()
-	 */
-	public function isPossible(DateTimeInterface $scrutinize) : bool {
+    /**
+     * {@inheritDoc}
+     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getPossibilites()
+     */
+    public function getPossibilites() : array
+    {
 
-		$verdict = false;
+        $periods = [];
 
-		$verdict = ($scrutinize >= $this->getEarliest() && $scrutinize <= $this->getLatest());
+        return $periods;
+    }
 
-		return $verdict;
-	}
+    /**
+     * @todo So far only works with one single, consecutive interval
+     *
+     * {@inheritDoc}
+     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::isPossible()
+     */
+    public function isPossible(DateTimeInterface $scrutinize) : bool
+    {
 
-	/**
-	 * {@inheritDoc}
-	 * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLuckyShot()
-	 */
-	public function getLuckyShot() : DateTimeInterface {
-		return $this->getEarliest();
-	}
+        $verdict = false;
+
+        $verdict = ($scrutinize >= $this->getEarliest() && $scrutinize <= $this->getLatest());
+
+        return $verdict;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLuckyShot()
+     */
+    public function getLuckyShot() : DateTimeInterface
+    {
+        return $this->getEarliest();
+    }
 }
-

@@ -5,25 +5,31 @@ namespace wiese\ApproximateDateTime;
 
 use \DateTimeInterface;
 
-class Clue {
-	/**
-	 *
-	 * @var string
-	 */
-	public $type;
-	/**
-	 *
-	 * @var mixed
-	 */
-	public $value;
-	/**
-	 *
-	 * @var DateTimeInterface
-	 */
-	public $first;
-	/**
-	 * 
-	 * @var DateTimeInterface
-	 */
-	public $last;
+class Clue
+{
+    /**
+     *
+     * @var string
+     */
+    public $type;
+    /**
+     *
+     * @var mixed
+     */
+    public $rawValue;
+    /**
+     *
+     * @var DateTimeInterface
+     */
+    public $first;
+    /**
+     *
+     * @var DateTimeInterface
+     */
+    public $last;
+    /**
+     *
+     * @var bool
+     */
+    public $negative = false;
 }
