@@ -16,6 +16,11 @@ class Clue
      *
      * @var mixed
      */
+    public $value;
+    /**
+     *
+     * @var mixed
+     */
     public $rawValue;
     /**
      *

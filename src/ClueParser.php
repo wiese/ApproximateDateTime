@@ -22,7 +22,6 @@ class ClueParser
 
     public function addClue(string $clue) : self
     {
-
         $this->resetProcessedClues();
         $this->clues[] = $clue;
 
@@ -58,7 +57,6 @@ class ClueParser
      */
     protected function processClues()
     {
-
         if (!empty($this->processedClues)) {
             return false;
         }
@@ -79,7 +77,6 @@ class ClueParser
      */
     protected function processClue(string $rawClue) : ? Clue
     {
-
         $clue = null;
 
         if (preg_match(self::RULE_YEAR, $rawClue)) {

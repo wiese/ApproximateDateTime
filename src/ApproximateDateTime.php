@@ -10,19 +10,64 @@ use \DateTimeZone;
 
 class ApproximateDateTime implements ApproximateDateTimeInterface
 {
-
     const DEFAULT_TIMEZONE = 'UTC';
 
     /**
-     * @var DateTimeZone
+     * Timezone to use
+     *
+     * @var \DateTimeZone
      */
     protected $timezone;
 
     /**
+     * Calendar to base date calculation on
+     *
+     * @var integer
+     */
+    protected $calendar = CAL_GREGORIAN;
+
+    /**
      * @var Clue[]
      */
-    protected $processedClues = [];
+    protected $clues = [];
+/*
+    protected $allowed = [
+        'y' => [],
+        'm' => [],
+        'd' => [],
+        'y-m' => [],
+        'y-m-d' => [],
+        'h' => [],
+        'i' => [],
+        's' => [],
+        'h-i' => [],
+        'h-i-s' => [],
+    ];
 
+    protected $disallowed = [
+        'y' => [],
+        'm' => [],
+        'd' => [],
+        'y-m' => [],
+        'y-m-d' => [],
+        'h' => [],
+        'i' => [],
+        's' => [],
+        'h-i' => [],
+        'h-i-s' => [],
+    ];
+
+    '1980-??-??T??-??-??'
+    '????-08-??T??-??-??'
+    '????-??-17T??-??-??'
+    '????-05-23T??-??-??'
+    '1993-05-23T??-??-??'
+    '????-??-??T14-??-??'
+    '????-??-??T??-21-??'
+    '????-??-??T??-??-57'
+    '????-??-??T11-53'
+    '????-??-??T17-12-42'
+*/
     /**
      * @param string $timezone
      */
@@ -32,7 +77,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     }
 
     /**
-     * @return DateTimeZone
+     * @return \DateTimeZone
      */
     public function getTimezone() : DateTimeZone
     {
@@ -41,7 +86,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     public function setClues(array $clues)
     {
-        $this->processedClues = $clues;
+        $this->clues = $clues;
     }
 
     /**
@@ -50,17 +95,34 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getEarliest() : DateTimeInterface
     {
+        $defaultMins = ['m' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0];
+        $mins = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
 
-        $moment = null;
-
-        foreach ($this->processedClues as $clue) {
-            $clueMoment = $clue->first;
-            if (is_null($moment) || $clueMoment < $moment) {
-                $moment = $clueMoment;
+        foreach ($mins as $type => & $currentMin) {
+            foreach ($this->clues as $clue) {
+                if ($clue->type === $type) {
+                    if (is_null($currentMin) || $clue->value < $currentMin) {
+                        $currentMin = $clue->value;
+                    }
+                }
             }
         }
 
-        return $moment;
+        if (is_null($mins['y'])) {
+            throw new \Exception('need some year clue');
+        }
+
+        foreach ($mins as $type => & $currentMin) {
+            if (is_null($currentMin)) {
+                $currentMin = $defaultMins[$type];
+            }
+        }
+
+        extract($mins);
+
+        $str = "${y}-${m}-${d}T${h}:${i}:${s}";
+
+        return new \DateTime($str, $this->timezone);
     }
 
     /**
@@ -69,17 +131,55 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getLatest() : DateTimeInterface
     {
+        $defaultMaxs = ['m' => 12, 'h' => 23, 'i' => 59, 's' => 59];
+        $maxs = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
 
-        $moment = null;
-
-        foreach ($this->processedClues as $clue) {
-            $clueMoment = $clue->last;
-            if (is_null($moment) || $clueMoment > $moment) {
-                $moment = $clueMoment;
+        foreach ($maxs as $type => & $currentMax) {
+            foreach ($this->clues as $clue) {
+                if ($clue->type === $type) {
+                    if (is_null($currentMax) || $clue->value > $currentMax) {
+                        $currentMax = $clue->value;
+                    }
+                }
             }
         }
 
-        return $moment;
+        if (is_null($maxs['y'])) {
+            throw new \Exception('need some year clue');
+        }
+
+        foreach ($maxs as $type => & $currentMax) {
+            // no intervention needed if we have information
+            if (!is_null($currentMax)) {
+                continue;
+            }
+
+            // special treatment for the highest day of a month
+            if ($type === 'd') {
+                continue;
+            }
+
+            $maxs[$type] = $defaultMaxs[$type];
+        }
+
+        if (is_null($maxs['d'])) {
+            $maxs['d'] = $this->daysInMonth($maxs['m'], $maxs['y']);
+        }
+
+        extract($maxs);
+
+        $str = "${y}-${m}-${d}T${h}:${i}:${s}";
+
+        return new \DateTime($str, $this->timezone);
+    }
+
+    protected function daysInMonth($month, $year) : int
+    {
+        // calculate number of days in a month
+        return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
+
+        // polyfill for
+        \cal_days_in_month($this->calendar, $maxs['m'], $maxs['y']);
     }
 
     /**
@@ -88,7 +188,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getInterval() : DateInterval
     {
-
         $diff = $this->getEarliest()->diff($this->getLatest());
 
         return $diff;
@@ -100,7 +199,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getPossibilites() : array
     {
-
         $periods = [];
 
         return $periods;
@@ -114,7 +212,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function isPossible(DateTimeInterface $scrutinize) : bool
     {
-
         $verdict = false;
 
         $verdict = ($scrutinize >= $this->getEarliest() && $scrutinize <= $this->getLatest());
