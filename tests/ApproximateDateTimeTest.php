@@ -80,7 +80,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue1->type = 'y';
         $clue1->value = 1985;
 
-        $clue2 = $clue = new Clue;
+        $clue2 = new Clue;
         $clue2->type = 'y';
         $clue2->value = 1986;
 
@@ -104,7 +104,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(59, $sut->getInterval()->s);
     }
 
-    public function testRealisticGuess()
+    public function testSimpleRealworldExample()
     {
         $sut = new ApproximateDateTime();
 
@@ -112,11 +112,11 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue1->type = 'y';
         $clue1->value = 2001;
 
-        $clue2 = $clue = new Clue;
+        $clue2 = new Clue;
         $clue2->type = 'm';
         $clue2->value = 3;
 
-        $clue3 = $clue = new Clue;
+        $clue3 = new Clue;
         $clue3->type = 'm';
         $clue3->value = 4;
 
@@ -162,10 +162,8 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6]);
 
-        $moment = new DateTime('1985-01-23 07:11:32', $this->tz);
-
-        $this->assertEquals($moment, $sut->getEarliest());
-        $this->assertEquals($moment, $sut->getLatest());
+        $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $sut->getEarliest());
+        $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $sut->getLatest());
     }
 
     public function testWinterHolidayPicture()
