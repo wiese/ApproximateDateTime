@@ -23,6 +23,25 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->tz = new DateTimeZone('UTC');
     }
 
+    public function testDefault()
+    {
+        $sut = new ApproximateDateTime();
+
+        $this->assertEquals(new DateTimeZone('UTC'), $sut->getTimezone());
+        $this->assertEquals(new DateTime(date('Y') . '-01-01 00:00:00', $this->tz), $sut->getEarliest());
+        $this->assertEquals(new DateTime(date('Y') . '-12-31 23:59:59', $this->tz), $sut->getLatest());
+
+        $sut->setDefaultYear(333);
+
+        $this->assertEquals(new DateTime('333-01-01 00:00:00', $this->tz), $sut->getEarliest());
+        $this->assertEquals(new DateTime('333-12-31 23:59:59', $this->tz), $sut->getLatest());
+
+        $europeTz = new DateTimeZone('Europe/Berlin');
+        $sut->setTimezone($europeTz);
+        $this->assertEquals(new DateTime('333-01-01 00:00:00', $europeTz), $sut->getEarliest());
+        $this->assertEquals(new DateTime('333-12-31 23:59:59', $europeTz), $sut->getLatest());
+    }
+
     public function testOneYear()
     {
         $sut = new ApproximateDateTime();

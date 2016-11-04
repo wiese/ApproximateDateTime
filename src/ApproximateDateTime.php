@@ -27,6 +27,13 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     protected $calendar = CAL_GREGORIAN;
 
     /**
+     * Year to base clues on, if no specific year specified
+     *
+     * @var integer
+     */
+    protected $defaultYear;
+
+    /**
      * @var Clue[]
      */
     protected $clues = [];
@@ -73,7 +80,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
     {
-        $this->timezone = new DateTimeZone($timezone);
+        $this->setTimezone(new DateTimeZone($timezone));
+        $this->setDefaultYear((int)(new DateTime())->format('Y'));
     }
 
     /**
@@ -82,6 +90,23 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     public function getTimezone() : DateTimeZone
     {
         return $this->timezone;
+    }
+
+    /**
+     * @return \DateTimeZone
+     */
+    public function setTimezone(DateTimeZone $timezone) : self
+    {
+        $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    public function setDefaultYear(int $year) : self
+    {
+        $this->defaultYear = $year;
+
+        return $this;
     }
 
     public function setClues(array $clues)
@@ -95,21 +120,19 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getEarliest() : DateTimeInterface
     {
-        $defaultMins = ['m' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0];
+        $defaultMins = ['y' => $this->defaultYear, 'm' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0];
         $mins = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
 
         foreach ($mins as $type => & $currentMin) {
             foreach ($this->clues as $clue) {
-                if ($clue->type === $type) {
-                    if (is_null($currentMin) || $clue->value < $currentMin) {
-                        $currentMin = $clue->value;
-                    }
+                if ($clue->type !== $type) {
+                    continue;
+                }
+
+                if (is_null($currentMin) || $clue->value < $currentMin) {
+                    $currentMin = $clue->value;
                 }
             }
-        }
-
-        if (is_null($mins['y'])) {
-            throw new \Exception('need some year clue');
         }
 
         foreach ($mins as $type => & $currentMin) {
@@ -131,21 +154,19 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getLatest() : DateTimeInterface
     {
-        $defaultMaxs = ['m' => 12, 'h' => 23, 'i' => 59, 's' => 59];
+        $defaultMaxs = ['y' => $this->defaultYear, 'm' => 12, 'h' => 23, 'i' => 59, 's' => 59];
         $maxs = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
 
         foreach ($maxs as $type => & $currentMax) {
             foreach ($this->clues as $clue) {
-                if ($clue->type === $type) {
-                    if (is_null($currentMax) || $clue->value > $currentMax) {
-                        $currentMax = $clue->value;
-                    }
+                if ($clue->type !== $type) {
+                    continue;
+                }
+
+                if (is_null($currentMax) || $clue->value > $currentMax) {
+                    $currentMax = $clue->value;
                 }
             }
-        }
-
-        if (is_null($maxs['y'])) {
-            throw new \Exception('need some year clue');
         }
 
         foreach ($maxs as $type => & $currentMax) {
@@ -156,14 +177,11 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
             // special treatment for the highest day of a month
             if ($type === 'd') {
+                $currentMax = $this->daysInMonth($maxs['m'], $maxs['y']);
                 continue;
             }
 
-            $maxs[$type] = $defaultMaxs[$type];
-        }
-
-        if (is_null($maxs['d'])) {
-            $maxs['d'] = $this->daysInMonth($maxs['m'], $maxs['y']);
+            $currentMax = $defaultMaxs[$type];
         }
 
         extract($maxs);
