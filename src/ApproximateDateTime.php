@@ -175,10 +175,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
                 continue;
             }
 
-            // special treatment for the highest day of a month
+            // Special treatment for the highest day (dynamic) of a month
+            // Bit shaky as we rely on this being processed after m & y defaults
             if ($type === 'd') {
-                $currentMax = $this->daysInMonth($maxs['m'], $maxs['y']);
-                continue;
+                $defaultMaxs[$type] = $this->daysInMonth($maxs['m'], $maxs['y']);
             }
 
             $currentMax = $defaultMaxs[$type];
@@ -191,13 +191,20 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return new \DateTime($str, $this->timezone);
     }
 
+    /**
+     * Get number of days in the month of this year
+     *
+     * @param int $month
+     * @param int $year
+     * @return int
+     */
     protected function daysInMonth($month, $year) : int
     {
         // calculate number of days in a month
         return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
 
-        // polyfill for
-        \cal_days_in_month($this->calendar, $maxs['m'], $maxs['y']);
+        // @todo Cheap polyfill, use actual function, declare dependency on cal
+        // \cal_days_in_month($this->calendar, $month, $year);
     }
 
     /**
