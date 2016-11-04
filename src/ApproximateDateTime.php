@@ -145,7 +145,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $str = "${y}-${m}-${d}T${h}:${i}:${s}";
 
-        return new \DateTime($str, $this->timezone);
+        return new DateTime($str, $this->timezone);
     }
 
     /**
@@ -188,7 +188,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $str = "${y}-${m}-${d}T${h}:${i}:${s}";
 
-        return new \DateTime($str, $this->timezone);
+        return new DateTime($str, $this->timezone);
     }
 
     /**
