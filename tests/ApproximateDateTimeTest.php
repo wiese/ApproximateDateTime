@@ -164,6 +164,11 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $sut->getEarliest());
         $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $sut->getLatest());
+
+        $this->assertEquals(0, $sut->getInterval()->days);
+        $this->assertEquals(0, $sut->getInterval()->h);
+        $this->assertEquals(0, $sut->getInterval()->i);
+        $this->assertEquals(0, $sut->getInterval()->s);
     }
 
     public function testWinterHolidayPicture()
