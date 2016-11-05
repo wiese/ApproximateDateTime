@@ -41,6 +41,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     protected $whitelist;
     protected $blacklist;
+
+    public $periodDeterminationLoops = 0;
 /*
     [
         'y' => [],
@@ -250,11 +252,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             }
 
             $moment->add($step);
-            $i++;
+            $this->periodDeterminationLoops++;
         }
 
         $periods[] = new DatePeriod($start, $start->diff($lastPossible), 1);
-var_dump("$i loops");
 
         return $periods;
     }
