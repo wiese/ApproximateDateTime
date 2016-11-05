@@ -93,6 +93,22 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $this;
     }
 
+    /**
+     * Get the default year used when no respective clue given
+     *
+     * @return int
+     */
+    public function getDefaultYear() : int
+    {
+        return $this->defaultYear;
+    }
+
+    /**
+     * Set the default year used when no respective clue given
+     *
+     * @param int $year
+     * @return self
+     */
     public function setDefaultYear(int $year) : self
     {
         $this->defaultYear = $year;
@@ -100,9 +116,17 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $this;
     }
 
-    public function setClues(array $clues)
+    /**
+     * Set the clues to digest
+     *
+     * @param array $clues
+     * @return self
+     */
+    public function setClues(array $clues) : self
     {
         $this->clues = $clues;
+
+        return $this;
     }
 
     /**
@@ -145,7 +169,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getLatest() : DateTimeInterface
     {
-        $defaultMaxs = ['Y' => $this->defaultYear, 'm' => 12, 'h' => 23, 'i' => 59, 's' => 59];
+        $defaultMaxs = ['Y' => $this->defaultYear, 'm' => 12, 'd' => null, 'h' => 23, 'i' => 59, 's' => 59];
         $maxs = ['Y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
 
         foreach ($maxs as $type => & $currentMax) {
