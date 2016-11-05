@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace wiese\ApproximateDateTime;
 
-use \DateTimeInterface;
-use \DateTime;
-use \DateInterval;
-use \DateTimeZone;
+use DateTimeInterface;
+use DateTime;
+use DateInterval;
+use DatePeriod;
+use DateTimeZone;
 
 class ApproximateDateTime implements ApproximateDateTimeInterface
 {
@@ -37,21 +38,11 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * @var Clue[]
      */
     protected $clues = [];
-/*
-    protected $allowed = [
-        'y' => [],
-        'm' => [],
-        'd' => [],
-        'y-m' => [],
-        'y-m-d' => [],
-        'h' => [],
-        'i' => [],
-        's' => [],
-        'h-i' => [],
-        'h-i-s' => [],
-    ];
 
-    protected $disallowed = [
+    protected $whitelist;
+    protected $blacklist;
+/*
+    [
         'y' => [],
         'm' => [],
         'd' => [],
@@ -62,7 +53,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         's' => [],
         'h-i' => [],
         'h-i-s' => [],
-    ];
+    ]
 
     '1980-??-??T??-??-??'
     '????-08-??T??-??-??'
@@ -120,8 +111,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getEarliest() : DateTimeInterface
     {
-        $defaultMins = ['y' => $this->defaultYear, 'm' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0];
-        $mins = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
+        $defaultMins = ['Y' => $this->defaultYear, 'm' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0];
+        $mins = ['Y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
 
         foreach ($mins as $type => & $currentMin) {
             foreach ($this->clues as $clue) {
@@ -143,7 +134,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         extract($mins);
 
-        $str = "${y}-${m}-${d}T${h}:${i}:${s}";
+        $str = "${Y}-${m}-${d}T${h}:${i}:${s}";
 
         return new DateTime($str, $this->timezone);
     }
@@ -154,8 +145,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getLatest() : DateTimeInterface
     {
-        $defaultMaxs = ['y' => $this->defaultYear, 'm' => 12, 'h' => 23, 'i' => 59, 's' => 59];
-        $maxs = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
+        $defaultMaxs = ['Y' => $this->defaultYear, 'm' => 12, 'h' => 23, 'i' => 59, 's' => 59];
+        $maxs = ['Y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
 
         foreach ($maxs as $type => & $currentMax) {
             foreach ($this->clues as $clue) {
@@ -178,7 +169,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             // Special treatment for the highest day (dynamic) of a month
             // Bit shaky as we rely on this being processed after m & y defaults
             if ($type === 'd') {
-                $defaultMaxs[$type] = $this->daysInMonth($maxs['m'], $maxs['y']);
+                $defaultMaxs[$type] = $this->daysInMonth($maxs['m'], $maxs['Y']);
             }
 
             $currentMax = $defaultMaxs[$type];
@@ -186,25 +177,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         extract($maxs);
 
-        $str = "${y}-${m}-${d}T${h}:${i}:${s}";
+        $str = "${Y}-${m}-${d}T${h}:${i}:${s}";
 
         return new DateTime($str, $this->timezone);
-    }
-
-    /**
-     * Get number of days in the month of this year
-     *
-     * @param int $month
-     * @param int $year
-     * @return int
-     */
-    protected function daysInMonth($month, $year) : int
-    {
-        // calculate number of days in a month
-        return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
-
-        // @todo Cheap polyfill, use actual function, declare dependency on cal
-        // \cal_days_in_month($this->calendar, $month, $year);
     }
 
     /**
@@ -220,13 +195,79 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getPossibilites()
+     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getPeriods()
      */
-    public function getPossibilites() : array
+    public function getPeriods() : array
     {
         $periods = [];
 
+        $moment = $this->getEarliest();
+        $start = clone $moment;
+
+        $step = new DateInterval('PT1S');	// @todo determine biggest possible step
+        $i = 0;
+        $fronteer = true;
+        while ($moment <= $this->getLatest()) {
+            if ($this->checkPossible($moment)) {
+                $lastPossible = clone $moment;
+
+                if ($fronteer) {
+                    $start = clone $moment;
+                    $fronteer = false;
+                }
+            }
+            else {
+                if ($lastPossible) {
+                    $periods[] = new DatePeriod($start, $start->diff($lastPossible), 1);
+                }
+
+                $lastPossible = false;
+                $fronteer = true;
+            }
+
+            $moment->add($step);
+            $i++;
+        }
+
+        $periods[] = new DatePeriod($start, $start->diff($lastPossible), 1);
+var_dump("$i loops");
+
         return $periods;
+    }
+
+    protected function checkPossible(DateTimeInterface $scrutinize) : bool
+    {
+        $verdict = true;
+
+        $this->generateFilterListsFromClues();
+
+        foreach ($this->whitelist AS $type => $range) {
+            $challenge = $scrutinize->format($type);
+            if (count($range) && !in_array($challenge, $range)) {
+                $verdict = false;
+                break;
+            }
+        }
+
+        return $verdict;
+    }
+
+    protected function generateFilterListsFromClues() : bool
+    {
+        if ($this->whitelist) {
+            return false;
+        }
+
+        foreach ($this->clues as $clue) {
+            if ($clue->filter === Clue::FILTER_WHITELIST) {
+                if (!is_array($this->whitelist[$clue->type])) {
+                    $this->whitelist[$clue->type] = [];
+                }
+                $this->whitelist[$clue->type][] = $clue->value;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -251,5 +292,21 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     public function getLuckyShot() : DateTimeInterface
     {
         return $this->getEarliest();
+    }
+
+    /**
+     * Get number of days in the month of this year
+     *
+     * @param int $month
+     * @param int $year
+     * @return int
+     */
+    protected function daysInMonth($month, $year) : int
+    {
+        // calculate number of days in a month
+        return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
+
+        // @todo Cheap polyfill. Use actual function, declare dependency on cal
+        // \cal_days_in_month($this->calendar, $month, $year);
     }
 }

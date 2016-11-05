@@ -41,7 +41,8 @@ interface ApproximateDateTimeInterface
      * Get the interval in between earliest and latest possible moment
      *
      * @todo Does and can not cover holes in between. Lose and let user
-     * calculate herself if she needs this information of questionable quality?
+     * calculate herself (from getPeriods()) if she needs this information
+     * of questionable quality?
      *
      * @return DateInterval
      */
@@ -52,7 +53,7 @@ interface ApproximateDateTimeInterface
      *
      * @return DatePeriod[]
      */
-    public function getPossibilites() : array;
+    public function getPeriods() : array;
 
     /**
      * Check if the given DateTime is within the allowable range described

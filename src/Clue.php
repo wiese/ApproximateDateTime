@@ -7,6 +7,9 @@ use \DateTimeInterface;
 
 class Clue
 {
+    const FILTER_WHITELIST = 1;
+    const FILTER_BLACKLIST = 2;
+
     /**
      *
      * @var string
@@ -24,17 +27,7 @@ class Clue
     public $rawValue;
     /**
      *
-     * @var DateTimeInterface
+     * @var int
      */
-    public $first;
-    /**
-     *
-     * @var DateTimeInterface
-     */
-    public $last;
-    /**
-     *
-     * @var bool
-     */
-    public $negative = false;
+    public $filter = self::FILTER_WHITELIST;
 }
