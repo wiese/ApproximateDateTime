@@ -43,6 +43,19 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     protected $blacklist;
 
     public $periodDeterminationLoops = 0;
+
+    protected $units = [
+        'y' => 'y',
+        'm' => 'm',
+        'd' => 'd',
+        'y-m' => 'm',
+        'y-m-d' => 'd',
+        'h' => 'h',
+        'i' => 'i',
+        's' => 's',
+        'h-i' => 'i',
+        'h-i-s' => 's',
+    ];
 /*
     [
         'y' => [],
@@ -230,7 +243,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $moment = $this->getEarliest();
         $start = clone $moment;
 
-        $step = new DateInterval('PT1S');	// @todo determine biggest possible step
         $i = 0;
         $fronteer = true;
         while ($moment <= $this->getLatest()) {
@@ -251,7 +263,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
                 $fronteer = true;
             }
 
-            $moment->add($step);
+            $moment->add(new DateInterval('PT1S'));
             $this->periodDeterminationLoops++;
         }
 
@@ -260,21 +272,17 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $periods;
     }
 
-    protected function checkPossible(DateTimeInterface $scrutinize) : bool
+    protected function checkPossible(DateTimeInterface $moment) : bool
     {
-        $verdict = true;
-
         $this->generateFilterListsFromClues();
 
         foreach ($this->whitelist AS $type => $range) {
-            $challenge = $scrutinize->format($type);
-            if (count($range) && !in_array($challenge, $range)) {
-                $verdict = false;
-                break;
+            if (count($range) && !in_array($moment->format($type), $range)) {
+                return false;
             }
         }
 
-        return $verdict;
+        return true;
     }
 
     protected function generateFilterListsFromClues() : bool

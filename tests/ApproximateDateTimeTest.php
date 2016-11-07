@@ -261,13 +261,60 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $sut->getInterval()->i);
         $this->assertEquals(0, $sut->getInterval()->s);
 
-
         $this->assertEquals(
             [
                 new DatePeriod(new DateTime('1985-01-23 07:11:32', $this->tz), new DateInterval('PT0S'), 1),
             ],
             $sut->getPeriods()
         );
+    }
+
+    public function testMiniExample()
+    {
+        $sut = new ApproximateDateTime();
+
+        $clue1= new Clue;
+        $clue1->type = 'Y';
+        $clue1->value = 2007;
+
+        $clue2 = new Clue;
+        $clue2->type = 'm';
+        $clue2->value = 8;
+
+        $clue3 = new Clue;
+        $clue3->type = 'd';
+        $clue3->value = 15;
+
+        $clue4 = new Clue;
+        $clue4->type = 'h';
+        $clue4->value = 9;
+
+        $clue5 = new Clue;
+        $clue5->type = 'i';
+        $clue5->value = 34;
+
+        $clue6 = new Clue;
+        $clue6->type = 'i';
+        $clue6->value = 36;
+
+        $clue7 = new Clue;
+        $clue7->type = 'i';
+        $clue7->value = 39;
+
+        $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
+
+        $this->assertEquals(
+            [
+                new DatePeriod(new DateTime('2007-08-15 09:34:00', $this->tz), new DateInterval('PT59S'), 1),
+                new DatePeriod(new DateTime('2007-08-15 09:36:00', $this->tz), new DateInterval('PT59S'), 1),
+                new DatePeriod(new DateTime('2007-08-15 09:39:00', $this->tz), new DateInterval('PT59S'), 1),
+            ],
+            $sut->getPeriods()
+        );
+
+        if ($sut->periodDeterminationLoops >= 180) {
+            $this->fail('Inefficient algorithm. Seems to check every second.');
+        }
     }
 
     public function testWinterHolidayPicture()
