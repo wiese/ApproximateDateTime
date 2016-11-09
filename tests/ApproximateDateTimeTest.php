@@ -50,7 +50,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         // '1985-??-??T??-??-??'
         $clue = new Clue;
-        $clue->type = 'Y';
+        $clue->type = 'y';
         $clue->value = 2016;
 
         $sut->setClues([$clue]);
@@ -95,11 +95,11 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         // '1985-??-??T??-??-??'
         // '1986-??-??T??-??-??'
         $clue1= new Clue;
-        $clue1->type = 'Y';
+        $clue1->type = 'y';
         $clue1->value = 1985;
 
         $clue2 = new Clue;
-        $clue2->type = 'Y';
+        $clue2->type = 'y';
         $clue2->value = 1986;
 
         $sut->setClues([$clue1, $clue2]);
@@ -121,8 +121,8 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(59, $sut->getInterval()->i);
         $this->assertEquals(59, $sut->getInterval()->s);
 
-        $this->markTestIncomplete('2y not iterable w/ current algorithm');
-        return;
+        //$this->markTestIncomplete('2y not iterable w/ current algorithm');
+        //return;
 
         $actualPeriods = $sut->getPeriods();
         $this->assertCount(1, $actualPeriods);
@@ -142,7 +142,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $sut = new ApproximateDateTime();
 
         $clue1= new Clue;
-        $clue1->type = 'Y';
+        $clue1->type = 'y';
         $clue1->value = 2001;
 
         $clue2 = new Clue;
@@ -184,7 +184,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $sut = new ApproximateDateTime();
 
         $clue1= new Clue;
-        $clue1->type = 'Y';
+        $clue1->type = 'y';
         $clue1->value = 2010;
 
         $clue2 = new Clue;
@@ -228,7 +228,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         // '1985-01-23T07-11-32'
         $clue1= new Clue;
-        $clue1->type = 'Y';
+        $clue1->type = 'y';
         $clue1->value = 1985;
 
         $clue2 = new Clue;
@@ -274,7 +274,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $sut = new ApproximateDateTime();
 
         $clue1= new Clue;
-        $clue1->type = 'Y';
+        $clue1->type = 'y';
         $clue1->value = 2007;
 
         $clue2 = new Clue;
@@ -291,11 +291,11 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $clue5 = new Clue;
         $clue5->type = 'i';
-        $clue5->value = 34;
+        $clue5->value = 36;
 
         $clue6 = new Clue;
         $clue6->type = 'i';
-        $clue6->value = 36;
+        $clue6->value = 34;
 
         $clue7 = new Clue;
         $clue7->type = 'i';

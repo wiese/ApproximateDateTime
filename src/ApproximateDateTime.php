@@ -28,7 +28,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     protected $calendar = CAL_GREGORIAN;
 
     /**
-     * Year to base clues on, if no specific year specified
+     * Year to base clues on, if no year specified
      *
      * @var integer
      */
@@ -44,7 +44,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     public $periodDeterminationLoops = 0;
 
-    protected $units = [
+    protected $compoundUnits = [
         'y' => 'y',
         'm' => 'm',
         'd' => 'd',
@@ -55,6 +55,33 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         's' => 's',
         'h-i' => 'i',
         'h-i-s' => 's',
+    ];
+
+    protected $units = [
+        'y' => [
+            'min' => null,
+            'max' => null
+        ],
+        'm' => [
+            'min' => 1,
+            'max' => 12
+        ],
+        'd' => [
+            'min' => 1,
+            'max' => null
+        ],
+        'h' => [
+            'min' => 0,
+            'max' => 23
+        ],
+        'i' => [
+            'min' => 0,
+            'max' => 59
+        ],
+        's' => [
+            'min' => 0,
+            'max' => 59
+        ],
     ];
 /*
     [
@@ -150,8 +177,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getEarliest() : DateTimeInterface
     {
-        $defaultMins = ['Y' => $this->defaultYear, 'm' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0];
-        $mins = ['Y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
+        $defaultMins = ['y' => $this->defaultYear, 'm' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0];
+        $mins = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
 
         foreach ($mins as $type => & $currentMin) {
             foreach ($this->clues as $clue) {
@@ -173,7 +200,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         extract($mins);
 
-        $str = "${Y}-${m}-${d}T${h}:${i}:${s}";
+        $str = "${y}-${m}-${d}T${h}:${i}:${s}";
 
         return new DateTime($str, $this->timezone);
     }
@@ -184,8 +211,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getLatest() : DateTimeInterface
     {
-        $defaultMaxs = ['Y' => $this->defaultYear, 'm' => 12, 'd' => null, 'h' => 23, 'i' => 59, 's' => 59];
-        $maxs = ['Y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
+        $defaultMaxs = ['y' => $this->defaultYear, 'm' => 12, 'd' => null, 'h' => 23, 'i' => 59, 's' => 59];
+        $maxs = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
 
         foreach ($maxs as $type => & $currentMax) {
             foreach ($this->clues as $clue) {
@@ -208,7 +235,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             // Special treatment for the highest day (dynamic) of a month
             // Bit shaky as we rely on this being processed after m & y defaults
             if ($type === 'd') {
-                $defaultMaxs[$type] = $this->daysInMonth($maxs['m'], $maxs['Y']);
+                $defaultMaxs[$type] = $this->daysInMonth($maxs['m'], $maxs['y']);
             }
 
             $currentMax = $defaultMaxs[$type];
@@ -216,7 +243,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         extract($maxs);
 
-        $str = "${Y}-${m}-${d}T${h}:${i}:${s}";
+        $str = "${y}-${m}-${d}T${h}:${i}:${s}";
 
         return new DateTime($str, $this->timezone);
     }
@@ -240,34 +267,83 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $periods = [];
 
-        $moment = $this->getEarliest();
-        $start = clone $moment;
+        $this->generateFilterListsFromClues();
+
+        $wl = $this->whitelist;
+
+        if (empty($wl['m'])) {
+            $wl['m'] = [$this->units['m']['min']];
+        }
+        if (empty($wl['d'])) {
+            $wl['d'] = [$this->units['d']['min']];
+        }
+        if (empty($wl['h'])) {
+            $wl['h'] = [$this->units['h']['min']];
+        }
+        if (empty($wl['i'])) {
+            $wl['i'] = [$this->units['i']['min']];
+        }
+        if (empty($wl['s'])) {
+            $wl['s'] = [$this->units['i']['min']];
+        }
+
+        $starts = [];
+        $ends = [];
 
         $i = 0;
-        $fronteer = true;
-        while ($moment <= $this->getLatest()) {
-            if ($this->checkPossible($moment)) {
-                $lastPossible = clone $moment;
-
-                if ($fronteer) {
-                    $start = clone $moment;
-                    $fronteer = false;
+        foreach ($wl['y'] as $ykey => $y) {
+            $endy = $y;
+            foreach ($wl['m'] as $mkey => $m) {
+                if (empty($this->whitelist['m'])) {
+                    $endm = $endy . '-' . $this->units['m']['max'];
                 }
-            }
-            else {
-                if ($lastPossible) {
-                    $periods[] = new DatePeriod($start, $start->diff($lastPossible), 1);
+                elseif ($wl['m'][$mkey+1] != $m + 1) {
+                    $endm = $endy . '-' . $m;
                 }
-
-                $lastPossible = false;
-                $fronteer = true;
+                foreach ($wl['d'] as $dkey => $d) {
+                    if (empty($this->whitelist['d'])) {
+                        $endd = $endm . '-' . $this->daysInMonth($m, $y);
+                    }
+                    elseif ($wl['d'][$dkey+1] != $d + 1) {
+                        $endd = $endm . '-' . $d;
+                    }
+                    foreach ($wl['h'] as $hkey => $h) {
+                        if (empty($this->whitelist['h'])) {
+                            $endh = $endd . 'T' . $this->units['h']['max'];
+                        }
+                        elseif ($wl['h'][$hkey+1] != $h + 1) {
+                            $endh = $endd . 'T' . $h;
+                        }
+                        foreach ($wl['i'] as $ikey => $i) {
+                            if (empty($this->whitelist['i'])) {
+                                $endi = $endh . ':' . $this->units['i']['max'];
+                            }
+                            elseif ($wl['i'][$ikey+1] != $i + 1) {
+                                $endi = $endh . ':' . $i;
+                            }
+                            foreach ($wl['s'] as $skey => $s) {
+                                if (empty($this->whitelist['s'])) {
+                                    $end = $endi . ':' . $this->units['s']['max'];
+                                }
+                                elseif ($wl['s'][$skey+1] != $s + 1) {
+                                    $end = $endi . ':' . $s;
+                                }
+                                $starts[] = "${y}-${m}-${d}T${h}:${i}:${s}";
+                                $ends[] = $end;
+                            }
+                            $endi = '';
+                        }
+                        $endh = '';
+                    }
+                    $endd = '';
+                }
+                $endm = '';
             }
 
-            $moment->add(new DateInterval('PT1S'));
             $this->periodDeterminationLoops++;
         }
 
-        $periods[] = new DatePeriod($start, $start->diff($lastPossible), 1);
+        //$periods[] = new DatePeriod($start, $start->diff($lastPossible), 1);
 
         return $periods;
     }
@@ -291,14 +367,21 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             return false;
         }
 
+        foreach (array_keys($this->units) as $unit) {
+            $this->whitelist[$unit] = [];
+        }
+
         foreach ($this->clues as $clue) {
             if ($clue->filter === Clue::FILTER_WHITELIST) {
-                if (!is_array($this->whitelist[$clue->type])) {
-                    $this->whitelist[$clue->type] = [];
-                }
-                $this->whitelist[$clue->type][] = $clue->value;
+                $this->whitelist[$clue->type][$clue->value] = $clue->value;
             }
         }
+
+        array_walk($this->whitelist, function(& $value, $key) {
+            sort($value);
+        });
+
+        // @todo create white list from black list
 
         return true;
     }
