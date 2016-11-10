@@ -83,8 +83,6 @@ class ClueParser
             $clue = new Clue;
             $clue->type = 'y';
             $clue->rawValue = $rawClue;
-            $clue->first = new DateTime("$rawClue-01-01T00:00:00", $this->timezone);
-            $clue->last = new DateTime("$rawClue-12-31T23:59:59", $this->timezone);
         }
 
         return $clue;

@@ -24,8 +24,6 @@ class ClueParserTest extends PHPUnit_Framework_TestCase
         $clue = new Clue;
         $clue->type = 'y';
         $clue->rawValue = 2014;
-        $clue->first = new DateTime("2014-01-01T00:00:00+0000");
-        $clue->last = new DateTime("2014-12-31T23:59:59+0000");
 
         $this->assertEquals($clue, $method->invoke($sut, '2014'));
     }
@@ -41,8 +39,6 @@ class ClueParserTest extends PHPUnit_Framework_TestCase
         $clue = new Clue;
         $clue->type = 'y';
         $clue->rawValue = '2016';
-        $clue->first = new DateTime("2016-01-01T00:00:00+0000");
-        $clue->last = new DateTime("2016-12-31T23:59:59+0000");
 
         $this->assertEquals($clue, $method->invoke($sut, '2016'));
 
