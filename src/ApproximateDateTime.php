@@ -239,6 +239,30 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $this->periods;
     }
 
+    /**
+     * @todo So far only works with one single, consecutive interval
+     *
+     * {@inheritDoc}
+     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::isPossible()
+     */
+    public function isPossible(DateTimeInterface $scrutinize) : bool
+    {
+        $verdict = false;
+
+        $verdict = ($scrutinize >= $this->getEarliest() && $scrutinize <= $this->getLatest());
+
+        return $verdict;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLuckyShot()
+     */
+    public function getLuckyShot() : DateTimeInterface
+    {
+        return $this->getEarliest();
+    }
+
     protected function calculateBoundaries() : void
     {
         $this->generateFilterListsFromClues();
@@ -356,30 +380,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         });
 
         // @todo create white list from black list
-    }
-
-    /**
-     * @todo So far only works with one single, consecutive interval
-     *
-     * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::isPossible()
-     */
-    public function isPossible(DateTimeInterface $scrutinize) : bool
-    {
-        $verdict = false;
-
-        $verdict = ($scrutinize >= $this->getEarliest() && $scrutinize <= $this->getLatest());
-
-        return $verdict;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLuckyShot()
-     */
-    public function getLuckyShot() : DateTimeInterface
-    {
-        return $this->getEarliest();
     }
 
     /**
