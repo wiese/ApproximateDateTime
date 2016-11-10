@@ -39,9 +39,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     protected $clues = [];
 
-    protected $whitelist = [];
-    protected $blacklist = [];
-
     protected $compoundUnits = [
         'y' => 'y',
         'm' => 'm',
@@ -66,7 +63,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         ],
         'd' => [
             'min' => 1,
-            'max' => null
+            'max' => null	// depends on y, m, and the calendar
         ],
         'h' => [
             'min' => 0,
@@ -81,6 +78,26 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             'max' => 59
         ],
     ];
+
+    /**
+     * caches
+     */
+
+     /**
+      * @var array Combined clue information on whitelisted dates
+      */
+     protected $whitelist = [];
+
+     protected $blacklist = [];
+
+     /**
+      * @var array Periods compatible with given clues
+      */
+     protected $periods = [];
+     /**
+      * @var bool Have periods been calculated? To avoid redundant iterations
+      */
+     protected $periodsCalculated = false;
 /*
     [
         'y' => [],
@@ -263,7 +280,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getPeriods() : array
     {
-        $periods = [];
+        if ($this->periodsCalculated) {
+            return $this->periods;
+        }
 
         $this->generateFilterListsFromClues();
 
@@ -279,12 +298,14 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             $start = $this->momentToDateTime($startInfo);
             $end = $this->momentToDateTime($ends[$key]);
 
-            $periods[] = new DatePeriod($start, $start->diff($end), 1);
+            $this->periods[] = new DatePeriod($start, $start->diff($end), 1);
 
             // @todo identify patterns, set recurrences correctly, and avoid redundancy
         }
 
-        return $periods;
+        $this->periodsCalculated = true;
+
+        return $this->periods;
     }
 
     protected function momentToDateTime(array $moment) : DateTime
