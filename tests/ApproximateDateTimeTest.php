@@ -48,7 +48,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
     {
         $sut = new ApproximateDateTime();
 
-        // '1985-??-??T??-??-??'
+        // '2016-??-??T??-??-??'
         $clue = new Clue;
         $clue->type = 'y';
         $clue->value = 2016;
@@ -72,12 +72,9 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(59, $sut->getInterval()->i);
         $this->assertEquals(59, $sut->getInterval()->s);
 
-        $this->markTestIncomplete('2y not iterable w/ current algorithm');
-        return;
-
         $actualPeriods = $sut->getPeriods();
         $this->assertCount(1, $actualPeriods);
-        $this->assertEquals(new DateTime('2014-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
+        $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
         $actualInterval = $actualPeriods[0]->getDateInterval();
         $this->assertEquals(0, $actualInterval->y);
         $this->assertEquals(11, $actualInterval->m);
@@ -120,9 +117,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(23, $sut->getInterval()->h);
         $this->assertEquals(59, $sut->getInterval()->i);
         $this->assertEquals(59, $sut->getInterval()->s);
-
-        //$this->markTestIncomplete('2y not iterable w/ current algorithm');
-        //return;
 
         $actualPeriods = $sut->getPeriods();
         $this->assertCount(1, $actualPeriods);
@@ -173,10 +167,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(59, $actualInterval->i);
         $this->assertEquals(59, $actualInterval->s);
         $this->assertEquals(60, $actualInterval->days);
-
-        if ($sut->periodDeterminationLoops >= 5270400) {
-            $this->fail('Inefficient algorithm. Seems to check every second.');
-        }
     }
 
     public function testRealworldExample()
@@ -216,10 +206,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
             ],
             $sut->getPeriods()
         );
-
-        if ($sut->periodDeterminationLoops >= 259200) {
-            $this->fail('Inefficient algorithm. Seems to check every second.');
-        }
     }
 
     public function testNotSoApproximate()
@@ -311,15 +297,12 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
             ],
             $sut->getPeriods()
         );
-
-        if ($sut->periodDeterminationLoops >= 180) {
-            $this->fail('Inefficient algorithm. Seems to check every second.');
-        }
     }
 
     public function testWinterHolidayPicture()
     {
         $this->markTestIncomplete();
+        return;
 
         $sut = new ApproximateDateTime();
 
@@ -344,6 +327,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
     public function testWorkday()
     {
         $this->markTestIncomplete();
+        return;
 
         $sut = new ApproximateDateTime();
 

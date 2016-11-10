@@ -39,10 +39,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     protected $clues = [];
 
-    protected $whitelist;
-    protected $blacklist;
-
-    public $periodDeterminationLoops = 0;
+    protected $whitelist = [];
+    protected $blacklist = [];
 
     protected $compoundUnits = [
         'y' => 'y',
@@ -269,83 +267,82 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $this->generateFilterListsFromClues();
 
-        $wl = $this->whitelist;
+        $starts = $ends = [];
+        foreach ($this->units as $unit => $info) {
+            $borders = $this->getBorders($this->whitelist[$unit], $info['min'], $info['max'], $unit);
 
-        if (empty($wl['m'])) {
-            $wl['m'] = [$this->units['m']['min']];
-        }
-        if (empty($wl['d'])) {
-            $wl['d'] = [$this->units['d']['min']];
-        }
-        if (empty($wl['h'])) {
-            $wl['h'] = [$this->units['h']['min']];
-        }
-        if (empty($wl['i'])) {
-            $wl['i'] = [$this->units['i']['min']];
-        }
-        if (empty($wl['s'])) {
-            $wl['s'] = [$this->units['i']['min']];
+            $starts = $this->combineValues($starts, $borders['starts']);
+            $ends = $this->combineValues($ends, $borders['ends']);
         }
 
+        foreach ($starts as $key => $startInfo) {
+            $start = $this->momentToDateTime($startInfo);
+            $end = $this->momentToDateTime($ends[$key]);
+
+            $periods[] = new DatePeriod($start, $start->diff($end), 1);
+
+            // @todo identify patterns, set recurrences correctly, and avoid redundancy
+        }
+
+        return $periods;
+    }
+
+    protected function momentToDateTime(array $moment) : DateTime
+    {
+        if (is_null($moment['d'])) {
+            $moment['d'] = $this->daysInMonth($moment['m'], $moment['y']);
+        }
+
+        $datetime = new DateTime();
+        $datetime->setTimezone($this->timezone);
+        $datetime->setDate($moment['y'], $moment['m'], $moment['d']);
+        $datetime->setTime($moment['h'], $moment['i'], $moment['s']);
+
+        return $datetime;
+    }
+
+    protected function combineValues(array $array1, array $array2)
+    {
+        $combined = [];
+        foreach ($array1 as $value1) {
+            foreach ($array2 as $value2) {
+                $combined[] = $value1 + $value2;
+            }
+        }
+
+        if (empty($array1)) {
+            $combined = $array2;
+        }
+
+        return $combined;
+    }
+
+    protected function getBorders(array $array, int $defaultMin = null, int $defaultMax = null, string $unit) : array
+    {
         $starts = [];
         $ends = [];
 
-        $i = 0;
-        foreach ($wl['y'] as $ykey => $y) {
-            $endy = $y;
-            foreach ($wl['m'] as $mkey => $m) {
-                if (empty($this->whitelist['m'])) {
-                    $endm = $endy . '-' . $this->units['m']['max'];
+        if (empty($array)) {
+            $starts[] = [$unit => $defaultMin];
+            $ends[] = [$unit => $defaultMax];
+        }
+        else {
+            $previous = null;
+            foreach ($array as $key => $value) {
+                if (is_null($previous) || $array[$key - 1 ] != $value - 1) {
+                    $starts[] = [$unit => $value];
+                    $previous = $value;
                 }
-                elseif ($wl['m'][$mkey+1] != $m + 1) {
-                    $endm = $endy . '-' . $m;
+                if ($array[$key + 1 ] != $value + 1) {
+                    $ends[] = [$unit => $value];
                 }
-                foreach ($wl['d'] as $dkey => $d) {
-                    if (empty($this->whitelist['d'])) {
-                        $endd = $endm . '-' . $this->daysInMonth($m, $y);
-                    }
-                    elseif ($wl['d'][$dkey+1] != $d + 1) {
-                        $endd = $endm . '-' . $d;
-                    }
-                    foreach ($wl['h'] as $hkey => $h) {
-                        if (empty($this->whitelist['h'])) {
-                            $endh = $endd . 'T' . $this->units['h']['max'];
-                        }
-                        elseif ($wl['h'][$hkey+1] != $h + 1) {
-                            $endh = $endd . 'T' . $h;
-                        }
-                        foreach ($wl['i'] as $ikey => $i) {
-                            if (empty($this->whitelist['i'])) {
-                                $endi = $endh . ':' . $this->units['i']['max'];
-                            }
-                            elseif ($wl['i'][$ikey+1] != $i + 1) {
-                                $endi = $endh . ':' . $i;
-                            }
-                            foreach ($wl['s'] as $skey => $s) {
-                                if (empty($this->whitelist['s'])) {
-                                    $end = $endi . ':' . $this->units['s']['max'];
-                                }
-                                elseif ($wl['s'][$skey+1] != $s + 1) {
-                                    $end = $endi . ':' . $s;
-                                }
-                                $starts[] = "${y}-${m}-${d}T${h}:${i}:${s}";
-                                $ends[] = $end;
-                            }
-                            $endi = '';
-                        }
-                        $endh = '';
-                    }
-                    $endd = '';
-                }
-                $endm = '';
             }
-
-            $this->periodDeterminationLoops++;
         }
 
-        //$periods[] = new DatePeriod($start, $start->diff($lastPossible), 1);
-
-        return $periods;
+        return [
+            'starts' => $starts,
+            'ends' => $ends
+        ];
     }
 
     protected function checkPossible(DateTimeInterface $moment) : bool
