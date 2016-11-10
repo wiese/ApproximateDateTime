@@ -63,7 +63,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         ],
         'd' => [
             'min' => 1,
-            'max' => null	// depends on y, m, and the calendar
+            'max' => null // depends on y, m, and the calendar
         ],
         'h' => [
             'min' => 0,
@@ -83,19 +83,19 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * caches
      */
 
-     /**
-      * @var array Combined clue information on whitelisted dates
-      */
-     protected $whitelist = [];
+    /**
+     * @var array Combined clue information on whitelisted dates
+     */
+    protected $whitelist = [];
 
-     protected $blacklist = [];
+    protected $blacklist = [];
 
-     /**
-      * @var array Periods compatible with given clues
-      */
-     protected $periods = [];
-     protected $starts = [];
-     protected $ends = [];
+    /**
+     * @var array Periods compatible with given clues
+     */
+    protected $periods = [];
+    protected $starts = [];
+    protected $ends = [];
 /*
     [
         'y' => [],
@@ -321,7 +321,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             }
         }
 
-        if (empty($higherLevelInfo)) {	// on "highest level"/first run
+        if (empty($higherLevelInfo)) { // on "highest level"/first run
             $combined = $lowerLevelInfo;
         }
 
@@ -346,8 +346,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         if (empty($list)) {
             $starts[] = [$unit => $this->units[$unit]['min']];
             $ends[] = [$unit => $this->units[$unit]['max']];
-        }
-        else {
+        } else {
             $previous = null;
             foreach ($list as $key => $value) {
                 if (is_null($previous) || $list[$key - 1 ] != $value - 1) {
@@ -370,7 +369,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $this->generateFilterListsFromClues();
 
-        foreach ($this->whitelist AS $type => $range) {
+        foreach ($this->whitelist as $type => $range) {
             if (count($range) && !in_array($moment->format($type), $range)) {
                 return false;
             }
@@ -393,7 +392,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             }
         }
 
-        array_walk($this->whitelist, function(& $value, $key) {
+        array_walk($this->whitelist, function (& $value, $key) {
             sort($value);
         });
 
