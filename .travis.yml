@@ -16,7 +16,7 @@ before_script:
   - git config --global user.email travis@example.com
 
 script:
-  - ./vendor/bin/phpunit
+  - ./vendor/bin/phpunit tests/
 
 git:
   depth: 1
