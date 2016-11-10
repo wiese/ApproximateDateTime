@@ -17,6 +17,7 @@ before_script:
 
 script:
   - ./vendor/bin/phpunit tests/
+  - ./vendor/bin/phpcs --standard=PSR2 src/ tests/
 
 git:
   depth: 1
