@@ -1,9 +1,10 @@
 {
     "name": "wiese/approximate-datetime",
-    "description": "Library to handle dates that are not precisely defined",
+    "description": "Handle dates that are not precisely defined",
     "type": "library",
     "require": {
-        "php": "^7.1"
+        "php": "^7.1",
+        "ext-calendar": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "@stable",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "35f3fb80c39abf09114c03a0bef5be04",
+    "content-hash": "a8457d843c82a00047ba2fa4ee2bd266",
     "packages": [],
     "packages-dev": [
         {
@@ -1341,7 +1341,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-11-06T16:24:48+00:00"
+            "time": "2016-11-06 16:24:48"
         },
         {
             "name": "webmozart/assert",
@@ -1403,7 +1403,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1"
+        "php": "^7.1",
+        "ext-calendar": "*"
     },
     "platform-dev": []
 }
