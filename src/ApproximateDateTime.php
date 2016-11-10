@@ -269,10 +269,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $starts = $ends = [];
         foreach ($this->units as $unit => $info) {
-            $borders = $this->getBorders($this->whitelist[$unit], $info['min'], $info['max'], $unit);
+            $boundaries = $this->getUnitBoundaries($unit, $this->whitelist[$unit], $info['min'], $info['max']);
 
-            $starts = $this->combineValues($starts, $borders['starts']);
-            $ends = $this->combineValues($ends, $borders['ends']);
+            $starts = $this->combineValues($starts, $boundaries['starts']);
+            $ends = $this->combineValues($ends, $boundaries['ends']);
         }
 
         $this->starts = [];
@@ -316,23 +316,23 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $combined;
     }
 
-    protected function getBorders(array $array, int $defaultMin = null, int $defaultMax = null, string $unit) : array
+    protected function getUnitBoundaries(string $unit, array $list, int $min = null, int $max = null) : array
     {
         $starts = [];
         $ends = [];
 
-        if (empty($array)) {
-            $starts[] = [$unit => $defaultMin];
-            $ends[] = [$unit => $defaultMax];
+        if (empty($list)) {
+            $starts[] = [$unit => $min];
+            $ends[] = [$unit => $max];
         }
         else {
             $previous = null;
-            foreach ($array as $key => $value) {
-                if (is_null($previous) || $array[$key - 1 ] != $value - 1) {
+            foreach ($list as $key => $value) {
+                if (is_null($previous) || $list[$key - 1 ] != $value - 1) {
                     $starts[] = [$unit => $value];
                     $previous = $value;
                 }
-                if ($array[$key + 1 ] != $value + 1) {
+                if ($list[$key + 1 ] != $value + 1) {
                     $ends[] = [$unit => $value];
                 }
             }
@@ -371,13 +371,13 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             }
         }
 
-        if (empty($this->whitelist['y'])) {
-            $this->whitelist['y'][] = $this->defaultYear;
-        }
-
         array_walk($this->whitelist, function(& $value, $key) {
             sort($value);
         });
+
+        if (empty($this->whitelist['y'])) {
+            $this->whitelist['y'][] = $this->defaultYear;
+        }
 
         // @todo create white list from black list
     }
