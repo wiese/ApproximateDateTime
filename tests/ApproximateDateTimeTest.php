@@ -299,6 +299,30 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testMiniExampleWithDefaultYear()
+    {
+        $sut = new ApproximateDateTime();
+
+        $clue1 = new Clue;
+        $clue1->type = 'm';
+        $clue1->value = 7;
+
+        $sut->setClues([$clue1]);
+
+        $periods = $sut->getPeriods();
+        $actualPeriods = $sut->getPeriods();
+        $this->assertCount(1, $actualPeriods);
+        $this->assertEquals(new DateTime(date('Y') . '-07-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
+        $actualInterval = $actualPeriods[0]->getDateInterval();
+        $this->assertEquals(0, $actualInterval->y);
+        $this->assertEquals(0, $actualInterval->m);
+        $this->assertEquals(30, $actualInterval->d);
+        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(59, $actualInterval->i);
+        $this->assertEquals(59, $actualInterval->s);
+        $this->assertEquals(30, $actualInterval->days);
+    }
+
     public function testWinterHolidayPicture()
     {
         $this->markTestIncomplete();

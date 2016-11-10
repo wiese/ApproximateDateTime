@@ -391,8 +391,12 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         foreach ($this->clues as $clue) {
             if ($clue->filter === Clue::FILTER_WHITELIST) {
-                $this->whitelist[$clue->type][$clue->value] = $clue->value;
+                $this->whitelist[$clue->type][] = $clue->value;
             }
+        }
+
+        if (empty($this->whitelist['y'])) {
+            $this->whitelist['y'][] = $this->defaultYear;
         }
 
         array_walk($this->whitelist, function(& $value, $key) {
