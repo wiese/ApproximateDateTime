@@ -63,7 +63,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         ],
         'd' => [
             'min' => 1,
-            'max' => null // depends on y, m, and the calendar
+            'max' => 31 // biggest day - refined based on y, m, and the calendar
         ],
         'h' => [
             'min' => 0,
@@ -269,7 +269,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $starts = $ends = [];
         foreach (array_keys($this->units) as $unit) {
-            $boundaries = $this->getUnitBoundaries($this->whitelist[$unit], $unit);
+            $boundaries = $this->getUnitBoundaries($unit);
 
             $starts = $this->enrichMomentInformation($starts, $boundaries['starts']);
             $ends = $this->enrichMomentInformation($ends, $boundaries['ends']);
@@ -288,7 +288,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     protected function momentToDateTime(array $moment) : DateTime
     {
-        if (is_null($moment['d'])) {
+        if ($moment['d'] === $this->units['d']['max']) {
             $moment['d'] = $this->daysInMonth($moment['m'], $moment['y']);
         }
 
@@ -334,28 +334,32 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * @tutorial Key of the values is the $unit so result can be used for
      * self::enrichMomentInformation()
      *
-     * @param array $list
      * @param string $unit
      * @return array
      */
-    protected function getUnitBoundaries(array $list, string $unit) : array
+    protected function getUnitBoundaries(string $unit) : array
     {
         $starts = [];
         $ends = [];
 
-        if (empty($list)) {
-            $starts[] = [$unit => $this->units[$unit]['min']];
-            $ends[] = [$unit => $this->units[$unit]['max']];
+        $whitelist = $this->whitelist[$unit];
+        $blacklist = $this->blacklist[$unit];
+
+        if (empty($whitelist)) {
+            $options = range($this->units[$unit]['min'], $this->units[$unit]['max']);
         } else {
-            $previous = null;
-            foreach ($list as $key => $value) {
-                if (is_null($previous) || $list[$key - 1 ] != $value - 1) {
-                    $starts[] = [$unit => $value];
-                    $previous = $value;
-                }
-                if (!isset($list[$key + 1]) || $list[$key + 1] != $value + 1) {
-                    $ends[] = [$unit => $value];
-                }
+            $options = $whitelist;
+        }
+
+        $options = array_diff($options, $blacklist);
+        $options = array_values($options); // resetting keys to be sequential
+
+        foreach ($options as $key => $value) {
+            if (!isset($options[$key - 1]) || $options[$key - 1] != $value - 1) {
+                $starts[] = [$unit => $value];
+            }
+            if (!isset($options[$key + 1]) || $options[$key + 1] != $value + 1) {
+                $ends[] = [$unit => $value];
             }
         }
 
@@ -384,17 +388,26 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         foreach (array_keys($this->units) as $unit) {
             $this->whitelist[$unit] = [];
+            $this->blacklist[$unit] = [];
         }
 
         foreach ($this->clues as $clue) {
-            if ($clue->filter === Clue::FILTER_WHITELIST) {
-                $this->whitelist[$clue->type][] = $clue->value;
+            switch ($clue->filter) {
+                case Clue::FILTER_WHITELIST:
+                    $this->whitelist[$clue->type][] = $clue->value;
+                    break;
+                case Clue::FILTER_BLACKLIST:
+                    $this->blacklist[$clue->type][] = $clue->value;
+                    break;
             }
         }
 
-        array_walk($this->whitelist, function (& $value, $key) {
+        $sortArray = function (& $value, $key) {
             sort($value);
-        });
+        };
+
+        array_walk($this->whitelist, $sortArray);
+        array_walk($this->blacklist, $sortArray);
 
         if (empty($this->whitelist['y'])) {
             $this->whitelist['y'][] = $this->defaultYear;

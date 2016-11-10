@@ -321,6 +321,76 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(30, $actualInterval->days);
     }
 
+    public function testBlacklist()
+    {
+        $sut = new ApproximateDateTime();
+
+        $clue1= new Clue;
+        $clue1->type = 'y';
+        $clue1->value = 2012;
+
+        $clue2 = new Clue;
+        $clue2->type = 'm';
+        $clue2->value = 7;
+
+        $clue3 = new Clue;
+        $clue3->filter = Clue::FILTER_BLACKLIST;
+        $clue3->type = 'd';
+        $clue3->value = 1;
+
+        $sut->setClues([$clue1, $clue2, $clue3]);
+
+        $this->assertEquals(new DateTime('2012-07-02 00:00:00', $this->tz), $sut->getEarliest());
+        $this->assertEquals(new DateTime('2012-07-31 23:59:59', $this->tz), $sut->getLatest());
+
+        $this->assertCount(1, $sut->getPeriods());
+    }
+
+    public function testComplexBlacklist()
+    {
+        $sut = new ApproximateDateTime();
+
+        $clue1= new Clue;
+        $clue1->type = 'y';
+        $clue1->value = 2018;
+
+        $clue2 = new Clue;
+        $clue2->type = 'm';
+        $clue2->value = 7;
+
+        $clue3 = new Clue;
+        $clue3->type = 'm';
+        $clue3->value = 8;
+
+        $clue4 = new Clue;
+        $clue4->type = 'm';
+        $clue4->value = 9;
+
+        $clue5 = new Clue;
+        $clue5->filter = Clue::FILTER_BLACKLIST;
+        $clue5->type = 'm';
+        $clue5->value = 8;
+
+        $clue6 = new Clue;
+        $clue6->filter = Clue::FILTER_BLACKLIST;
+        $clue6->type = 'd';
+        $clue6->value = 1;
+
+        $clue7 = new Clue;
+        $clue7->filter = Clue::FILTER_BLACKLIST;
+        $clue7->type = 'd';
+        $clue7->value = 30;
+
+        $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
+
+        $periods = $sut->getPeriods();
+
+        $this->assertCount(3, $periods);
+        $this->assertEquals(new DateTime('2018-07-02 00:00:00', $this->tz), $periods[0]->getStartDate());
+        $this->assertEquals(new DateTime('2018-07-31 00:00:00', $this->tz), $periods[1]->getStartDate());
+        $this->assertEquals(new DateTime('2018-09-02 00:00:00', $this->tz), $periods[2]->getStartDate());
+    }
+
     public function testWinterHolidayPicture()
     {
         $this->markTestIncomplete();
