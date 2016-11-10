@@ -25,7 +25,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      *
      * @var integer
      */
-    protected $calendar = CAL_GREGORIAN;
+    //protected $calendar = CAL_GREGORIAN;
 
     /**
      * Year to base clues on, if no year specified
@@ -353,7 +353,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
                     $starts[] = [$unit => $value];
                     $previous = $value;
                 }
-                if ($list[$key + 1 ] != $value + 1) {
+                if (!isset($list[$key + 1]) || $list[$key + 1] != $value + 1) {
                     $ends[] = [$unit => $value];
                 }
             }
