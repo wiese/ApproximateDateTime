@@ -413,7 +413,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     protected function daysInMonth($month, $year) : int
     {
         // calculate number of days in a month
-        return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
+        return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 :
+                ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
 
         // @todo Cheap polyfill. Use actual function, declare dependency on cal
         // \cal_days_in_month($this->calendar, $month, $year);
