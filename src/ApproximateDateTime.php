@@ -25,7 +25,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      *
      * @var integer
      */
-    //protected $calendar = CAL_GREGORIAN;
+    protected $calendar = CAL_GREGORIAN;
 
     /**
      * Year to base clues on, if no year specified
