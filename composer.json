@@ -12,7 +12,11 @@
     },
     "autoload": {
         "psr-4": {
-            "wiese\\ApproximateDateTime\\":        "src/",
+            "wiese\\ApproximateDateTime\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "wiese\\ApproximateDateTime\\Tests\\": "tests/"
         }
     },
