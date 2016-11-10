@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="./bootstrap.php" colors="true">
+<phpunit bootstrap="./bootstrap.php" colors="auto">
     <testsuites>
         <testsuite name="ApproximateDateTime Test Suite">
             <directory suffix="Test.php">./tests/</directory>
