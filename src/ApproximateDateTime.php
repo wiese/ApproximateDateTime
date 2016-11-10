@@ -268,11 +268,11 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $this->generateFilterListsFromClues();
 
         $starts = $ends = [];
-        foreach ($this->units as $unit => $info) {
-            $boundaries = $this->getUnitBoundaries($unit, $this->whitelist[$unit], $info['min'], $info['max']);
+        foreach (array_keys($this->units) as $unit) {
+            $boundaries = $this->getUnitBoundaries($unit, $this->whitelist[$unit]);
 
-            $starts = $this->combineValues($starts, $boundaries['starts']);
-            $ends = $this->combineValues($ends, $boundaries['ends']);
+            $starts = $this->enrichMomentInformation($starts, $boundaries['starts']);
+            $ends = $this->enrichMomentInformation($ends, $boundaries['ends']);
         }
 
         $this->starts = [];
@@ -300,30 +300,42 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $datetime;
     }
 
-    protected function combineValues(array $array1, array $array2)
+    /**
+     * Add precision and diversity to moment information
+     *
+     * @tutorial $lowerLevelInfo is added to every piece of $higherLevelInfo;
+     * amount of combinations increasing to $lowerLevelInfo * $higherLevelInfo
+     *
+     * @example [m => 5] & [d => [17, 19]]  ->  [[m => 5, d => 17], [m => 5, d => 19]]
+     *
+     * @param array $higherLevelInfo
+     * @param array $lowerLevelInfo
+     * @return array
+     */
+    protected function enrichMomentInformation(array $higherLevelInfo, array $lowerLevelInfo) : array
     {
         $combined = [];
-        foreach ($array1 as $value1) {
-            foreach ($array2 as $value2) {
+        foreach ($higherLevelInfo as $value1) {
+            foreach ($lowerLevelInfo as $value2) {
                 $combined[] = $value1 + $value2;
             }
         }
 
-        if (empty($array1)) {
-            $combined = $array2;
+        if (empty($higherLevelInfo)) {	// on "highest level"/first run
+            $combined = $lowerLevelInfo;
         }
 
         return $combined;
     }
 
-    protected function getUnitBoundaries(string $unit, array $list, int $min = null, int $max = null) : array
+    protected function getUnitBoundaries(string $unit, array $list) : array
     {
         $starts = [];
         $ends = [];
 
         if (empty($list)) {
-            $starts[] = [$unit => $min];
-            $ends[] = [$unit => $max];
+            $starts[] = [$unit => $this->units[$unit]['min']];
+            $ends[] = [$unit => $this->units[$unit]['max']];
         }
         else {
             $previous = null;
