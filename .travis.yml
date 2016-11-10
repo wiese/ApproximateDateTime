@@ -16,7 +16,7 @@ before_script:
   - git config --global user.email travis@example.com
 
 script:
-  - ./vendor/bin/phpunit tests/
+  - ./vendor/bin/phpunit
   - ./vendor/bin/phpcs --standard=PSR2 src/ tests/
 
 git:
