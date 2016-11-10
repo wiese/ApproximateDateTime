@@ -269,7 +269,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $starts = $ends = [];
         foreach (array_keys($this->units) as $unit) {
-            $boundaries = $this->getUnitBoundaries($unit, $this->whitelist[$unit]);
+            $boundaries = $this->getUnitBoundaries($this->whitelist[$unit], $unit);
 
             $starts = $this->enrichMomentInformation($starts, $boundaries['starts']);
             $ends = $this->enrichMomentInformation($ends, $boundaries['ends']);
@@ -328,7 +328,17 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $combined;
     }
 
-    protected function getUnitBoundaries(string $unit, array $list) : array
+    /**
+     * Get beginnings and ends of consecutive value blocks from the list
+     *
+     * @tutorial Key of the values is the $unit so result can be used for
+     * self::enrichMomentInformation()
+     *
+     * @param array $list
+     * @param string $unit
+     * @return array
+     */
+    protected function getUnitBoundaries(array $list, string $unit) : array
     {
         $starts = [];
         $ends = [];
