@@ -94,10 +94,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
       * @var array Periods compatible with given clues
       */
      protected $periods = [];
-     /**
-      * @var bool Have periods been calculated? To avoid redundant iterations
-      */
-     protected $periodsCalculated = false;
+     protected $starts = [];
+     protected $ends = [];
 /*
     [
         'y' => [],
@@ -190,77 +188,26 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * {@inheritDoc}
      * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getEarliest()
      */
-    public function getEarliest() : DateTimeInterface
+    public function getEarliest() : ? DateTimeInterface
     {
-        $defaultMins = ['y' => $this->defaultYear, 'm' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0];
-        $mins = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
+        $this->calculateBoundaries();
 
-        foreach ($mins as $type => & $currentMin) {
-            foreach ($this->clues as $clue) {
-                if ($clue->type !== $type) {
-                    continue;
-                }
+        sort($this->starts);
 
-                if (is_null($currentMin) || $clue->value < $currentMin) {
-                    $currentMin = $clue->value;
-                }
-            }
-        }
-
-        foreach ($mins as $type => & $currentMin) {
-            if (is_null($currentMin)) {
-                $currentMin = $defaultMins[$type];
-            }
-        }
-
-        extract($mins);
-
-        $str = "${y}-${m}-${d}T${h}:${i}:${s}";
-
-        return new DateTime($str, $this->timezone);
+        return $this->starts ? $this->starts[0] : null;
     }
 
     /**
      * {@inheritDoc}
      * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLatest()
      */
-    public function getLatest() : DateTimeInterface
+    public function getLatest() : ? DateTimeInterface
     {
-        $defaultMaxs = ['y' => $this->defaultYear, 'm' => 12, 'd' => null, 'h' => 23, 'i' => 59, 's' => 59];
-        $maxs = ['y' => null, 'm' => null, 'd' => null, 'h' => null, 'i' => null, 's' => null];
+        $this->calculateBoundaries();
 
-        foreach ($maxs as $type => & $currentMax) {
-            foreach ($this->clues as $clue) {
-                if ($clue->type !== $type) {
-                    continue;
-                }
+        sort($this->ends);
 
-                if (is_null($currentMax) || $clue->value > $currentMax) {
-                    $currentMax = $clue->value;
-                }
-            }
-        }
-
-        foreach ($maxs as $type => & $currentMax) {
-            // no intervention needed if we have information
-            if (!is_null($currentMax)) {
-                continue;
-            }
-
-            // Special treatment for the highest day (dynamic) of a month
-            // Bit shaky as we rely on this being processed after m & y defaults
-            if ($type === 'd') {
-                $defaultMaxs[$type] = $this->daysInMonth($maxs['m'], $maxs['y']);
-            }
-
-            $currentMax = $defaultMaxs[$type];
-        }
-
-        extract($maxs);
-
-        $str = "${y}-${m}-${d}T${h}:${i}:${s}";
-
-        return new DateTime($str, $this->timezone);
+        return $this->ends ? end($this->ends) : null;
     }
 
     /**
@@ -280,10 +227,20 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function getPeriods() : array
     {
-        if ($this->periodsCalculated) {
-            return $this->periods;
+        $this->calculateBoundaries();
+
+        $this->periods = [];
+        foreach ($this->starts as $key => $start) {
+            $this->periods[] = new DatePeriod($start, $start->diff($this->ends[$key]), 1);
+
+            // @todo identify patterns, set recurrences correctly, and avoid redundancy
         }
 
+        return $this->periods;
+    }
+
+    protected function calculateBoundaries() : void
+    {
         $this->generateFilterListsFromClues();
 
         $starts = $ends = [];
@@ -294,18 +251,15 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             $ends = $this->combineValues($ends, $borders['ends']);
         }
 
-        foreach ($starts as $key => $startInfo) {
-            $start = $this->momentToDateTime($startInfo);
-            $end = $this->momentToDateTime($ends[$key]);
-
-            $this->periods[] = new DatePeriod($start, $start->diff($end), 1);
-
-            // @todo identify patterns, set recurrences correctly, and avoid redundancy
+        $this->starts = [];
+        foreach ($starts as $start) {
+            $this->starts[] = $this->momentToDateTime($start);
         }
 
-        $this->periodsCalculated = true;
-
-        return $this->periods;
+        $this->ends = [];
+        foreach ($ends as $end) {
+            $this->ends[] = $this->momentToDateTime($end);
+        }
     }
 
     protected function momentToDateTime(array $moment) : DateTime
@@ -379,11 +333,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return true;
     }
 
-    protected function generateFilterListsFromClues() : bool
+    protected function generateFilterListsFromClues() : void
     {
-        if ($this->whitelist) {
-            return false;
-        }
+        $this->whitelist = [];
 
         foreach (array_keys($this->units) as $unit) {
             $this->whitelist[$unit] = [];
@@ -404,8 +356,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         });
 
         // @todo create white list from black list
-
-        return true;
     }
 
     /**

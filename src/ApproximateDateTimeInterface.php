@@ -28,14 +28,14 @@ interface ApproximateDateTimeInterface
      *
      * @return DateTimeInterface
      */
-    public function getEarliest() : DateTimeInterface;
+    public function getEarliest() : ? DateTimeInterface;
 
     /**
      * Get the last valid moment described by the clues
      *
      * @return DateTimeInterface
      */
-    public function getLatest() : DateTimeInterface;
+    public function getLatest() : ? DateTimeInterface;
 
     /**
      * Get the interval in between earliest and latest possible moment
