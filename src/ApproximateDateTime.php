@@ -8,6 +8,7 @@ use DateTime;
 use DateInterval;
 use DatePeriod;
 use DateTimeZone;
+use cal_days_in_month;
 
 class ApproximateDateTime implements ApproximateDateTimeInterface
 {
@@ -39,6 +40,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     protected $clues = [];
 
+    /**
+     * @var array
+     */
     protected $compoundUnits = [
         'y' => 'y',
         'm' => 'm',
@@ -52,6 +56,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         'h-i-s' => 's',
     ];
 
+    /**
+     * @var array
+     */
     protected $units = [
         'y' => [
             'min' => null,
@@ -80,6 +87,16 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     ];
 
     /**
+     * @var array
+     */
+    protected $numericDateUnits = ['y', 'm', 'd'];
+
+    /**
+     * @var array
+     */
+    protected $numericTimeUnits = ['h', 'i', 's'];
+
+    /**
      * caches
      */
 
@@ -88,28 +105,27 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     protected $whitelist = [];
 
+    /**
+     * @var array Combined clue information on blacklisted dates
+     */
     protected $blacklist = [];
 
     /**
      * @var array Periods compatible with given clues
      */
     protected $periods = [];
-    protected $starts = [];
-    protected $ends = [];
-/*
-    [
-        'y' => [],
-        'm' => [],
-        'd' => [],
-        'y-m' => [],
-        'y-m-d' => [],
-        'h' => [],
-        'i' => [],
-        's' => [],
-        'h-i' => [],
-        'h-i-s' => [],
-    ]
 
+    /**
+     * @var array
+     */
+    protected $starts = [];
+
+    /**
+     * @var array
+     */
+    protected $ends = [];
+
+/*
     '1980-??-??T??-??-??'
     '????-08-??T??-??-??'
     '????-??-17T??-??-??'
@@ -121,6 +137,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     '????-??-??T11-53'
     '????-??-??T17-12-42'
 */
+
     /**
      * @param string $timezone
      */
@@ -268,12 +285,27 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $this->generateFilterListsFromClues();
 
         $starts = $ends = [];
-        foreach (array_keys($this->units) as $unit) {
-            $boundaries = $this->getUnitBoundaries($unit);
+        foreach ($this->numericDateUnits as $unit) {
+            $boundaries = $this->getUnitBoundaries($unit, ['starts' => $starts, 'ends' => $ends]);
 
             $starts = $this->enrichMomentInformation($starts, $boundaries['starts']);
             $ends = $this->enrichMomentInformation($ends, $boundaries['ends']);
         }
+
+        // sanitize dates before bounds are further multiplied by time info
+        // @todo remove invalid dates (d always goes to 31)
+        // @todo remove specific dates (compound units)
+        // @todo remove dates by weekday
+
+        foreach ($this->numericTimeUnits as $unit) {
+            $boundaries = $this->getUnitBoundaries($unit, ['starts' => $starts, 'ends' => $ends]);
+
+            $starts = $this->enrichMomentInformation($starts, $boundaries['starts']);
+            $ends = $this->enrichMomentInformation($ends, $boundaries['ends']);
+        }
+
+        // @todo remove specific times (compound units)
+        // @todo what about time lost/inexisting due to daylight saving time?
 
         $this->starts = [];
         foreach ($starts as $start) {
@@ -288,10 +320,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     protected function momentToDateTime(array $moment) : DateTime
     {
-        if ($moment['d'] === $this->units['d']['max']) {
-            $moment['d'] = $this->daysInMonth($moment['m'], $moment['y']);
-        }
-
         $datetime = new DateTime();
         $datetime->setTimezone($this->timezone);
         $datetime->setDate($moment['y'], $moment['m'], $moment['d']);
@@ -335,9 +363,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * self::enrichMomentInformation()
      *
      * @param string $unit
+     * @param array $existingBounds
      * @return array
      */
-    protected function getUnitBoundaries(string $unit) : array
+    protected function getUnitBoundaries(string $unit, array $existingBounds) : array
     {
         $starts = [];
         $ends = [];
@@ -355,10 +384,16 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $options = array_values($options); // resetting keys to be sequential
 
         foreach ($options as $key => $value) {
-            if (!isset($options[$key - 1]) || $options[$key - 1] != $value - 1) {
+            if (!isset($options[$key - 1]) // first overall
+                ||
+                $options[$key - 1] != $value - 1 // first of a block
+            ) {
                 $starts[] = [$unit => $value];
             }
-            if (!isset($options[$key + 1]) || $options[$key + 1] != $value + 1) {
+            if (!isset($options[$key + 1]) // last
+                ||
+                $options[$key + 1] != $value + 1 // last of a block
+            ) {
                 $ends[] = [$unit => $value];
             }
         }
@@ -412,8 +447,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         if (empty($this->whitelist['y'])) {
             $this->whitelist['y'][] = $this->defaultYear;
         }
-
-        // @todo create white list from black list
     }
 
     /**
@@ -425,11 +458,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     protected function daysInMonth($month, $year) : int
     {
-        // calculate number of days in a month
-        return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 :
-                ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
-
-        // @todo Cheap polyfill. Use actual function, declare dependency on cal
-        // \cal_days_in_month($this->calendar, $month, $year);
+        return cal_days_in_month($this->calendar, $month, $year);
     }
 }
