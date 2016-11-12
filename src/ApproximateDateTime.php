@@ -286,55 +286,17 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $starts = $ends = [];
         foreach (['y', 'm'] as $unit) {
-            $boundaries = $this->getUnitBoundaries($unit, ['starts' => $starts, 'ends' => $ends]);
-
-            $starts = $this->enrichMomentInformation($starts, $boundaries['starts']);
-            $ends = $this->enrichMomentInformation($ends, $boundaries['ends']);
+            $this->applyUnitBoundaries($starts, $ends, $unit);
         }
 
         // days are strange, as their limits depend on y & m
-        $newStarts = $newEnds = [];
-        $unit = 'd';
-        foreach ($ends as $endkey => $end) {
-            $whitelist = $this->whitelist[$unit];
-            $blacklist = $this->blacklist[$unit];
-
-            if (empty($whitelist)) {
-                $options = range($this->units[$unit]['min'], $this->daysInMonth($end['m'], $end['y']));
-            } else {
-                $options = $whitelist;
-            }
-
-            $options = array_diff($options, $blacklist);
-            $options = array_values($options); // resetting keys to be sequential
-
-            foreach ($options as $key => $value) {
-                if (!isset($options[$key - 1]) // first overall
-                    ||
-                    $options[$key - 1] != $value - 1 // first of a block
-                ) {
-                    $newStarts[] = $starts[$endkey] + [$unit => $value];
-                }
-                if (!isset($options[$key + 1]) // last
-                    ||
-                    $options[$key + 1] != $value + 1 // last of a block
-                ) {
-                    $newEnds[] = $end + [$unit => $value];
-                }
-            }
-        }
-
-        $starts = $newStarts;
-        $ends = $newEnds;
+        $this->applyDayBoundaries($starts, $ends);
 
         // @todo remove specific dates (compound units)
         // @todo remove dates by weekday
 
         foreach ($this->numericTimeUnits as $unit) {
-            $boundaries = $this->getUnitBoundaries($unit, ['starts' => $starts, 'ends' => $ends]);
-
-            $starts = $this->enrichMomentInformation($starts, $boundaries['starts']);
-            $ends = $this->enrichMomentInformation($ends, $boundaries['ends']);
+            $this->applyUnitBoundaries($starts, $ends, $unit);
         }
 
         // @todo remove specific times (compound units)
@@ -396,14 +358,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * self::enrichMomentInformation()
      *
      * @param string $unit
-     * @param array $existingBounds
      * @return array
      */
-    protected function getUnitBoundaries(string $unit, array $existingBounds) : array
+    protected function applyUnitBoundaries(array & $starts, array & $ends, string $unit) : void
     {
-        $starts = [];
-        $ends = [];
-
         $whitelist = $this->whitelist[$unit];
         $blacklist = $this->blacklist[$unit];
 
@@ -416,25 +374,66 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $options = array_diff($options, $blacklist);
         $options = array_values($options); // resetting keys to be sequential
 
+        $newStarts = $newEnds = [];
         foreach ($options as $key => $value) {
             if (!isset($options[$key - 1]) // first overall
                 ||
                 $options[$key - 1] != $value - 1 // first of a block
             ) {
-                $starts[] = [$unit => $value];
+                $newStarts[] = [$unit => $value];
             }
             if (!isset($options[$key + 1]) // last
                 ||
                 $options[$key + 1] != $value + 1 // last of a block
             ) {
-                $ends[] = [$unit => $value];
+                $newEnds[] = [$unit => $value];
             }
         }
 
-        return [
-            'starts' => $starts,
-            'ends' => $ends
-        ];
+        $starts = $this->enrichMomentInformation($starts, $newStarts);
+        $ends = $this->enrichMomentInformation($ends, $newEnds);
+    }
+
+    /**
+     *
+     * @param array $existingBounds
+     * @return array
+     */
+    protected function applyDayBoundaries(array & $starts, array & $ends) : void
+    {
+        $newStarts = $newEnds = [];
+        $unit = 'd';
+        foreach ($ends as $endkey => $end) {
+            $whitelist = $this->whitelist[$unit];
+            $blacklist = $this->blacklist[$unit];
+
+            if (empty($whitelist)) {
+                $options = range($this->units[$unit]['min'], $this->daysInMonth($end['m'], $end['y']));
+            } else {
+                $options = $whitelist;
+            }
+
+            $options = array_diff($options, $blacklist);
+            $options = array_values($options); // resetting keys to be sequential
+
+            foreach ($options as $key => $value) {
+                if (!isset($options[$key - 1]) // first overall
+                    ||
+                    $options[$key - 1] != $value - 1 // first of a block
+                ) {
+                    $newStarts[] = $starts[$endkey] + [$unit => $value];
+                }
+                if (!isset($options[$key + 1]) // last
+                    ||
+                    $options[$key + 1] != $value + 1 // last of a block
+                ) {
+                    $newEnds[] = $end + [$unit => $value];
+                }
+            }
+        }
+
+        $starts = $newStarts;
+        $ends = $newEnds;
     }
 
     protected function checkPossible(DateTimeInterface $moment) : bool
