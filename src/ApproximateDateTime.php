@@ -70,7 +70,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         ],
         'd' => [
             'min' => 1,
-            'max' => 31 // biggest day - refined based on y, m, and the calendar
+            'max' => null // dynamic based on y, m, and calendar
         ],
         'h' => [
             'min' => 0,
@@ -83,6 +83,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         's' => [
             'min' => 0,
             'max' => 59
+        ],
+        'n' => [
+            'min' => 1,
+            'max' => 7
         ],
     ];
 
@@ -295,6 +299,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         // @todo remove specific dates (compound units)
         // @todo remove dates by weekday
 
+        $this->applyWeekdayBoundaries($starts, $ends);
+
         foreach ($this->numericTimeUnits as $unit) {
             $this->applyUnitBoundaries($starts, $ends, $unit);
         }
@@ -436,6 +442,59 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $ends = $newEnds;
     }
 
+    /**
+     *
+     * @param array $existingBounds
+     * @return array
+     */
+    protected function applyWeekdayBoundaries(array & $starts, array & $ends) : void
+    {
+        $unit = 'n';
+        $whitelist = $this->whitelist[$unit];
+        $blacklist = $this->blacklist[$unit];
+
+        if (count($whitelist) === 7 && count($blacklist) === 0) { // all days allowed
+            return;
+        }
+
+        if (empty($whitelist)) {
+            $options = range($this->units[$unit]['min'], $this->units[$unit]['max']);
+        } else {
+            $options = $whitelist;
+        }
+
+        $options = array_diff($options, $blacklist);
+        $options = array_values($options); // resetting keys to be sequential
+
+        switch (count($options)) {
+            case 7: // all days allowed
+                return;
+            case 0: // no days allowed
+                $starts = $ends = [];
+                return;
+        }
+
+        $newStarts = $newEnds = [];
+        for ($i = 0; $i < count($starts); $i++) {
+            $start = new DateTime(implode('-', $starts[$i]), $this->timezone);
+            $end = new DateTime(implode('-', $ends[$i]), $this->timezone); // +1?
+            $period = new DatePeriod($start, new DateInterval('P1D'), $end);
+            foreach ($period as $moment) {
+                if (in_array($moment->format('N'), $options)) {
+                    $newStarts[] = $newEnds[] = [
+                        'y' => (int)$moment->format('Y'),
+                        'm' => (int)$moment->format('m'),
+                        'd' => (int)$moment->format('d')
+                    ];
+                    // @todo group consecutive days!
+                }
+            }
+        }
+
+        $starts = $newStarts;
+        $ends = $newEnds;
+    }
+
     protected function checkPossible(DateTimeInterface $moment) : bool
     {
         $this->generateFilterListsFromClues();
@@ -459,6 +518,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         }
 
         foreach ($this->clues as $clue) {
+            // @todo validate value
+
             switch ($clue->filter) {
                 case Clue::FILTER_WHITELIST:
                     $this->whitelist[$clue->type][] = $clue->value;
@@ -469,12 +530,13 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             }
         }
 
-        $sortArray = function (& $value, $key) {
-            sort($value);
+        $sanitizeArray = function (& $value, $key) {
+            array_unique($value, SORT_REGULAR);
+            sort($value); // list in order of values
         };
 
-        array_walk($this->whitelist, $sortArray);
-        array_walk($this->blacklist, $sortArray);
+        array_walk($this->whitelist, $sanitizeArray);
+        array_walk($this->blacklist, $sanitizeArray);
 
         if (empty($this->whitelist['y'])) {
             $this->whitelist['y'][] = $this->defaultYear;

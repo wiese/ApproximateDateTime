@@ -391,6 +391,37 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2018-09-02 00:00:00', $this->tz), $periods[2]->getStartDate());
     }
 
+    public function testWeekday()
+    {
+        $sut = new ApproximateDateTime();
+
+        $clue1= new Clue;
+        $clue1->type = 'y';
+        $clue1->value = 2017;
+
+        $clue2 = new Clue;
+        $clue2->type = 'm';
+        $clue2->value = 10;
+
+        $clue3 = new Clue;
+        $clue3->filter = Clue::FILTER_BLACKLIST;
+        $clue3->type = 'd';
+        $clue3->value = 14;
+
+        $clue4 = new Clue;
+        $clue4->type = 'n';
+        $clue4->value = 6;
+
+        $sut->setClues([$clue1, $clue2, $clue3, $clue4]);
+
+        $periods = $sut->getPeriods();
+
+        $this->assertCount(3, $periods);
+        $this->assertEquals(new DateTime('2017-10-07 00:00:00', $this->tz), $periods[0]->getStartDate());
+        $this->assertEquals(new DateTime('2017-10-21 00:00:00', $this->tz), $periods[1]->getStartDate());
+        $this->assertEquals(new DateTime('2017-10-28 00:00:00', $this->tz), $periods[2]->getStartDate());
+    }
+
     public function testWinterHolidayPicture()
     {
         $this->markTestIncomplete();
