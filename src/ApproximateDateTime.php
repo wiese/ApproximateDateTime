@@ -285,15 +285,48 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $this->generateFilterListsFromClues();
 
         $starts = $ends = [];
-        foreach ($this->numericDateUnits as $unit) {
+        foreach (['y', 'm'] as $unit) {
             $boundaries = $this->getUnitBoundaries($unit, ['starts' => $starts, 'ends' => $ends]);
 
             $starts = $this->enrichMomentInformation($starts, $boundaries['starts']);
             $ends = $this->enrichMomentInformation($ends, $boundaries['ends']);
         }
 
-        // sanitize dates before bounds are further multiplied by time info
-        // @todo remove invalid dates (d always goes to 31)
+        // days are strange, as their limits depend on y & m
+        $newStarts = $newEnds = [];
+        $unit = 'd';
+        foreach ($ends as $endkey => $end) {
+            $whitelist = $this->whitelist[$unit];
+            $blacklist = $this->blacklist[$unit];
+
+            if (empty($whitelist)) {
+                $options = range($this->units[$unit]['min'], $this->daysInMonth($end['m'], $end['y']));
+            } else {
+                $options = $whitelist;
+            }
+
+            $options = array_diff($options, $blacklist);
+            $options = array_values($options); // resetting keys to be sequential
+
+            foreach ($options as $key => $value) {
+                if (!isset($options[$key - 1]) // first overall
+                    ||
+                    $options[$key - 1] != $value - 1 // first of a block
+                ) {
+                    $newStarts[] = $starts[$endkey] + [$unit => $value];
+                }
+                if (!isset($options[$key + 1]) // last
+                    ||
+                    $options[$key + 1] != $value + 1 // last of a block
+                ) {
+                    $newEnds[] = $end + [$unit => $value];
+                }
+            }
+        }
+
+        $starts = $newStarts;
+        $ends = $newEnds;
+
         // @todo remove specific dates (compound units)
         // @todo remove dates by weekday
 
