@@ -486,6 +486,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
                         'm' => (int)$moment->format('m'),
                         'd' => (int)$moment->format('d')
                     ];
+
                     // @todo group consecutive days!
                 }
             }

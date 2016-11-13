@@ -440,6 +440,8 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $parser->addClue('>February-04');
         $parser->addClue('!2016-03-14');
         $parser->addClue('Weekend');
+        $parser->addClue('Summer'); // boo - needs geo-awareness
+
 
         $this->assertEquals($sut, $sut->setClues($parser->getProcessedClues()));
         $this->assertCount(6, $sut->getClues());
@@ -449,20 +451,32 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
     public function testWorkday()
     {
-        $this->markTestIncomplete();
-        return;
-
         $sut = new ApproximateDateTime();
 
-        $parser = new ClueParser();
-        $parser->addClue('2001');
-        $parser->addClue('Tuesday');
-        $parser->addClue('!October');
-        // $parser->addClue('Summer'); // boo - needs geo-awareness
+        $clue1= new Clue;
+        $clue1->type = 'y';
+        $clue1->value = 2001;
 
-        $this->assertEquals($sut, $sut->setClues($parser->getProcessedClues()));
-        $this->assertCount(45, $sut->getPeriods());
-        $this->assertEquals(new DateTime('2001-01-02 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('2001-12-25 23:59:59', $this->tz), $sut->getLatest());
+        $clue2 = new Clue;
+        $clue2->filter = Clue::FILTER_BLACKLIST;
+        $clue2->type = 'm';
+        $clue2->value = 10;
+
+        $clue3 = new Clue;
+        $clue3->filter = Clue::FILTER_BLACKLIST;
+        $clue3->type = 'n';
+        $clue3->value = 6;
+
+        $clue4 = new Clue;
+        $clue4->filter = Clue::FILTER_BLACKLIST;
+        $clue4->type = 'n';
+        $clue4->value = 7;
+
+        $this->assertEquals($sut, $sut->setClues([$clue1, $clue2, $clue3, $clue4]));
+        $periods = $sut->getPeriods();
+
+        $this->assertCount(48, $periods);
+        $this->assertEquals(new DateTime('2001-01-01 00:00:00', $this->tz), $sut->getEarliest());
+        $this->assertEquals(new DateTime('2001-12-31 23:59:59', $this->tz), $sut->getLatest());
     }
 }
