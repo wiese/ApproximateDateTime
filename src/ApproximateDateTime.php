@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
@@ -148,7 +148,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
     {
         $this->setTimezone(new DateTimeZone($timezone));
-        $this->setDefaultYear((int)(new DateTime())->format('Y'));
+        $this->setDefaultYear((int) (new DateTime())->format('Y'));
     }
 
     /**
@@ -383,14 +383,12 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $newStarts = $newEnds = [];
         foreach ($options as $key => $value) {
             if (!isset($options[$key - 1]) // first overall
-                ||
-                $options[$key - 1] != $value - 1 // first of a block
+                || $options[$key - 1] != $value - 1 // first of a block
             ) {
                 $newStarts[] = [$unit => $value];
             }
             if (!isset($options[$key + 1]) // last
-                ||
-                $options[$key + 1] != $value + 1 // last of a block
+                || $options[$key + 1] != $value + 1 // last of a block
             ) {
                 $newEnds[] = [$unit => $value];
             }
@@ -424,14 +422,12 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
             foreach ($options as $key => $value) {
                 if (!isset($options[$key - 1]) // first overall
-                    ||
-                    $options[$key - 1] != $value - 1 // first of a block
+                    || $options[$key - 1] != $value - 1 // first of a block
                 ) {
                     $newStarts[] = $starts[$endkey] + [$unit => $value];
                 }
                 if (!isset($options[$key + 1]) // last
-                    ||
-                    $options[$key + 1] != $value + 1 // last of a block
+                    || $options[$key + 1] != $value + 1 // last of a block
                 ) {
                     $newEnds[] = $end + [$unit => $value];
                 }
@@ -482,11 +478,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             foreach ($period as $moment) {
                 if (in_array($moment->format('N'), $options)) {
                     $newStarts[] = $newEnds[] = [
-                        'y' => (int)$moment->format('Y'),
-                        'm' => (int)$moment->format('m'),
-                        'd' => (int)$moment->format('d')
+                        'y' => (int) $moment->format('Y'),
+                        'm' => (int) $moment->format('m'),
+                        'd' => (int) $moment->format('d')
                     ];
-
                     // @todo group consecutive days!
                 }
             }
