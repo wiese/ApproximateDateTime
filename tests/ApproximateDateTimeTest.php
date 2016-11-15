@@ -527,6 +527,9 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
     public function testCompoundUnits()
     {
+        $this->markTestIncomplete();
+        return;
+
         $sut = new ApproximateDateTime();
 
         $clue1 = new Clue;

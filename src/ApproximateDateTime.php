@@ -416,11 +416,13 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     protected function applyDayBoundaries(array & $starts, array & $ends) : void
     {
-        $newStarts = $newEnds = [];
         $unit = 'd';
+
+        $whitelist = $this->whitelist[$unit];
+        $blacklist = $this->blacklist[$unit];
+
+        $newStarts = $newEnds = [];
         foreach ($ends as $endkey => $end) {
-            $whitelist = $this->whitelist[$unit];
-            $blacklist = $this->blacklist[$unit];
 
             if (empty($whitelist)) {
                 $options = range($this->units[$unit]['min'], $this->daysInMonth($end['m'], $end['y']));
@@ -457,6 +459,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     protected function applyWeekdayBoundaries(array & $starts, array & $ends) : void
     {
         $unit = 'n';
+
         $whitelist = $this->whitelist[$unit];
         $blacklist = $this->blacklist[$unit];
 
