@@ -504,11 +504,23 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue5->type = 'n';
         $clue5->value = 7;
 
-        $this->assertEquals($sut, $sut->setClues([$clue1, $clue2, $clue3, $clue4]));
+        $this->assertEquals($sut, $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]));
         $periods = $sut->getPeriods();
 
         $this->assertCount(5, $periods);
-        $this->assertEquals(new DateTime('2001-03-02 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('2001-03-31 23:59:59', $this->tz), $sut->getLatest());
+
+        // @todo DatePeriod wrapper with direct access to end, calculated from start and interval?
+
+        $period = $periods[0];
+        $this->assertEquals(new DateTime('2001-03-02 00:00:00', $this->tz), $period->getStartDate());
+        $this->assertEquals(new DateTime('2001-03-04 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+
+        $period = $periods[2];
+        $this->assertEquals(new DateTime('2001-03-16 00:00:00', $this->tz), $period->getStartDate());
+        $this->assertEquals(new DateTime('2001-03-18 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+
+        $period = $periods[4];
+        $this->assertEquals(new DateTime('2001-03-30 00:00:00', $this->tz), $period->getStartDate());
+        $this->assertEquals(new DateTime('2001-03-31 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
     }
 }
