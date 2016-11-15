@@ -11,7 +11,9 @@ class Day extends Base
     {
         $newStarts = $newEnds = [];
         foreach ($ends as $endkey => $end) {
-            $options = $this->getAllowableOptions($this->daysInMonth($end['m'], $end['y']));
+            $options = $this->getAllowableOptions(
+                cal_days_in_month($this->calendar, $end['m'], $end['y'])
+            );
 
             foreach ($options as $key => $value) {
                 if (!isset($options[$key - 1]) // first overall
@@ -29,17 +31,5 @@ class Day extends Base
 
         $starts = $newStarts;
         $ends = $newEnds;
-    }
-
-    /**
-     * Get number of days in the month of this year
-     *
-     * @param int $month
-     * @param int $year
-     * @return int
-     */
-    protected function daysInMonth($month, $year) : int
-    {
-        return cal_days_in_month($this->calendar, $month, $year);
     }
 }
