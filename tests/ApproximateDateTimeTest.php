@@ -39,7 +39,8 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('333-12-31 23:59:59', $this->tz), $sut->getLatest());
 
         $europeTz = new DateTimeZone('Europe/Berlin');
-        $sut->setTimezone($europeTz);
+        $this->assertEquals($sut, $sut->setTimezone($europeTz));
+        $this->assertEquals($europeTz, $sut->getTimezone());
         $this->assertEquals(new DateTime('333-01-01 00:00:00', $europeTz), $sut->getEarliest());
         $this->assertEquals(new DateTime('333-12-31 23:59:59', $europeTz), $sut->getLatest());
     }
@@ -522,5 +523,35 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $period = $periods[4];
         $this->assertEquals(new DateTime('2001-03-30 00:00:00', $this->tz), $period->getStartDate());
         $this->assertEquals(new DateTime('2001-03-31 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+    }
+
+    public function testCompoundUnits()
+    {
+        $sut = new ApproximateDateTime();
+
+        $clue1 = new Clue;
+        $clue1->type = 'y-m-d';
+        $clue1->value = [
+            'y' => 2007,
+            'm' => 10,
+            'd' => 30,
+        ];
+
+        $clue2 = new Clue;
+        $clue2->type = 'h-i-s';
+        $clue2->value = [
+            'h' => 9,
+            'i' => 37,
+            's' => 14,
+        ];
+
+        $this->assertEquals($sut, $sut->setClues([$clue1, $clue2]));
+
+        $this->assertEquals(
+            [
+                new DatePeriod(new DateTime('2007-10-30 09:37:14', $this->tz), new DateInterval('PT1S'), 1),
+            ],
+            $sut->getPeriods()
+        );
     }
 }
