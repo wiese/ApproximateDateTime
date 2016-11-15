@@ -27,7 +27,8 @@ class Weekday extends Base
 
         $newStarts = $newEnds = [];
         $oneDayInterval = new DateInterval('P1D');
-        for ($i = 0; $i < count($starts); $i++) {
+        $n = count($starts);
+        for ($i = 0; $i < $n; $i++) {
             $start = new DateTime(implode('-', $starts[$i]), $this->timezone);
             $end = new DateTime(implode('-', $ends[$i]), $this->timezone);
             $end->add($oneDayInterval); // work with end day, too

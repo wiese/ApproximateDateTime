@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\OptionFilter;
 
+use cal_days_in_month;
+
 class Day extends Base
 {
     public function apply(array & $starts, array & $ends) : void

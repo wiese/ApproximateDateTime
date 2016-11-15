@@ -8,7 +8,6 @@ use DateTime;
 use DateInterval;
 use DatePeriod;
 use DateTimeZone;
-use cal_days_in_month;
 
 class ApproximateDateTime implements ApproximateDateTimeInterface
 {
@@ -96,16 +95,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             'max' => 59
         ],
     ];
-
-    /**
-     * @var array
-     */
-    protected $numericDateUnits = ['y', 'm', 'd'];
-
-    /**
-     * @var array
-     */
-    protected $numericTimeUnits = ['h', 'i', 's'];
 
     /**
      * caches
