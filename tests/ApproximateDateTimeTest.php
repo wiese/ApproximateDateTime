@@ -475,8 +475,40 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($sut, $sut->setClues([$clue1, $clue2, $clue3, $clue4]));
         $periods = $sut->getPeriods();
 
-        $this->assertCount(48, $periods);
+        $this->assertCount(49, $periods);
         $this->assertEquals(new DateTime('2001-01-01 00:00:00', $this->tz), $sut->getEarliest());
         $this->assertEquals(new DateTime('2001-12-31 23:59:59', $this->tz), $sut->getLatest());
+    }
+
+    public function testTrickyWeekdays()
+    {
+        $sut = new ApproximateDateTime();
+
+        $clue1 = new Clue;
+        $clue1->type = 'y';
+        $clue1->value = 2001;
+
+        $clue2 = new Clue;
+        $clue2->type = 'm';
+        $clue2->value = 3;
+
+        $clue3 = new Clue;
+        $clue3->type = 'n';
+        $clue3->value = 5;
+
+        $clue4 = new Clue;
+        $clue4->type = 'n';
+        $clue4->value = 6;
+
+        $clue5 = new Clue;
+        $clue5->type = 'n';
+        $clue5->value = 7;
+
+        $this->assertEquals($sut, $sut->setClues([$clue1, $clue2, $clue3, $clue4]));
+        $periods = $sut->getPeriods();
+
+        $this->assertCount(5, $periods);
+        $this->assertEquals(new DateTime('2001-03-02 00:00:00', $this->tz), $sut->getEarliest());
+        $this->assertEquals(new DateTime('2001-03-31 23:59:59', $this->tz), $sut->getLatest());
     }
 }

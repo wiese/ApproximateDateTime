@@ -293,11 +293,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             $this->applyUnitBoundaries($starts, $ends, $unit);
         }
 
-        // days are strange, as their limits depend on y & m
+        // day-specific logic, as their limits depend on y & m
         $this->applyDayBoundaries($starts, $ends);
 
         // @todo remove specific dates (compound units)
-        // @todo remove dates by weekday
 
         $this->applyWeekdayBoundaries($starts, $ends);
 
@@ -329,13 +328,22 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $datetime;
     }
 
+    protected function dateTimeToMoment(DateTime $dateTime) : array
+    {
+        return [
+            'y' => (int) $dateTime->format('Y'),
+            'm' => (int) $dateTime->format('m'),
+            'd' => (int) $dateTime->format('d')
+        ];
+    }
+
     /**
      * Add precision and diversity to moment information
      *
      * @tutorial $lowerLevelInfo is added to every piece of $higherLevelInfo;
      * amount of combinations increasing to $lowerLevelInfo * $higherLevelInfo
      *
-     * @example [m => 5] & [d => [17, 19]]  ->  [[m => 5, d => 17], [m => 5, d => 19]]
+     * @example [m => 5] & [d => [17, 19]] -> [[m => 5, d => 17], [m => 5, d => 19]]
      *
      * @param array $higherLevelInfo
      * @param array $lowerLevelInfo
@@ -363,8 +371,11 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * @tutorial Key of the values is the $unit so result can be used for
      * self::enrichMomentInformation()
      *
+     * @todo Consider changing modification by reference to decorator pattern
+     * for all self::apply*() methods. Separate classes?
+     *
      * @param string $unit
-     * @return array
+     * @return void
      */
     protected function applyUnitBoundaries(array & $starts, array & $ends, string $unit) : void
     {
@@ -401,7 +412,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     /**
      *
      * @param array $existingBounds
-     * @return array
+     * @return void
      */
     protected function applyDayBoundaries(array & $starts, array & $ends) : void
     {
@@ -441,7 +452,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     /**
      *
      * @param array $existingBounds
-     * @return array
+     * @return void
      */
     protected function applyWeekdayBoundaries(array & $starts, array & $ends) : void
     {
@@ -471,19 +482,31 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         }
 
         $newStarts = $newEnds = [];
+        $oneDayInterval = new DateInterval('P1D');
         for ($i = 0; $i < count($starts); $i++) {
             $start = new DateTime(implode('-', $starts[$i]), $this->timezone);
-            $end = new DateTime(implode('-', $ends[$i]), $this->timezone); // +1?
-            $period = new DatePeriod($start, new DateInterval('P1D'), $end);
+            $end = new DateTime(implode('-', $ends[$i]), $this->timezone);
+            $end->add($oneDayInterval); // work with end day, too
+            $period = new DatePeriod($start, $oneDayInterval, $end);
+            $gap = true;
+            $previous = null;
             foreach ($period as $moment) {
                 if (in_array($moment->format('N'), $options)) {
-                    $newStarts[] = $newEnds[] = [
-                        'y' => (int) $moment->format('Y'),
-                        'm' => (int) $moment->format('m'),
-                        'd' => (int) $moment->format('d')
-                    ];
-                    // @todo group consecutive days!
+                    if ($gap) {
+                        $newStarts[] = $this->dateTimeToMoment($moment);
+                    }
+                    $gap = false;
+                    $previous = $moment;
+                } else {
+                    $gap = true;
+                    if ($previous) {
+                        $newEnds[] = $this->dateTimeToMoment($previous);
+                        $previous = null;
+                    }
                 }
+            }
+            if (count($newStarts) !== count($newEnds)) {
+                $newEnds[] = $this->dateTimeToMoment($previous);
             }
         }
 
