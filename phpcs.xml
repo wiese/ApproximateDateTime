@@ -3,6 +3,10 @@
     <description>The ApproximateDateTime coding standard.</description>
     <arg name="tab-width" value="4"/>
     <arg name="colors"/>
+    <arg value="s"/>
+
+    <file>src/</file>
+    <file>tests/</file>
 
     <!-- Include the whole PSR-2 standard -->
     <rule ref="PSR2"/>
@@ -67,12 +71,14 @@
     <rule ref="Generic.WhiteSpace.ScopeIndent"/>
 
     <rule ref="Generic.Commenting.Todo.CommentFound">
-        <message>Please review this TODO comment: %s</message>
+        <message>Please review this note: %s</message>
         <type>warning</type>
+        <severity>3</severity>
     </rule>
-    <rule ref="Generic.Commenting.Fixme.TaskFound">
-        <message>Please review this FIXME comment: %s</message>
+    <rule ref="Generic.Commenting.Todo.TaskFound">
+        <message>Please review this note: %s</message>
         <type>warning</type>
+        <severity>3</severity>
     </rule>
 
     <rule ref="Generic.Files.LineLength">

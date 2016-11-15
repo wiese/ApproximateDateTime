@@ -17,7 +17,7 @@ before_script:
 
 script:
   - ./vendor/bin/phpunit
-  - ./vendor/bin/phpcs --standard=phpcs.xml src/ tests/
+  - ./vendor/bin/phpcs
 
 git:
   depth: 1
