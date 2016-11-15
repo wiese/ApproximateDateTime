@@ -77,5 +77,29 @@ abstract class Base
         return $this;
     }
 
+    /**
+     * @param int $overrideMax
+     * @return array
+     */
+    public function getAllowableOptions(int $overrideMax = null): array
+    {
+        if (is_int($overrideMax)) {
+            $max = $overrideMax;
+        } else {
+            $max = $this->max;
+        }
+
+        if (empty($this->whitelist)) {
+            $options = range($this->min, $max);
+        } else {
+            $options = $this->whitelist;
+        }
+
+        $options = array_diff($options, $this->blacklist);
+        $options = array_values($options); // resetting keys to be sequential
+
+        return $options;
+    }
+
     abstract public function apply(array & $starts, array & $ends) : void;
 }

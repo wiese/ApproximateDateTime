@@ -7,14 +7,7 @@ class Numeric extends Base
 {
     public function apply(array & $starts, array & $ends) : void
     {
-        if (empty($this->whitelist)) {
-            $options = range($this->min, $this->max);
-        } else {
-            $options = $this->whitelist;
-        }
-
-        $options = array_diff($options, $this->blacklist);
-        $options = array_values($options); // resetting keys to be sequential
+        $options = $this->getAllowableOptions();
 
         $newStarts = $newEnds = [];
         foreach ($options as $key => $value) {

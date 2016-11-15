@@ -15,14 +15,7 @@ class Weekday extends Base
             return;
         }
 
-        if (empty($this->whitelist)) {
-            $options = range($this->min, $this->max);
-        } else {
-            $options = $this->whitelist;
-        }
-
-        $options = array_diff($options, $this->blacklist);
-        $options = array_values($options); // resetting keys to be sequential
+        $options = $this->getAllowableOptions();
 
         switch (count($options)) {
             case 7: // all days allowed

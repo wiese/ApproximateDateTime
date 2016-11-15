@@ -9,14 +9,7 @@ class Day extends Base
     {
         $newStarts = $newEnds = [];
         foreach ($ends as $endkey => $end) {
-            if (empty($this->whitelist)) {
-                $options = range($this->min, $this->daysInMonth($end['m'], $end['y']));
-            } else {
-                $options = $this->whitelist;
-            }
-
-            $options = array_diff($options, $this->blacklist);
-            $options = array_values($options); // resetting keys to be sequential
+            $options = $this->getAllowableOptions($this->daysInMonth($end['m'], $end['y']));
 
             foreach ($options as $key => $value) {
                 if (!isset($options[$key - 1]) // first overall
