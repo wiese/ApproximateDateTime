@@ -208,6 +208,43 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testRealworldExampleConsecutiveMonth()
+    {
+        $sut = new ApproximateDateTime();
+
+        $clue1 = new Clue;
+        $clue1->type = 'y';
+        $clue1->value = 2010;
+
+        $clue2 = new Clue;
+        $clue2->type = 'm';
+        $clue2->value = 3;
+
+        $clue3 = new Clue;
+        $clue3->type = 'm';
+        $clue3->value = 4;
+
+        $clue4 = new Clue;
+        $clue4->type = 'd';
+        $clue4->value = 28;
+
+        $clue5 = new Clue;
+        $clue5->type = 'd';
+        $clue5->value = 30;
+
+        $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]);
+
+        $this->assertEquals(
+            [
+                new DatePeriod(new DateTime('2010-03-28 00:00:00', $this->tz), new DateInterval('PT23H59M59S'), 1),
+                new DatePeriod(new DateTime('2010-03-30 00:00:00', $this->tz), new DateInterval('PT23H59M59S'), 1),
+                new DatePeriod(new DateTime('2010-04-28 00:00:00', $this->tz), new DateInterval('PT23H59M59S'), 1),
+                new DatePeriod(new DateTime('2010-04-30 00:00:00', $this->tz), new DateInterval('PT23H59M59S'), 1),
+            ],
+            $sut->getPeriods()
+        );
+    }
+
     public function testNotSoApproximate()
     {
         $sut = new ApproximateDateTime();
