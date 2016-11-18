@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\OptionFilter;
 
+use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
 
 abstract class Base
@@ -97,9 +98,10 @@ abstract class Base
 
         $options = array_diff($options, $this->blacklist);
         $options = array_values($options); // resetting keys to be sequential
+        // array_unique?
 
         return $options;
     }
 
-    abstract public function apply(array & $starts, array & $ends) : void;
+    abstract public function apply(Ranges $ranges) : Ranges;
 }

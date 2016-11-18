@@ -3,34 +3,40 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\OptionFilter;
 
-use DateTime;
+use wiese\ApproximateDateTime\DateTimeData;
+use wiese\ApproximateDateTime\Range;
+use wiese\ApproximateDateTime\Ranges;
 use DateInterval;
 use DatePeriod;
+use DateTime;
 
 class Weekday extends Base
 {
-    public function apply(array & $starts, array & $ends) : void
+    public function apply(Ranges $ranges) : Ranges
     {
         if (count($this->whitelist) === 7 && count($this->blacklist) === 0) { // all days allowed
-            return;
+            return $ranges;
         }
+
+        $newRanges = new Ranges();
 
         $options = $this->getAllowableOptions();
 
         switch (count($options)) {
             case 7: // all days allowed
-                return;
+                return $ranges;
             case 0: // no days allowed
-                $starts = $ends = [];
-                return;
+                return $newRanges;
         }
 
-        $newStarts = $newEnds = [];
         $oneDayInterval = new DateInterval('P1D');
-        $numberOfStarts = count($starts);
-        for ($i = 0; $i < $numberOfStarts; $i++) {
-            $start = new DateTime(implode('-', $starts[$i]), $this->timezone);
-            $end = new DateTime(implode('-', $ends[$i]), $this->timezone);
+
+        foreach ($ranges as $range) {
+            /**
+             * @var \wiese\ApproximateDateTime\Range $range
+             */
+            $start = $range->getStart()->toDateTime();
+            $end = $range->getEnd()->toDateTime();
             $end->add($oneDayInterval); // work with end day, too
             $period = new DatePeriod($start, $oneDayInterval, $end);
             $gap = true;
@@ -38,25 +44,26 @@ class Weekday extends Base
             foreach ($period as $moment) {
                 if (in_array($moment->format('N'), $options)) {
                     if ($gap) {
-                        $newStarts[] = $this->dateTimeToMoment($moment);
+                        $newRange = new Range();
+                        $newRanges->append($newRange); // append, keep var for edit
+                        $newRange->setStart(DateTimeData::fromDateTime($moment));
                     }
                     $gap = false;
                     $previous = $moment;
                 } else {
                     $gap = true;
                     if ($previous) {
-                        $newEnds[] = $this->dateTimeToMoment($previous);
+                        $newRange->setEnd(DateTimeData::fromDateTime($previous));
                         $previous = null;
                     }
                 }
             }
-            if (count($newStarts) !== count($newEnds)) {
-                $newEnds[] = $this->dateTimeToMoment($previous);
+            if ($newRange) { // dangling end
+                $newRange->setEnd(DateTimeData::fromDateTime($moment));
             }
         }
 
-        $starts = $newStarts;
-        $ends = $newEnds;
+        return $newRanges;
     }
 
     /**

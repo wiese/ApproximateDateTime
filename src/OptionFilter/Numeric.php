@@ -3,55 +3,36 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\OptionFilter;
 
+use wiese\ApproximateDateTime\DateTimeData;
+use wiese\ApproximateDateTime\Range;
+use wiese\ApproximateDateTime\Ranges;
+
 class Numeric extends Base
 {
-    public function apply(array & $starts, array & $ends) : void
+    public function apply(Ranges $ranges) : Ranges
     {
         $options = $this->getAllowableOptions();
 
-        $newStarts = $newEnds = [];
+        $newRanges = new Ranges();
         foreach ($options as $key => $value) {
             if (!isset($options[$key - 1]) // first overall
                 || $options[$key - 1] != $value - 1 // first of a block
             ) {
-                $newStarts[] = [$this->unit => $value];
+                $start = new DateTimeData($this->timezone);
+                $start->{$this->unit} = $value;
+                $range = new Range();
+                $range->setStart($start);
             }
             if (!isset($options[$key + 1]) // last
                 || $options[$key + 1] != $value + 1 // last of a block
             ) {
-                $newEnds[] = [$this->unit => $value];
+                $end = new DateTimeData($this->timezone);
+                $end->{$this->unit} = $value;
+                $range->setEnd($end);
+                $newRanges->append($range);
             }
         }
 
-        $starts = $this->enrichMomentInformation($starts, $newStarts);
-        $ends = $this->enrichMomentInformation($ends, $newEnds);
-    }
-
-    /**
-     * Add precision and diversity to moment information
-     *
-     * @tutorial $lowerLevelInfo is added to every piece of $higherLevelInfo;
-     * amount of combinations increasing to $lowerLevelInfo * $higherLevelInfo
-     *
-     * @example [m => 5] & [d => [17, 19]] -> [[m => 5, d => 17], [m => 5, d => 19]]
-     *
-     * @param array $higherLevelInfo
-     * @param array $lowerLevelInfo
-     * @return array
-     */
-    protected function enrichMomentInformation(array $higherLevelInfo, array $lowerLevelInfo) : array
-    {
-        $combined = [];
-        foreach ($higherLevelInfo as $value1) {
-            foreach ($lowerLevelInfo as $value2) {
-                $combined[] = $value1 + $value2;
-            }
-        }
-
-        if (empty($higherLevelInfo)) { // on "highest level"/first run
-            $combined = $lowerLevelInfo;
-        }
-
-        return $combined;
+        return $ranges->merge($newRanges);
     }
 }

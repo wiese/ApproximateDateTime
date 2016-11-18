@@ -192,9 +192,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $this->calculateBoundaries();
 
-        sort($this->starts);
-
-        return $this->starts ? $this->starts[0] : null;
+        return $this->ranges[0]->getStart()->toDateTime();
     }
 
     /**
@@ -205,9 +203,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $this->calculateBoundaries();
 
-        sort($this->ends);
-
-        return $this->ends ? end($this->ends) : null;
+        return $this->ranges[$this->ranges->count() - 1]->getEnd()->toDateTime();
     }
 
     /**
@@ -230,8 +226,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $this->calculateBoundaries();
 
         $this->periods = [];
-        foreach ($this->starts as $key => $start) {
-            $this->periods[] = new DatePeriod($start, $start->diff($this->ends[$key]), 1);
+        foreach ($this->ranges as $range) {
+            $start = $range->getStart()->toDateTime();
+            $end = $range->getEnd()->toDateTime();
+            $this->periods[] = new DatePeriod($start, $start->diff($end), 1);
 
             // @todo identify patterns, set recurrences correctly, and avoid redundancy
         }
@@ -268,6 +266,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $this->generateFilterListsFromClues();
 
         $starts = $ends = [];
+        $ranges = new Ranges();
         foreach ($this->units as $unit => $settings) {
             $className = __NAMESPACE__ . '\\OptionFilter\\' . $settings['filter'];
             /**
@@ -281,21 +280,17 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             $filter->setMax($settings['max']);
             $filter->setCalendar($this->calendar);
             $filter->setTimezone($this->timezone);
-            $filter->apply($starts, $ends);
+
+            $ranges = $filter->apply($ranges);
         }
 
         // @todo remove specific times (compound units)
         // @todo what about time lost/inexisting due to daylight saving time?
 
-        $this->starts = [];
-        foreach ($starts as $start) {
-            $this->starts[] = $this->momentToDateTime($start);
-        }
+        // @fixme sort by range start
+        //sort($ranges);
 
-        $this->ends = [];
-        foreach ($ends as $end) {
-            $this->ends[] = $this->momentToDateTime($end);
-        }
+        $this->ranges = $ranges;
     }
 
     protected function momentToDateTime(array $moment) : DateTime

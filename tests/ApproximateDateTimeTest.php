@@ -20,12 +20,12 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
      */
     protected $tz;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->tz = new DateTimeZone('UTC');
     }
 
-    public function testDefault()
+    public function testDefault() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -45,7 +45,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('333-12-31 23:59:59', $europeTz), $sut->getLatest());
     }
 
-    public function testOneLeapYear()
+    public function testOneLeapYear() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -86,7 +86,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(365, $actualInterval->days);
     }
 
-    public function testTwoYears()
+    public function testTwoYears() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -132,7 +132,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(729, $actualInterval->days);
     }
 
-    public function testSimpleRealworldExample()
+    public function testSimpleRealworldExample() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -170,7 +170,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(60, $actualInterval->days);
     }
 
-    public function testRealworldExample()
+    public function testRealworldExample() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -208,7 +208,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRealworldExampleConsecutiveMonth()
+    public function testRealworldExampleConsecutiveMonth() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -245,7 +245,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testNotSoApproximate()
+    public function testNotSoApproximate() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -292,7 +292,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testMiniExample()
+    public function testMiniExample() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -336,7 +336,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testMiniExampleWithDefaultYear()
+    public function testMiniExampleWithDefaultYear() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -359,7 +359,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(30, $actualInterval->days);
     }
 
-    public function testBlacklist()
+    public function testBlacklist() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -384,7 +384,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $sut->getPeriods());
     }
 
-    public function testComplexBlacklist()
+    public function testComplexBlacklist() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -429,7 +429,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2018-09-02 00:00:00', $this->tz), $periods[2]->getStartDate());
     }
 
-    public function testWeekday()
+    public function testWeekday() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -460,7 +460,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2017-10-28 00:00:00', $this->tz), $periods[2]->getStartDate());
     }
 
-    public function testWinterHolidayPicture()
+    public function testWinterHolidayPicture() : void
     {
         $this->markTestIncomplete();
         return;
@@ -487,7 +487,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2016-13-31 23:59:59', $this->tz), $sut->getLatest());
     }
 
-    public function testWorkday()
+    public function testWorkday() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -518,7 +518,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2001-12-31 23:59:59', $this->tz), $sut->getLatest());
     }
 
-    public function testTrickyWeekdays()
+    public function testTrickyWeekdays() : void
     {
         $sut = new ApproximateDateTime();
 
@@ -550,6 +550,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         // @todo DatePeriod wrapper with direct access to end, calculated from start and interval?
 
         $period = $periods[0];
+
         $this->assertEquals(new DateTime('2001-03-02 00:00:00', $this->tz), $period->getStartDate());
         $this->assertEquals(new DateTime('2001-03-04 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
 
@@ -562,7 +563,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2001-03-31 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
     }
 
-    public function testCompoundUnits()
+    public function testCompoundUnits() : void
     {
         $this->markTestIncomplete();
         return;
