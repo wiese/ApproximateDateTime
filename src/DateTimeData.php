@@ -14,11 +14,29 @@ class DateTimeData
      */
     public $timezone;
 
+    /**
+     * @var int|null
+     */
     public $y;
+    /**
+     * @var int|null
+     */
     public $m;
+    /**
+     * @var int|null
+     */
     public $d;
+    /**
+     * @var int|null
+     */
     public $h;
+    /**
+     * @var int|null
+     */
     public $i;
+    /**
+     * @var int|null
+     */
     public $s;
 
     public function __construct(DateTimeZone $timezone)

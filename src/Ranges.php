@@ -8,7 +8,7 @@ use ArrayObject;
 
 class Ranges extends ArrayObject
 {
-    public function merge(self $ranges)
+    public function merge(self $ranges) : self
     {
         $combined = new self;
 
@@ -40,7 +40,7 @@ class Ranges extends ArrayObject
         return $combined;
     }
 
-    public function sort()
+    public function sort() : void
     {
         $this->uasort(function ($range1, $range2) {
             $a = $range1->getStart()->toString();
