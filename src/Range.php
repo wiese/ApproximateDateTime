@@ -55,17 +55,19 @@ class Range
         $max = $this->end->{$targetUnit};
 
         for ($value = $min; $value <= $max; $value++) {
-            $range = new self;
-            $start = clone $this->start;
-            $start->{$targetUnit} = $value;
-            $range->setStart($start);
-            $end = clone $this->end;
-            $end->{$targetUnit} = $value;
-            $range->setEnd($end);
+            $range = clone $this;
+            $range->getStart()->{$targetUnit} = $value;
+            $range->getEnd()->{$targetUnit} = $value;
 
             $ranges->append($range);
         }
 
         return $ranges;
+    }
+
+    public function __clone()
+    {
+        $this->start = clone $this->start;
+        $this->end = clone $this->end;
     }
 }

@@ -40,17 +40,13 @@ class Day extends Base
                     if (!isset($options[$key - 1]) // first overall
                         || $options[$key - 1] != $value - 1 // first of a block
                     ) {
-                        $newRange = new Range();
-                        $start = clone $filet->getStart();
-                        $start->d = $value;
-                        $newRange->setStart($start);
+                        $newRange = clone $filet;
+                        $newRange->getStart()->d = $value;
                     }
                     if (!isset($options[$key + 1]) // last
                         || $options[$key + 1] != $value + 1 // last of a block
                     ) {
-                        $end = clone $filet->getEnd();
-                        $end->d = $value;
-                        $newRange->setEnd($end);
+                        $newRange->getEnd()->d = $value;
 
                         $newRanges->append($newRange);
                     }

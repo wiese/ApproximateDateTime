@@ -24,14 +24,9 @@ class Ranges extends ArrayObject
                 /**
                  * @var \wiese\ApproximateDateTime\Range $range2
                  */
-                $newRange = new Range();
-                $start = clone $range1->getStart(); // avoid modifying element during loop
-                $start->merge($range2->getStart());
-                $newRange->setStart($start);
-
-                $end = clone $range1->getEnd();
-                $end->merge($range2->getEnd());
-                $newRange->setEnd($end);
+                $newRange = clone $range1;
+                $newRange->getStart()->merge($range2->getStart());
+                $newRange->getEnd()->merge($range2->getEnd());
 
                 $combined->append($newRange);
             }
