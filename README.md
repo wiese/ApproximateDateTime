@@ -15,11 +15,12 @@ composer require wiese/approximate-datetime
 
 ## Development
 
-There are not an awful lot of dependencies which can easily be 
-satisfied by any number of alternative setup flows and infrastructures you may 
-use at your discretion. Yet, this project uses [docker](https://docs.docker.com/) 
+There are not an awful lot of dependencies, and they can easily be 
+satisfied by any number of setup flows and infrastructures you may 
+use at your discretion. 
+Yet, this project uses [docker](https://docs.docker.com/) 
 to ease creating a level field for development, and [composer](https://getcomposer.org/doc/)
-for dependency management - technologies you should be familiar with before 
+for dependency management — technologies you should be familiar with prior to 
 submitting changes.
 
 ### Checking out the code
