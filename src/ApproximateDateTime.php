@@ -293,16 +293,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $this->ranges = $ranges;
     }
 
-    protected function momentToDateTime(array $moment) : DateTime
-    {
-        $datetime = new DateTime();
-        $datetime->setTimezone($this->timezone);
-        $datetime->setDate($moment['y'], $moment['m'], $moment['d']);
-        $datetime->setTime($moment['h'], $moment['i'], $moment['s']);
-
-        return $datetime;
-    }
-
     protected function checkPossible(DateTimeInterface $moment) : bool
     {
         $this->generateFilterListsFromClues();
