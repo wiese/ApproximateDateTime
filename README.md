@@ -41,6 +41,7 @@ submitting changes.
 
 #### With debugging
 
+	# assuming your docker host IP is 172.17.0.1
     [me@localhost ApproximateDateTime]$ docker run -v $(pwd):/app -w /app -e XDEBUG_CONFIG="remote_host=172.17.0.1" --rm wiese/php7.1-approximatedatetime ./vendor/bin/phpunit --color=always
 
 ### Checking codestyle
