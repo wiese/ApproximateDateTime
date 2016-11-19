@@ -8,11 +8,12 @@ ranges given a more or less verbose list of criteria describing these dates.
 
 ## Purpose & Usage
 
-Occasionally dates are not precisely known, but can only be described approximately — 
-resulting in multiple different possibilities of actual occurrence.
+Occasionally dates are not precisely known, but can only be described 
+approximately — resulting in multiple different possibilities of actual 
+occurrence.
 For example, just knowing the year will result in a date period that covers 365
-days (or 366 in leap years), adding a month to the list of clues will narrow this
-down to the amount of days in the month given, and so on.
+days (or 366 in leap years), adding a month to the list of clues will narrow 
+this down to the amount of days in the month given, and so on.
 More enlightening results can be achieved by clue sets including a weekday, or 
 the fact that the moment you describe happened in the afternoon.
 
@@ -27,11 +28,10 @@ Install into your project with composer:
 
 ## Development
 
-There are not an awful lot of dependencies, and they can easily be 
-satisfied by any number of setup flows and infrastructures you may 
-use at your discretion. 
-Yet, this project uses [docker](https://docs.docker.com/) 
-to ease creating a level field for development, and [composer](https://getcomposer.org/doc/)
+There are not an awful lot of dependencies, and they can easily be satisfied by 
+any number of setup flows and infrastructures you may use at your discretion. 
+Yet, this project uses [docker](https://docs.docker.com/) to ease creating a 
+level field for development, and [composer](https://getcomposer.org/doc/)
 for dependency management — technologies you should be familiar with prior to 
 submitting changes.
 
