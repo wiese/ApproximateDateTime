@@ -28,7 +28,9 @@ abstract class Base
      * @var int
      */
     protected $max = null;
-
+    /**
+     * @var int
+     */
     protected $calendar;
 
     /**
