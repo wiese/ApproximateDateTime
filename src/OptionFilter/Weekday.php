@@ -65,19 +65,4 @@ class Weekday extends Base
 
         return $newRanges;
     }
-
-    /**
-     * @todo static member method of our data object
-     *
-     * @param DateTime $dateTime
-     * @return array
-     */
-    protected function dateTimeToMoment(DateTime $dateTime) : array
-    {
-        return [
-            'y' => (int) $dateTime->format('Y'),
-            'm' => (int) $dateTime->format('m'),
-            'd' => (int) $dateTime->format('d')
-        ];
-    }
 }

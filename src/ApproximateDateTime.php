@@ -112,7 +112,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
     {
         $this->setTimezone(new DateTimeZone($timezone));
-        $this->setDefaultYear((int) (new DateTime())->format('Y'));
+        $this->setDefaultYear((int) (new DateTime())->format(DateTimeData::FORMAT_YEAR));
     }
 
     /**
@@ -280,7 +280,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     protected function generateFilterListsFromClues() : void
     {
-        $this->whitelist = [];
+        $this->whitelist = $this->blacklist = [];
 
         foreach (array_keys($this->units) as $unit) {
             $this->whitelist[$unit] = [];
