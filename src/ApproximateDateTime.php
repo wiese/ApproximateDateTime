@@ -265,7 +265,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $this->generateFilterListsFromClues();
 
-        $starts = $ends = [];
         $ranges = new Ranges();
         foreach ($this->units as $unit => $settings) {
             $className = __NAMESPACE__ . '\\OptionFilter\\' . $settings['filter'];
@@ -287,23 +286,10 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         // @todo remove specific times (compound units)
         // @todo what about time lost/inexisting due to daylight saving time?
 
-        // @fixme sort by range start
+        // @fixme sort by range start - do we have to?
         //sort($ranges);
 
         $this->ranges = $ranges;
-    }
-
-    protected function checkPossible(DateTimeInterface $moment) : bool
-    {
-        $this->generateFilterListsFromClues();
-
-        foreach ($this->whitelist as $type => $range) {
-            if (count($range) && !in_array($moment->format($type), $range)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     protected function generateFilterListsFromClues() : void
