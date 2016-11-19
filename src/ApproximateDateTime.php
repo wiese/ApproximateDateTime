@@ -23,14 +23,14 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     /**
      * Calendar to base date calculation on
      *
-     * @var integer
+     * @var int
      */
     protected $calendar = CAL_GREGORIAN;
 
     /**
      * Year to base clues on, if no year specified
      *
-     * @var integer
+     * @var int
      */
     protected $defaultYear;
 
@@ -107,21 +107,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     protected $blacklist = [];
 
     /**
-     * @var array Periods compatible with given clues
-     */
-    protected $periods = [];
-
-    /**
-     * @var array
-     */
-    protected $starts = [];
-
-    /**
-     * @var array
-     */
-    protected $ends = [];
-
-    /**
      * @param string $timezone
      */
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
@@ -139,7 +124,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     }
 
     /**
-     * @return \DateTimeZone
+     * @param \DateTimeZone $timezone
+     * @return self
      */
     public function setTimezone(DateTimeZone $timezone) : self
     {
@@ -225,16 +211,16 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $this->calculateBoundaries();
 
-        $this->periods = [];
+        $periods = [];
         foreach ($this->ranges as $range) {
             $start = $range->getStart()->toDateTime();
             $end = $range->getEnd()->toDateTime();
-            $this->periods[] = new DatePeriod($start, $start->diff($end), 1);
+            $periods[] = new DatePeriod($start, $start->diff($end), 1);
 
             // @todo identify patterns, set recurrences correctly, and avoid redundancy
         }
 
-        return $this->periods;
+        return $periods;
     }
 
     /**
