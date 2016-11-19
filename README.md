@@ -3,15 +3,27 @@
 [![Build Status](https://travis-ci.org/wiese/ApproximateDateTime.svg?branch=master)](https://travis-ci.org/wiese/ApproximateDateTime)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/wiese/ApproximateDateTime/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/wiese/ApproximateDateTime/)
 
-
 ApproximateDateTime is a library that helps determine possible dates and date
 ranges given a more or less verbose list of criteria describing these dates.
+
+## Purpose & Usage
+
+Occasionally dates are not precisely known, but can only be described approximately — 
+resulting in multiple different possibilities of actual occurrence.
+For example, just knowing the year will result in a date period that covers 365
+days (or 366 in leap years), adding a month to the list of clues will narrow this
+down to the amount of days in the month given, and so on.
+More enlightening results can be achieved by clue sets including a weekday, or 
+the fact that the moment you describe happened in the afternoon.
+
+Motivation for the implementation arose when trying to plot albums of pictures
+on a timeline, while for many of them precise information was unavailable.
 
 ## Installation
 
 Install into your project with composer:
 
-composer require wiese/approximate-datetime
+    [me@localhost your-project]$ composer require wiese/approximate-datetime
 
 ## Development
 
@@ -48,3 +60,7 @@ submitting changes.
 ### Checking codestyle
 
     [me@localhost ApproximateDateTime]$ docker run -v $(pwd):/app -w /app --rm wiese/php7.1-approximatedatetime ./vendor/bin/phpcs
+
+##Thanks
+
+To Charlie, Great Sun ⊕
