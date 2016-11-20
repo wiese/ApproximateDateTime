@@ -11,12 +11,10 @@ use DatePeriod;
 
 class Weekday extends Base
 {
+    const DATE_FORMAT_WEEKDAY = 'N';
+
     public function apply(Ranges $ranges) : Ranges
     {
-        if (count($this->clues->getWhitelist($this->unit)) === 7 && count($this->clues->getBlacklist($this->unit)) === 0) { // all days allowed
-            return $ranges;
-        }
-
         $newRanges = new Ranges();
 
         $options = $this->getAllowableOptions();
@@ -41,7 +39,7 @@ class Weekday extends Base
             $gap = true;
             $previous = null;
             foreach ($period as $moment) {
-                if (in_array($moment->format('N'), $options)) {
+                if (in_array($moment->format(self::DATE_FORMAT_WEEKDAY), $options)) {
                     if ($gap) {
                         $newRange = new Range();
                         $newRanges->append($newRange); // append, keep var for edit
