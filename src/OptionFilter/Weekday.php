@@ -8,7 +8,6 @@ use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 use DateInterval;
 use DatePeriod;
-use DateTime;
 
 class Weekday extends Base
 {

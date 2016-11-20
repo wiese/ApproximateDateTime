@@ -90,7 +90,7 @@ class Clues extends ArrayObject
             }
         }
 
-        $sanitizeArray = function (& $value, $key) {
+        $sanitizeArray = function (& $value) {
             array_unique($value, SORT_REGULAR);
             sort($value); // list in order of values
         };
