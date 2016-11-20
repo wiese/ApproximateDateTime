@@ -5,8 +5,8 @@ namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\OptionFilter\Weekday;
-use wiese\ApproximateDateTime\Ranges;
 use wiese\ApproximateDateTime\Range;
+use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
 use PHPUnit_Framework_TestCase;
 
@@ -22,6 +22,8 @@ class WeekdayTest extends PHPUnit_Framework_TestCase
      */
     protected $sut;
 
+    protected $clues;
+
     public function setUp() : void
     {
         $this->tz = new DateTimeZone('Pacific/Guam');
@@ -32,11 +34,14 @@ class WeekdayTest extends PHPUnit_Framework_TestCase
         $this->sut->setUnit('n'); // @todo mv into filter if only one purpose
         $this->sut->setTimezone($this->tz);
         $this->sut->setCalendar(CAL_GREGORIAN);
+
+        $this->clues = $this->createMock('wiese\ApproximateDateTime\Clues');
+        $this->sut->setClues($this->clues);
     }
 
     public function testApplyAllTuesdaysInMonth() : void
     {
-        $this->sut->setWhitelist(array(2));
+        $this->clues->method('getWhitelist')->willReturn(array(2));
 
         $ranges = new Ranges();
         $range = new Range();

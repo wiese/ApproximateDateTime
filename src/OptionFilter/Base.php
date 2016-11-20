@@ -5,6 +5,7 @@ namespace wiese\ApproximateDateTime\OptionFilter;
 
 use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
+use wiese\ApproximateDateTime\Clues;
 
 abstract class Base
 {
@@ -13,13 +14,9 @@ abstract class Base
      */
     protected $unit;
     /**
-     * @var array
+     * @var Clues
      */
-    protected $whitelist = [];
-    /**
-     * @var array
-     */
-    protected $blacklist = [];
+    protected $clues;
     /**
      * @var int
      */
@@ -44,15 +41,9 @@ abstract class Base
         return $this;
     }
 
-    public function setWhitelist(array $whitelist) : self
+    public function setClues(Clues $clues) : self
     {
-        $this->whitelist = $whitelist;
-        return $this;
-    }
-
-    public function setBlacklist(array $blacklist) : self
-    {
-        $this->blacklist = $blacklist;
+        $this->clues = $clues;
         return $this;
     }
 
@@ -92,13 +83,14 @@ abstract class Base
             $max = $this->max;
         }
 
-        if (empty($this->whitelist)) {
+        $whitelist = $this->clues->getWhitelist($this->unit);
+        if (empty($whitelist)) {
             $options = range($this->min, $max);
         } else {
-            $options = $this->whitelist;
+            $options = $whitelist;
         }
 
-        $options = array_diff($options, $this->blacklist);
+        $options = array_diff($options, $this->clues->getBlacklist($this->unit));
         $options = array_values($options); // resetting keys to be sequential
         // array_unique?
 

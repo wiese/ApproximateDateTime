@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use DateTimeInterface;
-use DateTime;
+use wiese\ApproximateDateTime\Clues;
+use wiese\ApproximateDateTime\OptionFilter\Base;
 use DateInterval;
 use DatePeriod;
+use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
 
 class ApproximateDateTime implements ApproximateDateTimeInterface
@@ -28,83 +30,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     protected $calendar = CAL_GREGORIAN;
 
     /**
-     * Year to base clues on, if no year specified
-     *
-     * @var int
+     * @var Clues
      */
-    protected $defaultYear;
-
-    /**
-     * @var Clue[]
-     */
-    protected $clues = [];
-
-    /**
-     * @var array
-     */
-    protected $compoundUnits = [
-        'y' => 'y',
-        'm' => 'm',
-        'd' => 'd',
-        'y-m' => 'm',
-        'y-m-d' => 'd',
-        'h' => 'h',
-        'i' => 'i',
-        's' => 's',
-        'h-i' => 'i',
-        'h-i-s' => 's',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $units = [
-        'y' => [
-            'filter' => 'Numeric',
-            'min' => null,
-            'max' => null
-        ],
-        'm' => [
-            'filter' => 'Numeric',
-            'min' => 1,
-            'max' => 12
-        ],
-        'd' => [
-            'filter' => 'Day',
-            'min' => 1,
-            'max' => null // dynamic based on y, m, and calendar
-        ],
-        'n' => [
-            'filter' => 'Weekday',
-            'min' => 1,
-            'max' => 7
-        ],
-        'h' => [
-            'filter' => 'Numeric',
-            'min' => 0,
-            'max' => 23
-        ],
-        'i' => [
-            'filter' => 'Numeric',
-            'min' => 0,
-            'max' => 59
-        ],
-        's' => [
-            'filter' => 'Numeric',
-            'min' => 0,
-            'max' => 59
-        ],
-    ];
-
-    /**
-     * @var array Combined clue information on whitelisted dates
-     */
-    protected $whitelist = [];
-
-    /**
-     * @var array Combined clue information on blacklisted dates
-     */
-    protected $blacklist = [];
+    protected $clues;
 
     /**
      * @param string $timezone
@@ -112,7 +40,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
     {
         $this->setTimezone(new DateTimeZone($timezone));
-        $this->setDefaultYear((int) (new DateTime())->format(DateTimeData::FORMAT_YEAR));
+        $this->setClues([]);
     }
 
     /**
@@ -135,16 +63,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     }
 
     /**
-     * Get the default year used when no respective clue given
-     *
-     * @return int
-     */
-    public function getDefaultYear() : int
-    {
-        return $this->defaultYear;
-    }
-
-    /**
      * Set the default year used when no respective clue given
      *
      * @param int $year
@@ -152,7 +70,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function setDefaultYear(int $year) : self
     {
-        $this->defaultYear = $year;
+        $this->clues->setDefaultYear($year);
 
         return $this;
     }
@@ -165,7 +83,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function setClues(array $clues) : self
     {
-        $this->clues = $clues;
+        $this->clues = Clues::fromArray($clues);
 
         return $this;
     }
@@ -231,8 +149,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      */
     public function isPossible(DateTimeInterface $scrutinize) : bool
     {
-        $verdict = false;
-
         $verdict = ($scrutinize >= $this->getEarliest() && $scrutinize <= $this->getLatest());
 
         return $verdict;
@@ -249,18 +165,15 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     protected function calculateBoundaries() : void
     {
-        $this->generateFilterListsFromClues();
-
         $ranges = new Ranges();
-        foreach ($this->units as $unit => $settings) {
+        foreach (Config::$units as $unit => $settings) {
             $className = __NAMESPACE__ . '\\OptionFilter\\' . $settings['filter'];
             /**
              * @var OptionFilter\Base $filter
              */
             $filter = new $className;
             $filter->setUnit($unit);
-            $filter->setWhitelist($this->whitelist[$unit]);
-            $filter->setBlacklist($this->blacklist[$unit]);
+            $filter->setClues($this->clues);
             $filter->setMin($settings['min']);
             $filter->setMax($settings['max']);
             $filter->setCalendar($this->calendar);
@@ -276,40 +189,5 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         //sort($ranges);
 
         $this->ranges = $ranges;
-    }
-
-    protected function generateFilterListsFromClues() : void
-    {
-        $this->whitelist = $this->blacklist = [];
-
-        foreach (array_keys($this->units) as $unit) {
-            $this->whitelist[$unit] = [];
-            $this->blacklist[$unit] = [];
-        }
-
-        foreach ($this->clues as $clue) {
-            // @todo validate value
-
-            switch ($clue->filter) {
-                case Clue::FILTER_WHITELIST:
-                    $this->whitelist[$clue->type][] = $clue->value;
-                    break;
-                case Clue::FILTER_BLACKLIST:
-                    $this->blacklist[$clue->type][] = $clue->value;
-                    break;
-            }
-        }
-
-        $sanitizeArray = function (& $value, $key) {
-            array_unique($value, SORT_REGULAR);
-            sort($value); // list in order of values
-        };
-
-        array_walk($this->whitelist, $sanitizeArray);
-        array_walk($this->blacklist, $sanitizeArray);
-
-        if (empty($this->whitelist['y'])) {
-            $this->whitelist['y'][] = $this->defaultYear;
-        }
     }
 }

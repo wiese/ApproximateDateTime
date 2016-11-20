@@ -5,24 +5,38 @@ namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\OptionFilter\Numeric;
-use wiese\ApproximateDateTime\Ranges;
 use wiese\ApproximateDateTime\Range;
+use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
 use PHPUnit_Framework_TestCase;
 
 class NumericTest extends PHPUnit_Framework_TestCase
 {
+    protected $tz;
+
+    protected $sut;
+
+    protected $clues;
+
+    public function setUp(): void
+    {
+        $this->sut = new Numeric;
+        $this->tz = new DateTimeZone('Asia/Kathmandu');
+        $this->sut->setTimezone($this->tz);
+        // keep a reference for modification during individual tests
+        $this->clues = $this->createMock('wiese\ApproximateDateTime\Clues');
+        $this->sut->setClues($this->clues);
+    }
+
     public function testApplyConsecutive() : void
     {
-        $sut = new Numeric;
-        $sut->setUnit('y');
-        $sut->setWhitelist(array(2011, 2012));
-        $sut->setTimezone(new DateTimeZone('Asia/Kathmandu'));
+        $this->sut->setUnit('y');
+        $this->clues->method('getWhitelist')->willReturn(array(2011, 2012));
 
         // empty so far
         $ranges = new Ranges();
 
-        $ranges = $sut->apply($ranges);
+        $ranges = $this->sut->apply($ranges);
 
         $this->assertCount(1, $ranges);
         $this->assertEquals(2011, $ranges[0]->getStart()->y);
@@ -31,15 +45,13 @@ class NumericTest extends PHPUnit_Framework_TestCase
 
     public function testApplySeparateRange() : void
     {
-        $sut = new Numeric;
-        $sut->setUnit('y');
-        $sut->setWhitelist(array(2008, 2010, 2039, 2040));
-        $sut->setTimezone(new DateTimeZone('Australia/Darwin'));
+        $this->sut->setUnit('y');
+        $this->clues->method('getWhitelist')->willReturn(array(2008, 2010, 2039, 2040));
 
         // empty so far
         $ranges = new Ranges();
 
-        $ranges = $sut->apply($ranges);
+        $ranges = $this->sut->apply($ranges);
 
         $this->assertCount(3, $ranges);
         $this->assertEquals(2008, $ranges[0]->getStart()->y);
@@ -52,23 +64,20 @@ class NumericTest extends PHPUnit_Framework_TestCase
 
     public function testWithMergePreexisting() : void
     {
-        $sut = new Numeric;
-        $sut->setUnit('m');
-        $sut->setWhitelist(array(3, 4));
-        $tz = new DateTimeZone('Europe/Berlin');
-        $sut->setTimezone($tz);
+        $this->sut->setUnit('m');
+        $this->clues->method('getWhitelist')->willReturn(array(3, 4));
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($tz);
+        $start = new DateTimeData($this->tz);
         $start->y = 1995;
         $range->setStart($start);
-        $end = new DateTimeData($tz);
+        $end = new DateTimeData($this->tz);
         $end->y = 1995;
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $sut->apply($ranges);
+        $ranges = $this->sut->apply($ranges);
 
         $this->assertCount(1, $ranges);
         $this->assertEquals(1995, $ranges[0]->getStart()->y);

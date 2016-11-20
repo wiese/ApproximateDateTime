@@ -4,12 +4,10 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime\Tests;
 
 use wiese\ApproximateDateTime\ApproximateDateTime;
-use wiese\ApproximateDateTime\ClueParser;
 use wiese\ApproximateDateTime\Clue;
+use wiese\ApproximateDateTime\ClueParser;
 use PHPUnit_Framework_TestCase;
 use ReflectionClass;
-use DateTime;
-use DateTimeZone;
 
 class ClueParserTest extends PHPUnit_Framework_TestCase
 {

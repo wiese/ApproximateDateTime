@@ -3,15 +3,14 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests;
 
-use \wiese\ApproximateDateTime\ApproximateDateTime;
-use \wiese\ApproximateDateTime\ClueParser;
-use \wiese\ApproximateDateTime\Clue;
-use PHPUnit_Framework_TestCase;
-use ReflectionClass;
-use DateTime;
-use DatePeriod;
+use wiese\ApproximateDateTime\ApproximateDateTime;
+use wiese\ApproximateDateTime\Clue;
+use wiese\ApproximateDateTime\ClueParser;
 use DateInterval;
+use DatePeriod;
+use DateTime;
 use DateTimeZone;
+use PHPUnit_Framework_TestCase;
 
 class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 {
@@ -20,60 +19,60 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
      */
     protected $tz;
 
+    protected $sut;
+
     public function setUp() : void
     {
         $this->tz = new DateTimeZone('UTC');
+
+        $this->sut = new ApproximateDateTime();
     }
 
     public function testDefault() : void
     {
-        $sut = new ApproximateDateTime();
+        $this->assertEquals(new DateTimeZone('UTC'), $this->sut->getTimezone());
+        $this->assertEquals(new DateTime(date('Y') . '-01-01 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime(date('Y') . '-12-31 23:59:59', $this->tz), $this->sut->getLatest());
 
-        $this->assertEquals(new DateTimeZone('UTC'), $sut->getTimezone());
-        $this->assertEquals(new DateTime(date('Y') . '-01-01 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime(date('Y') . '-12-31 23:59:59', $this->tz), $sut->getLatest());
+        $this->sut->setDefaultYear(333);
 
-        $sut->setDefaultYear(333);
-
-        $this->assertEquals(new DateTime('333-01-01 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('333-12-31 23:59:59', $this->tz), $sut->getLatest());
+        $this->assertEquals(new DateTime('333-01-01 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('333-12-31 23:59:59', $this->tz), $this->sut->getLatest());
 
         $europeTz = new DateTimeZone('Europe/Berlin');
-        $this->assertEquals($sut, $sut->setTimezone($europeTz));
-        $this->assertEquals($europeTz, $sut->getTimezone());
-        $this->assertEquals(new DateTime('333-01-01 00:00:00', $europeTz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('333-12-31 23:59:59', $europeTz), $sut->getLatest());
+        $this->assertEquals($this->sut, $this->sut->setTimezone($europeTz));
+        $this->assertEquals($europeTz, $this->sut->getTimezone());
+        $this->assertEquals(new DateTime('333-01-01 00:00:00', $europeTz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('333-12-31 23:59:59', $europeTz), $this->sut->getLatest());
     }
 
     public function testOneLeapYear() : void
     {
-        $sut = new ApproximateDateTime();
-
         // '2016-??-??T??-??-??'
         $clue = new Clue;
         $clue->type = 'y';
         $clue->value = 2016;
 
-        $sut->setClues([$clue]);
-        $this->assertEquals(new DateTimeZone('UTC'), $sut->getTimezone());
-        $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('2016-12-31 23:59:59', $this->tz), $sut->getLatest());
+        $this->sut->setClues([$clue]);
+        $this->assertEquals(new DateTimeZone('UTC'), $this->sut->getTimezone());
+        $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('2016-12-31 23:59:59', $this->tz), $this->sut->getLatest());
 
-        $luckyShot = $sut->getLuckyShot();
+        $luckyShot = $this->sut->getLuckyShot();
         $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $luckyShot);
-        $this->assertTrue($sut->isPossible($luckyShot));
+        $this->assertTrue($this->sut->isPossible($luckyShot));
 
-        $this->assertTrue($sut->isPossible(new DateTime('2016-04-03', $this->tz)));
-        $this->assertTrue($sut->isPossible(new DateTime('2016-02-29', $this->tz)));
-        $this->assertFalse($sut->isPossible(new DateTime('2017-01-02', $this->tz)));
-        $this->assertFalse($sut->isPossible(new DateTime('2015-12-31', $this->tz)));
+        $this->assertTrue($this->sut->isPossible(new DateTime('2016-04-03', $this->tz)));
+        $this->assertTrue($this->sut->isPossible(new DateTime('2016-02-29', $this->tz)));
+        $this->assertFalse($this->sut->isPossible(new DateTime('2017-01-02', $this->tz)));
+        $this->assertFalse($this->sut->isPossible(new DateTime('2015-12-31', $this->tz)));
 
-        $this->assertEquals(365, $sut->getInterval()->days);
-        $this->assertEquals(23, $sut->getInterval()->h);
-        $this->assertEquals(59, $sut->getInterval()->i);
-        $this->assertEquals(59, $sut->getInterval()->s);
+        $this->assertEquals(365, $this->sut->getInterval()->days);
+        $this->assertEquals(23, $this->sut->getInterval()->h);
+        $this->assertEquals(59, $this->sut->getInterval()->i);
+        $this->assertEquals(59, $this->sut->getInterval()->s);
 
-        $actualPeriods = $sut->getPeriods();
+        $actualPeriods = $this->sut->getPeriods();
         $this->assertCount(1, $actualPeriods);
         $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
         $actualInterval = $actualPeriods[0]->getDateInterval();
@@ -88,8 +87,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
     public function testTwoYears() : void
     {
-        $sut = new ApproximateDateTime();
-
         // '1985-??-??T??-??-??'
         // '1986-??-??T??-??-??'
         $clue1 = new Clue;
@@ -100,26 +97,26 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue2->type = 'y';
         $clue2->value = 1986;
 
-        $sut->setClues([$clue1, $clue2]);
+        $this->sut->setClues([$clue1, $clue2]);
 
-        $this->assertEquals(new DateTime('1985-01-01 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('1986-12-31 23:59:59', $this->tz), $sut->getLatest());
+        $this->assertEquals(new DateTime('1985-01-01 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('1986-12-31 23:59:59', $this->tz), $this->sut->getLatest());
 
-        $luckyShot = $sut->getLuckyShot();
+        $luckyShot = $this->sut->getLuckyShot();
         $this->assertEquals(new DateTime('1985-01-01 00:00:00', $this->tz), $luckyShot);
-        $this->assertTrue($sut->isPossible($luckyShot));
+        $this->assertTrue($this->sut->isPossible($luckyShot));
 
-        $this->assertTrue($sut->isPossible(new DateTime('1985-04-03', $this->tz)));
-        $this->assertTrue($sut->isPossible(new DateTime('1986-12-31', $this->tz)));
-        $this->assertFalse($sut->isPossible(new DateTime('1984-01-03', $this->tz)));
-        $this->assertFalse($sut->isPossible(new DateTime('1990-07-12', $this->tz)));
+        $this->assertTrue($this->sut->isPossible(new DateTime('1985-04-03', $this->tz)));
+        $this->assertTrue($this->sut->isPossible(new DateTime('1986-12-31', $this->tz)));
+        $this->assertFalse($this->sut->isPossible(new DateTime('1984-01-03', $this->tz)));
+        $this->assertFalse($this->sut->isPossible(new DateTime('1990-07-12', $this->tz)));
 
-        $this->assertEquals(729, $sut->getInterval()->days);
-        $this->assertEquals(23, $sut->getInterval()->h);
-        $this->assertEquals(59, $sut->getInterval()->i);
-        $this->assertEquals(59, $sut->getInterval()->s);
+        $this->assertEquals(729, $this->sut->getInterval()->days);
+        $this->assertEquals(23, $this->sut->getInterval()->h);
+        $this->assertEquals(59, $this->sut->getInterval()->i);
+        $this->assertEquals(59, $this->sut->getInterval()->s);
 
-        $actualPeriods = $sut->getPeriods();
+        $actualPeriods = $this->sut->getPeriods();
         $this->assertCount(1, $actualPeriods);
         $this->assertEquals(new DateTime('1985-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
         $actualInterval = $actualPeriods[0]->getDateInterval();
@@ -134,8 +131,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
     public function testSimpleRealworldExample() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y';
         $clue1->value = 2001;
@@ -148,17 +143,17 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue3->type = 'm';
         $clue3->value = 4;
 
-        $sut->setClues([$clue1, $clue2, $clue3]);
+        $this->sut->setClues([$clue1, $clue2, $clue3]);
 
-        $this->assertEquals(new DateTime('2001-03-01 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('2001-04-30 23:59:59', $this->tz), $sut->getLatest());
+        $this->assertEquals(new DateTime('2001-03-01 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('2001-04-30 23:59:59', $this->tz), $this->sut->getLatest());
 
-        $this->assertEquals(60, $sut->getInterval()->days);
-        $this->assertEquals(23, $sut->getInterval()->h);
-        $this->assertEquals(59, $sut->getInterval()->i);
-        $this->assertEquals(59, $sut->getInterval()->s);
+        $this->assertEquals(60, $this->sut->getInterval()->days);
+        $this->assertEquals(23, $this->sut->getInterval()->h);
+        $this->assertEquals(59, $this->sut->getInterval()->i);
+        $this->assertEquals(59, $this->sut->getInterval()->s);
 
-        $actualPeriods = $sut->getPeriods();
+        $actualPeriods = $this->sut->getPeriods();
         $this->assertCount(1, $actualPeriods);
         $this->assertEquals(new DateTime('2001-03-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
         $actualInterval = $actualPeriods[0]->getDateInterval();
@@ -172,8 +167,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
     public function testRealworldExample() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y';
         $clue1->value = 2010;
@@ -190,28 +183,26 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue4->type = 'd';
         $clue4->value = 30;
 
-        $sut->setClues([$clue1, $clue2, $clue3, $clue4]);
+        $this->sut->setClues([$clue1, $clue2, $clue3, $clue4]);
 
-        $this->assertEquals(new DateTime('2010-03-28 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('2010-03-30 23:59:59', $this->tz), $sut->getLatest());
+        $this->assertEquals(new DateTime('2010-03-28 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('2010-03-30 23:59:59', $this->tz), $this->sut->getLatest());
 
-        $this->assertEquals(23, $sut->getInterval()->h);
-        $this->assertEquals(59, $sut->getInterval()->i);
-        $this->assertEquals(59, $sut->getInterval()->s);
+        $this->assertEquals(23, $this->sut->getInterval()->h);
+        $this->assertEquals(59, $this->sut->getInterval()->i);
+        $this->assertEquals(59, $this->sut->getInterval()->s);
 
         $this->assertEquals(
             [
                 new DatePeriod(new DateTime('2010-03-28 00:00:00', $this->tz), new DateInterval('PT23H59M59S'), 1),
                 new DatePeriod(new DateTime('2010-03-30 00:00:00', $this->tz), new DateInterval('PT23H59M59S'), 1)
             ],
-            $sut->getPeriods()
+            $this->sut->getPeriods()
         );
     }
 
     public function testRealworldExampleConsecutiveMonth() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y';
         $clue1->value = 2010;
@@ -232,7 +223,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue5->type = 'd';
         $clue5->value = 30;
 
-        $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]);
+        $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]);
 
         $this->assertEquals(
             [
@@ -241,14 +232,12 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
                 new DatePeriod(new DateTime('2010-04-28 00:00:00', $this->tz), new DateInterval('PT23H59M59S'), 1),
                 new DatePeriod(new DateTime('2010-04-30 00:00:00', $this->tz), new DateInterval('PT23H59M59S'), 1),
             ],
-            $sut->getPeriods()
+            $this->sut->getPeriods()
         );
     }
 
     public function testNotSoApproximate() : void
     {
-        $sut = new ApproximateDateTime();
-
         // '1985-01-23T07-11-32'
         $clue1 = new Clue;
         $clue1->type = 'y';
@@ -274,28 +263,26 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue6->type = 's';
         $clue6->value = 32;
 
-        $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6]);
+        $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6]);
 
-        $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $sut->getLatest());
+        $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $this->sut->getLatest());
 
-        $this->assertEquals(0, $sut->getInterval()->days);
-        $this->assertEquals(0, $sut->getInterval()->h);
-        $this->assertEquals(0, $sut->getInterval()->i);
-        $this->assertEquals(0, $sut->getInterval()->s);
+        $this->assertEquals(0, $this->sut->getInterval()->days);
+        $this->assertEquals(0, $this->sut->getInterval()->h);
+        $this->assertEquals(0, $this->sut->getInterval()->i);
+        $this->assertEquals(0, $this->sut->getInterval()->s);
 
         $this->assertEquals(
             [
                 new DatePeriod(new DateTime('1985-01-23 07:11:32', $this->tz), new DateInterval('PT0S'), 1),
             ],
-            $sut->getPeriods()
+            $this->sut->getPeriods()
         );
     }
 
     public function testMiniExample() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y';
         $clue1->value = 2007;
@@ -324,7 +311,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue7->type = 'i';
         $clue7->value = 39;
 
-        $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
+        $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
 
         $this->assertEquals(
             [
@@ -332,21 +319,19 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
                 new DatePeriod(new DateTime('2007-08-15 09:36:00', $this->tz), new DateInterval('PT59S'), 1),
                 new DatePeriod(new DateTime('2007-08-15 09:39:00', $this->tz), new DateInterval('PT59S'), 1),
             ],
-            $sut->getPeriods()
+            $this->sut->getPeriods()
         );
     }
 
     public function testMiniExampleWithDefaultYear() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'm';
         $clue1->value = 7;
 
-        $sut->setClues([$clue1]);
+        $this->sut->setClues([$clue1]);
 
-        $actualPeriods = $sut->getPeriods();
+        $actualPeriods = $this->sut->getPeriods();
         $this->assertCount(1, $actualPeriods);
         $this->assertEquals(new DateTime(date('Y') . '-07-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
         $actualInterval = $actualPeriods[0]->getDateInterval();
@@ -361,8 +346,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
     public function testBlacklist() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y';
         $clue1->value = 2012;
@@ -376,18 +359,16 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue3->type = 'd';
         $clue3->value = 1;
 
-        $sut->setClues([$clue1, $clue2, $clue3]);
+        $this->sut->setClues([$clue1, $clue2, $clue3]);
 
-        $this->assertEquals(new DateTime('2012-07-02 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('2012-07-31 23:59:59', $this->tz), $sut->getLatest());
+        $this->assertEquals(new DateTime('2012-07-02 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('2012-07-31 23:59:59', $this->tz), $this->sut->getLatest());
 
-        $this->assertCount(1, $sut->getPeriods());
+        $this->assertCount(1, $this->sut->getPeriods());
     }
 
     public function testComplexBlacklist() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y';
         $clue1->value = 2018;
@@ -419,9 +400,9 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue7->type = 'd';
         $clue7->value = 30;
 
-        $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
+        $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
 
-        $periods = $sut->getPeriods();
+        $periods = $this->sut->getPeriods();
 
         $this->assertCount(3, $periods);
         $this->assertEquals(new DateTime('2018-07-02 00:00:00', $this->tz), $periods[0]->getStartDate());
@@ -431,8 +412,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
     public function testWeekday() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y';
         $clue1->value = 2017;
@@ -450,9 +429,9 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue4->type = 'n';
         $clue4->value = 6;
 
-        $sut->setClues([$clue1, $clue2, $clue3, $clue4]);
+        $this->sut->setClues([$clue1, $clue2, $clue3, $clue4]);
 
-        $periods = $sut->getPeriods();
+        $periods = $this->sut->getPeriods();
 
         $this->assertCount(3, $periods);
         $this->assertEquals(new DateTime('2017-10-07 00:00:00', $this->tz), $periods[0]->getStartDate());
@@ -464,8 +443,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
     {
         $this->markTestIncomplete();
         return;
-
-        $sut = new ApproximateDateTime();
 
         $parser = new ClueParser();
         // '2016-??-??T??-??-??'
@@ -481,16 +458,14 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $parser->addClue('Summer'); // boo - needs geo-awareness
 
 
-        $this->assertEquals($sut, $sut->setClues($parser->getProcessedClues()));
-        $this->assertCount(6, $sut->getClues());
-        $this->assertEquals(new DateTime('2016-02-05 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('2016-13-31 23:59:59', $this->tz), $sut->getLatest());
+        $this->assertEquals($this->sut, $this->sut->setClues($parser->getProcessedClues()));
+        $this->assertCount(6, $this->sut->getClues());
+        $this->assertEquals(new DateTime('2016-02-05 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('2016-13-31 23:59:59', $this->tz), $this->sut->getLatest());
     }
 
     public function testWorkday() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y';
         $clue1->value = 2001;
@@ -510,18 +485,16 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue4->type = 'n';
         $clue4->value = 7;
 
-        $this->assertEquals($sut, $sut->setClues([$clue1, $clue2, $clue3, $clue4]));
-        $periods = $sut->getPeriods();
+        $this->assertEquals($this->sut, $this->sut->setClues([$clue1, $clue2, $clue3, $clue4]));
+        $periods = $this->sut->getPeriods();
 
         $this->assertCount(49, $periods);
-        $this->assertEquals(new DateTime('2001-01-01 00:00:00', $this->tz), $sut->getEarliest());
-        $this->assertEquals(new DateTime('2001-12-31 23:59:59', $this->tz), $sut->getLatest());
+        $this->assertEquals(new DateTime('2001-01-01 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('2001-12-31 23:59:59', $this->tz), $this->sut->getLatest());
     }
 
     public function testTrickyWeekdays() : void
     {
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y';
         $clue1->value = 2001;
@@ -542,8 +515,8 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue5->type = 'n';
         $clue5->value = 7;
 
-        $this->assertEquals($sut, $sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]));
-        $periods = $sut->getPeriods();
+        $this->assertEquals($this->sut, $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]));
+        $periods = $this->sut->getPeriods();
 
         $this->assertCount(5, $periods);
 
@@ -568,8 +541,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->markTestIncomplete();
         return;
 
-        $sut = new ApproximateDateTime();
-
         $clue1 = new Clue;
         $clue1->type = 'y-m-d';
         $clue1->value = [
@@ -586,13 +557,13 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
             's' => 14,
         ];
 
-        $this->assertEquals($sut, $sut->setClues([$clue1, $clue2]));
+        $this->assertEquals($this->sut, $this->sut->setClues([$clue1, $clue2]));
 
         $this->assertEquals(
             [
                 new DatePeriod(new DateTime('2007-10-30 09:37:14', $this->tz), new DateInterval('PT1S'), 1),
             ],
-            $sut->getPeriods()
+            $this->sut->getPeriods()
         );
     }
 }

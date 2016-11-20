@@ -3,10 +3,11 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
+use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\OptionFilter\Day;
-use wiese\ApproximateDateTime\Ranges;
 use wiese\ApproximateDateTime\Range;
+use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
 use PHPUnit_Framework_TestCase;
 
@@ -22,6 +23,8 @@ class DayTest extends PHPUnit_Framework_TestCase
      */
     protected $sut;
 
+    protected $clues;
+
     public function setUp() : void
     {
         $this->tz = new DateTimeZone('Asia/Ulaanbaatar');
@@ -31,6 +34,9 @@ class DayTest extends PHPUnit_Framework_TestCase
         $this->sut->setUnit('d');
         $this->sut->setTimezone($this->tz);
         $this->sut->setCalendar(CAL_GREGORIAN);
+        // keep a reference for modification during individual tests
+        $this->clues = $this->createMock('wiese\ApproximateDateTime\Clues');
+        $this->sut->setClues($this->clues);
     }
 
     public function testApplyAllDaysInMonth() : void
@@ -131,8 +137,8 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyConsecutiveDaysInMonth() : void
     {
-        $this->sut->setWhitelist(array(3, 4, 5));
-        $this->sut->setBlacklist(array(5));
+        $this->clues->method('getWhitelist')->willReturn(array(3, 4, 5));
+        $this->clues->method('getBlacklist')->willReturn(array(5));
 
         $ranges = new Ranges();
         $range = new Range();
@@ -160,7 +166,7 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyConsecutiveDaysInConsecutiveMonths() : void
     {
-        $this->sut->setWhitelist(array(7, 8, 9));
+        $this->clues->method('getWhitelist')->willReturn(array(7, 8, 9));
 
         // empty so far
         $ranges = new Ranges();
@@ -196,7 +202,7 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyConsecutiveDaysInSeparateMonths() : void
     {
-        $this->sut->setWhitelist(array(27, 28));
+        $this->clues->method('getWhitelist')->willReturn(array(27, 28));
 
         // empty so far
         $ranges = new Ranges();
@@ -243,8 +249,8 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplySeparateDaysInMonth() : void
     {
-        $this->sut->setWhitelist(array(3, 4, 5));
-        $this->sut->setBlacklist(array(4));
+        $this->clues->method('getWhitelist')->willReturn(array(3, 4, 5));
+        $this->clues->method('getBlacklist')->willReturn(array(4));
 
         $ranges = new Ranges();
         $range = new Range();
@@ -279,7 +285,7 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplySeparateDaysInConsecutiveMonths() : void
     {
-        $this->sut->setWhitelist(array(10, 12));
+        $this->clues->method('getWhitelist')->willReturn(array(10, 12));
 
         $ranges = new Ranges();
         $range = new Range();
@@ -342,7 +348,7 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplySeparateDaysInSeparateMonths() : void
     {
-        $this->sut->setWhitelist(array(27, 29));
+        $this->clues->method('getWhitelist')->willReturn(array(27, 29));
 
         // empty so far
         $ranges = new Ranges();

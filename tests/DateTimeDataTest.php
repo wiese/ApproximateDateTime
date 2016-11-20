@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime\Tests;
 
 use wiese\ApproximateDateTime\DateTimeData;
-use PHPUnit_Framework_TestCase;
 use DateTimeZone;
 use Exception;
+use PHPUnit_Framework_TestCase;
 
 class DateTimeDataTest extends PHPUnit_Framework_TestCase
 {

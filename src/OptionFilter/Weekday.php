@@ -14,7 +14,7 @@ class Weekday extends Base
 {
     public function apply(Ranges $ranges) : Ranges
     {
-        if (count($this->whitelist) === 7 && count($this->blacklist) === 0) { // all days allowed
+        if (count($this->clues->getWhitelist($this->unit)) === 7 && count($this->clues->getBlacklist($this->unit)) === 0) { // all days allowed
             return $ranges;
         }
 
