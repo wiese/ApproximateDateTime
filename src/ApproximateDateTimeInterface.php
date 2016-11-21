@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use DateTimeInterface;
-use DateTime;
 use DateInterval;
+use DateTime;
+use DateTimeInterface;
 
 interface ApproximateDateTimeInterface
 {

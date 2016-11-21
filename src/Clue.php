@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use \DateTimeInterface;
+use DateTimeInterface;
 
 class Clue
 {

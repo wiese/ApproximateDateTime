@@ -34,6 +34,7 @@ class Clues extends ArrayObject
         $this->setDefaultYear((int) (new DateTime())->format(DateTimeData::FORMAT_YEAR));
         parent::__construct();
     }
+
     public function setDefaultYear(int $defaultYear) : self
     {
         $this->defaultYear = $defaultYear;

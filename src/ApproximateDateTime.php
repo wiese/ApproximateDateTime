@@ -167,15 +167,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $ranges = new Ranges();
         foreach (Config::$units as $unit => $settings) {
-            $className = __NAMESPACE__ . '\\OptionFilter\\' . $settings['filter'];
-            /**
-             * @var OptionFilter\Base $filter
-             */
-            $filter = new $className;
+            $filter = Base::fromName($settings['filter']);
             $filter->setUnit($unit);
             $filter->setClues($this->clues);
-            $filter->setMin($settings['min']);
-            $filter->setMax($settings['max']);
             $filter->setCalendar($this->calendar);
             $filter->setTimezone($this->timezone);
 

@@ -30,7 +30,6 @@ class DayTest extends PHPUnit_Framework_TestCase
         $this->tz = new DateTimeZone('Asia/Ulaanbaatar');
 
         $this->sut = new Day();
-        $this->sut->setMin(1);
         $this->sut->setUnit('d');
         $this->sut->setTimezone($this->tz);
         $this->sut->setCalendar(CAL_GREGORIAN);

@@ -29,8 +29,6 @@ class WeekdayTest extends PHPUnit_Framework_TestCase
         $this->tz = new DateTimeZone('Pacific/Guam');
 
         $this->sut = new Weekday();
-        $this->sut->setMin(1);
-        $this->sut->setMin(7);
         $this->sut->setUnit('n'); // @todo mv into filter if only one purpose
         $this->sut->setTimezone($this->tz);
         $this->sut->setCalendar(CAL_GREGORIAN);
