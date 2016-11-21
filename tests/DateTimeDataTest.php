@@ -61,4 +61,22 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
 
         $sut->merge($sut2);
     }
+
+    public function testToString() : void
+    {
+        $tz = new DateTimeZone('Europe/Berlin');
+        $sut = new DateTimeData($tz);
+
+        $sut->y = 2007;
+        $sut->m = 8;
+
+        $this->assertEquals('2007-08-00T00:00:00', $sut->toString());
+
+        $sut->d = 30;
+        $sut->h = 9;
+        $sut->i = 27;
+        $sut->s = 5;
+
+        $this->assertEquals('2007-08-30T09:27:05', $sut->toString());
+    }
 }

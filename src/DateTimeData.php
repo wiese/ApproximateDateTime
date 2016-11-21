@@ -17,6 +17,8 @@ class DateTimeData
     const FORMAT_MINUTE = 'i';
     const FORMAT_SECOND = 's';
 
+    const TO_STRING_FORMAT = '%d-%02d-%02dT%02d:%02d:%02d';
+
     /**
      * @var \DateTimeZone
      */
@@ -91,7 +93,7 @@ class DateTimeData
     public function toString() : string
     {
         return sprintf(
-            '%d-%2d-%2dT%2d-%2d-%2d',
+            self::TO_STRING_FORMAT,
             $this->y,
             $this->m,
             $this->d,
