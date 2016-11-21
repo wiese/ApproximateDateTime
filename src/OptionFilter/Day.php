@@ -9,6 +9,10 @@ use cal_days_in_month;
 
 class Day extends Base
 {
+    /**
+     * {@inheritDoc}
+     * @see \wiese\ApproximateDateTime\OptionFilter\Base::apply()
+     */
     public function apply(Ranges $ranges) : Ranges
     {
         if (empty($this->clues->getWhitelist($this->unit)) && empty($this->clues->getBlacklist($this->unit))) { // all days
