@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime;
 
 use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 
@@ -67,7 +68,7 @@ class DateTimeData
      * Convert current information into a DateTime object.
      * Unset time yields 00:00:00
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function toDateTime() : DateTime
     {
@@ -104,7 +105,7 @@ class DateTimeData
      * Merge data from another DateTimeDate object into the current one
      *
      * @param self $other
-     * @throws Exception
+     * @throws \Exception
      */
     public function merge(self $other) : void
     {
@@ -125,10 +126,10 @@ class DateTimeData
     /**
      * Create an instance from the information contained in a DateTime object
      *
-     * @param DateTime $dateTime
+     * @param \DateTimeInterface $dateTime
      * @return self
      */
-    public static function fromDateTime(DateTime $dateTime) : self
+    public static function fromDateTime(DateTimeInterface $dateTime) : self
     {
         $instance = new self($dateTime->getTimezone());
 

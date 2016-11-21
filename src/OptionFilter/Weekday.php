@@ -52,8 +52,8 @@ class Weekday extends Base
     /**
      * Add allowabled dates (defined by) $options from $range to $ranges
      *
-     * @param Ranges $ranges Ranges to append matching ranges to
-     * @param Range $range The existing to check for matching weekdays
+     * @param \wiese\ApproximateDateTime\Ranges $ranges Ranges to append matching ranges to
+     * @param \wiese\ApproximateDateTime\Range $range The existing to check for matching weekdays
      * @param array $options Allowable weekdays
      */
     protected function patchRanges(Ranges & $ranges, Range $range, array $options)
@@ -64,11 +64,19 @@ class Weekday extends Base
             $range->getEnd()->toDateTime()->add($this->dayIterationInterval) // work with end day, too
         );
 
+        /**
+         * Indicator to identify value ranges
+         * @var bool $gap
+         */
         $gap = true;
         /**
-         * @var \DateTime $previous
+         * @var \DateTimeInterface $previous
          */
         $previous = null;
+        /**
+         * @var \DateTimeInterface $moment
+         */
+        $moment = null;
         /**
          * @var \wiese\ApproximateDateTime\Range $newRange
          */
@@ -93,7 +101,7 @@ class Weekday extends Base
                 }
             }
         }
-        if ($newRange) { // dangling end
+        if ($newRange && $moment) { // dangling end
             $newRange->setEnd(DateTimeData::fromDateTime($moment));
         }
     }
