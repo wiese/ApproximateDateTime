@@ -4,10 +4,8 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime;
 
 use wiese\ApproximateDateTime\Clues;
-use wiese\ApproximateDateTime\OptionFilter\Base;
 use DateInterval;
 use DatePeriod;
-use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 
@@ -167,7 +165,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $ranges = new Ranges();
         foreach (Config::$units as $unit => $settings) {
-            $filter = Base::fromName($settings['filter']);
+            $filter = OptionFilter\Base::fromName($settings['filter']);
             $filter->setUnit($unit);
             $filter->setClues($this->clues);
             $filter->setCalendar($this->calendar);

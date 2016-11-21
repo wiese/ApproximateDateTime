@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-abstract class Config implements ApproximateDateTimeInterface
+class Config
 {
     /**
      * @var array
@@ -50,15 +50,37 @@ abstract class Config implements ApproximateDateTimeInterface
      * @var array
      */
     public static $compoundUnits = [
-            'y' => 'y',
-            'm' => 'm',
-            'd' => 'd',
-            'y-m' => 'm',
-            'y-m-d' => 'd',
-            'h' => 'h',
-            'i' => 'i',
-            's' => 's',
-            'h-i' => 'i',
-            'h-i-s' => 's',
+        'y' => 'y',
+        'm' => 'm',
+        'd' => 'd',
+        'y-m' => 'm',
+        'y-m-d' => 'd',
+        'h' => 'h',
+        'i' => 'i',
+        's' => 's',
+        'h-i' => 'i',
+        'h-i-s' => 's',
     ];
+
+    /**
+     * Get the minimum valid value for the given unit
+     *
+     * @param string $unit
+     * @return int|null
+     */
+    public function getMin(string $unit) : ? int
+    {
+        return self::$units[$unit]['min'];
+    }
+
+    /**
+     * Get the maximum valid value for the given unit
+     *
+     * @param string $unit
+     * @return int|null
+     */
+    public function getMax(string $unit) : ? int
+    {
+        return self::$units[$unit]['max'];
+    }
 }

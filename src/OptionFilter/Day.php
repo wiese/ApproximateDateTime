@@ -17,7 +17,7 @@ class Day extends Base
     {
         if (empty($this->clues->getWhitelist($this->unit)) && empty($this->clues->getBlacklist($this->unit))) { // all days
             foreach ($ranges as & $range) {
-                $range->getStart()->d = $this->getMin();
+                $range->getStart()->d = $this->config->getMin($this->unit);
                 $range->getEnd()->d = cal_days_in_month($this->calendar, $range->getEnd()->m, $range->getEnd()->y);
             }
 

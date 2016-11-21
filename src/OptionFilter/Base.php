@@ -31,6 +31,15 @@ abstract class Base
     protected $timezone;
 
     /**
+     * @var \wiese\ApproximateDateTime\Config
+     */
+    protected $config;
+
+    public function __construct()
+    {
+        $this->config = new Config;
+    }
+    /**
      * Set the unit the OptionFilter is supposed to be working on
      *
      * @param string $unit
@@ -87,7 +96,7 @@ abstract class Base
     public static function fromName(string $name) : self
     {
         $className = __NAMESPACE__ . '\\' . $name;
-        return new $className;
+        return new $className();
     }
 
     /**
@@ -97,26 +106,6 @@ abstract class Base
      * @return \wiese\ApproximateDateTime\Ranges
      */
     abstract public function apply(Ranges $ranges) : Ranges;
-
-    /**
-     * Get the minimum valid value for the current unit
-     *
-     * @return int
-     */
-    protected function getMin() : ? int
-    {
-        return Config::$units[$this->unit]['min'];
-    }
-
-    /**
-     * Get the maximum valid value for the current unit
-     *
-     * @return int
-     */
-    protected function getMax() : ? int
-    {
-        return Config::$units[$this->unit]['max'];
-    }
 
     /**
      * Determine the range of allowable values from all clues, and limits
@@ -129,12 +118,12 @@ abstract class Base
         if (is_int($overrideMax)) {
             $max = $overrideMax;
         } else {
-            $max = $this->getMax();
+            $max = $this->config->getMax($this->unit);
         }
 
         $whitelist = $this->clues->getWhitelist($this->unit);
         if (empty($whitelist)) {
-            $options = range($this->getMin(), $max);
+            $options = range($this->config->getMin($this->unit), $max);
         } else {
             $options = $whitelist;
         }

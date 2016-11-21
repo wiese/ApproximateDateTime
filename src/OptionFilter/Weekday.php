@@ -14,16 +14,6 @@ class Weekday extends Base
     const DATE_FORMAT_WEEKDAY = 'N';
 
     /**
-     * @var DateInterval
-     */
-    protected $dayIterationInterval;
-
-    public function __construct()
-    {
-        $this->dayIterationInterval = new DateInterval('P1D');
-    }
-
-    /**
      * {@inheritDoc}
      * @see \wiese\ApproximateDateTime\OptionFilter\Base::apply()
      */
@@ -33,7 +23,7 @@ class Weekday extends Base
 
         switch (count($options)) {
             case 7: // all days allowed
-                return $ranges;
+                return $ranges; // keep given ranges intact, nothing to do
             case 0: // no days allowed
                 return new Ranges();
         }
@@ -58,10 +48,12 @@ class Weekday extends Base
      */
     protected function patchRanges(Ranges & $ranges, Range $range, array $options)
     {
+        $dayIterationInterval = new DateInterval('P1D');
+
         $period = new DatePeriod(
             $range->getStart()->toDateTime(),
-            $this->dayIterationInterval,
-            $range->getEnd()->toDateTime()->add($this->dayIterationInterval) // work with end day, too
+            $dayIterationInterval,
+            $range->getEnd()->toDateTime()->add($dayIterationInterval) // work with end day, too
         );
 
         /**
