@@ -8,6 +8,10 @@ use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 
+/**
+ * A data vehicle for partially known information about a DateTime.
+ * Typically information gets added from greater to smally unit, adding precision.
+ */
 class DateTimeData
 {
     const FORMAT_YEAR = 'Y';
@@ -18,11 +22,6 @@ class DateTimeData
     const FORMAT_SECOND = 's';
 
     const TO_STRING_FORMAT = '%d-%02d-%02dT%02d:%02d:%02d';
-
-    /**
-     * @var \DateTimeZone
-     */
-    public $timezone;
 
     /**
      * Year
@@ -61,6 +60,11 @@ class DateTimeData
      */
     public $s;
 
+    /**
+     * @var \DateTimeZone
+     */
+    protected $timezone;
+
     public function __construct(DateTimeZone $timezone)
     {
         $this->timezone = $timezone;
@@ -68,7 +72,7 @@ class DateTimeData
 
     /**
      * Convert current information into a DateTime object.
-     * Unset time yields 00:00:00
+     * Unset time values yield 00:00:00
      *
      * @return \DateTime
      */
@@ -106,10 +110,11 @@ class DateTimeData
     /**
      * Merge data from another DateTimeDate object into the current one
      *
-     * @param self $other
      * @throws \Exception
+     * @param self $other
+     * @return self
      */
-    public function merge(self $other) : void
+    public function merge(self $other) : self
     {
         foreach ($other as $property => $value) {
             if ($property === 'timezone') {
@@ -123,6 +128,8 @@ class DateTimeData
                 $this->{$property} = $value;
             }
         }
+
+        return $this;
     }
 
     /**
