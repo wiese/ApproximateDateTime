@@ -1,4 +1,4 @@
-FROM php:7.1-cli
+FROM php:7.1-rc-cli
 
 RUN apt-get update \
     && docker-php-ext-install -j$(nproc) calendar \
