@@ -439,6 +439,44 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2017-10-28 00:00:00', $this->tz), $periods[2]->getStartDate());
     }
 
+    public function testGenerousWhitelistStillOneRange() : void
+    {
+        $clues = [];
+
+        $clue = new Clue;
+        $clue->type = 'y';
+        $clue->value = 2016;
+        $clues[] = $clue;
+
+        foreach (range(1, 12) as $month) {
+            $clue = new Clue;
+            $clue->type = 'm';
+            $clue->value = $month;
+            $clues[] = $clue;
+        }
+
+        foreach (range(1, 31) as $day) {
+            $clue = new Clue;
+            $clue->type = 'd';
+            $clue->value = $day;
+            $clues[] = $clue;
+        }
+
+        $this->sut->setClues([$clue]);
+
+        $actualPeriods = $this->sut->getPeriods();
+        $this->assertCount(1, $actualPeriods);
+        $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
+        $actualInterval = $actualPeriods[0]->getDateInterval();
+        $this->assertEquals(0, $actualInterval->y);
+        $this->assertEquals(11, $actualInterval->m);
+        $this->assertEquals(30, $actualInterval->d);
+        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(59, $actualInterval->i);
+        $this->assertEquals(59, $actualInterval->s);
+        $this->assertEquals(365, $actualInterval->days);
+    }
+
     public function testWinterHolidayPicture() : void
     {
         $this->markTestIncomplete();
