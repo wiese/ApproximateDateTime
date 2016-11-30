@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use DateTimeInterface;
-
 class Clue
 {
     const FILTER_WHITELIST = 1;

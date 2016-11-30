@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use DateTime;
-
 class ClueParser
 {
 
