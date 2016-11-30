@@ -29,17 +29,20 @@ class WeekdayTest extends PHPUnit_Framework_TestCase
         $this->tz = new DateTimeZone('Pacific/Guam');
 
         $this->sut = new Weekday();
-        $this->sut->setUnit('n'); // @todo mv into filter if only one purpose
+        $this->sut->setUnit('n'); // @todo mv into filter if only one purpose?
         $this->sut->setTimezone($this->tz);
         $this->sut->setCalendar(CAL_GREGORIAN);
-
-        $this->clues = $this->createMock('wiese\ApproximateDateTime\Clues');
+        // keep a reference for modification during individual tests
+        $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
+            // methods that are mocked; results can be manipulated later
+            ->setMethods(['getWhitelist', 'getBlacklist'])
+            ->getMock();
         $this->sut->setClues($this->clues);
     }
 
     public function testApplyAllTuesdaysInMonth() : void
     {
-        $this->clues->method('getWhitelist')->willReturn(array(2));
+        $this->clues->method('getWhitelist')->willReturn([2]);
 
         $ranges = new Ranges();
         $range = new Range();
@@ -58,6 +61,9 @@ class WeekdayTest extends PHPUnit_Framework_TestCase
         $ranges = $this->sut->apply($ranges);
 
         $this->assertCount(4, $ranges);
+
+        $this->assertEquals(2001, $ranges[0]->getStart()->y);
+        $this->assertEquals(9, $ranges[0]->getStart()->m);
 
         $this->assertEquals(4, $ranges[0]->getStart()->d);
         $this->assertEquals(11, $ranges[1]->getStart()->d);

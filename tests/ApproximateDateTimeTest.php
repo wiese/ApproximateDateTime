@@ -530,7 +530,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->sut->setClues($clues);
         $actualPeriods = $this->sut->getPeriods();
-        $this->assertCount(1, $actualPeriods, 'after OptionFilter\Numeric');
+        $this->assertCount(1, $actualPeriods, 'after month whitelist');
 
         foreach (range(1, 31) as $day) {
             $clue = new Clue;
@@ -541,7 +541,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->sut->setClues($clues);
         $actualPeriods = $this->sut->getPeriods();
-        $this->assertCount(1, $actualPeriods, 'after OptionFilter\Day');
+        $this->assertCount(1, $actualPeriods, 'after day whitelist');
 
         foreach (range(1, 7) as $weekday) {
             $clue = new Clue;
@@ -553,7 +553,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->sut->setClues($clues);
 
         $actualPeriods = $this->sut->getPeriods();
-        $this->assertCount(1, $actualPeriods, 'after OptionFilter\Weekday');
+        $this->assertCount(1, $actualPeriods, 'after weekday whitelist');
 
         $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
         $actualInterval = $actualPeriods[0]->getDateInterval();

@@ -136,10 +136,16 @@ abstract class Base
         }
 
         $whitelist = $this->clues->getWhitelist($this->unit);
-        if (empty($whitelist)) {
+
+        if (!is_null($gtEq) && !is_null($ltEq)) {
             $options = range($gtEq, $ltEq);
         } else {
+            // @todo y has no min/max, but may have gt or lt. enforce on whitelist items
             $options = $whitelist;
+        }
+
+        if (!empty($whitelist)) {
+            $options = array_intersect($options, $whitelist);
         }
 
         $options = array_diff($options, $this->clues->getBlacklist($this->unit));

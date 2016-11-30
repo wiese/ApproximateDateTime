@@ -24,14 +24,17 @@ class NumericTest extends PHPUnit_Framework_TestCase
         $this->tz = new DateTimeZone('Asia/Kathmandu');
         $this->sut->setTimezone($this->tz);
         // keep a reference for modification during individual tests
-        $this->clues = $this->createMock('wiese\ApproximateDateTime\Clues');
+        $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
+            // methods that are mocked; results can be manipulated later
+            ->setMethods(['getWhitelist', 'getBlacklist'])
+            ->getMock();
         $this->sut->setClues($this->clues);
     }
 
     public function testApplyConsecutive() : void
     {
         $this->sut->setUnit('y');
-        $this->clues->method('getWhitelist')->willReturn(array(2011, 2012));
+        $this->clues->method('getWhitelist')->willReturn([2011, 2012]);
 
         // empty so far
         $ranges = new Ranges();
@@ -46,7 +49,7 @@ class NumericTest extends PHPUnit_Framework_TestCase
     public function testApplySeparateRange() : void
     {
         $this->sut->setUnit('y');
-        $this->clues->method('getWhitelist')->willReturn(array(2008, 2010, 2039, 2040));
+        $this->clues->method('getWhitelist')->willReturn([2008, 2010, 2039, 2040]);
 
         // empty so far
         $ranges = new Ranges();
@@ -65,7 +68,7 @@ class NumericTest extends PHPUnit_Framework_TestCase
     public function testWithMergePreexisting() : void
     {
         $this->sut->setUnit('m');
-        $this->clues->method('getWhitelist')->willReturn(array(3, 4));
+        $this->clues->method('getWhitelist')->willReturn([3, 4]);
 
         $ranges = new Ranges();
         $range = new Range();
