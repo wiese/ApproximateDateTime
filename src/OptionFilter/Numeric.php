@@ -11,7 +11,7 @@ class Numeric extends Base
 {
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\OptionFilter\Base::apply()
+     * @see Base::apply()
      */
     public function apply(Ranges $ranges) : Ranges
     {

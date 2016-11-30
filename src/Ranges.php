@@ -18,11 +18,11 @@ class Ranges extends ArrayObject
 
         foreach ($this as $range1) {
             /**
-             * @var \wiese\ApproximateDateTime\Range $range1
+             * @var Range $range1
              */
             foreach ($ranges as $range2) {
                 /**
-                 * @var \wiese\ApproximateDateTime\Range $range2
+                 * @var Range $range2
                  */
                 $newRange = clone $range1;
                 $newRange->getStart()->merge($range2->getStart());

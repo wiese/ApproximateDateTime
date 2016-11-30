@@ -88,7 +88,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getEarliest()
+     * @see ApproximateDateTimeInterface::getEarliest()
      */
     public function getEarliest() : ? DateTimeInterface
     {
@@ -99,7 +99,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLatest()
+     * @see ApproximateDateTimeInterface::getLatest()
      */
     public function getLatest() : ? DateTimeInterface
     {
@@ -110,7 +110,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getInterval()
+     * @see ApproximateDateTimeInterface::getInterval()
      */
     public function getInterval() : DateInterval
     {
@@ -121,7 +121,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getPeriods()
+     * @see ApproximateDateTimeInterface::getPeriods()
      */
     public function getPeriods() : array
     {
@@ -143,7 +143,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * @todo So far only works with one single, consecutive interval
      *
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::isPossible()
+     * @see ApproximateDateTimeInterface::isPossible()
      */
     public function isPossible(DateTimeInterface $scrutinize) : bool
     {
@@ -154,7 +154,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getLuckyShot()
+     * @see ApproximateDateTimeInterface::getLuckyShot()
      */
     public function getLuckyShot() : DateTimeInterface
     {

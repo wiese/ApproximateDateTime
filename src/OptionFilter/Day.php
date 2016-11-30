@@ -12,7 +12,7 @@ class Day extends Base
 {
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\OptionFilter\Base::apply()
+     * @see Base::apply()
      */
     public function apply(Ranges $ranges) : Ranges
     {
@@ -35,13 +35,13 @@ class Day extends Base
 
         foreach ($ranges as $range) {
             /**
-             * @var \wiese\ApproximateDateTime\Range $range
+             * @var Range $range
              */
             $filets = $range->filet();
 
             foreach ($filets as $filet) {
                 /**
-                 * @var \wiese\ApproximateDateTime\Range $filet
+                 * @var Range $filet
                  */
 
                 $daysInMonth = $this->daysInMonth($filet->getEnd());
@@ -79,6 +79,14 @@ class Day extends Base
         return $newRanges;
     }
 
+    /**
+     * Get the number of days in the month as per given $data (its y & m)
+     *
+     * @todo Exception handling if DateTimeData not qualified (yet)
+     *
+     * @param DateTimeData $data
+     * @return int
+     */
     protected function daysInMonth(DateTimeData $data)
     {
         return cal_days_in_month($this->calendar, $data->m, $data->y);

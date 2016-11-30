@@ -9,18 +9,18 @@ use wiese\ApproximateDateTime\Ranges;
 class Range
 {
     /**
-     * @var \wiese\ApproximateDateTime\DateTimeData
+     * @var DateTimeData
      */
     protected $start;
     /**
-     * @var \wiese\ApproximateDateTime\DateTimeData
+     * @var DateTimeData
      */
     protected $end;
 
     /**
      * Get the start of the range
      *
-     * @return \wiese\ApproximateDateTime\DateTimeData
+     * @return DateTimeData
      */
     public function getStart() : DateTimeData
     {
@@ -30,7 +30,7 @@ class Range
     /**
      * Set the start of the range
      *
-     * @param \wiese\ApproximateDateTime\DateTimeData $start
+     * @param DateTimeData $start
      * @return self
      */
     public function setStart(DateTimeData $start) : self
@@ -43,7 +43,7 @@ class Range
     /**
      * Get the end of the range
      *
-     * @return \wiese\ApproximateDateTime\DateTimeData
+     * @return DateTimeData
      */
     public function getEnd() : DateTimeData
     {
@@ -53,7 +53,7 @@ class Range
     /**
      * Set the end of the range
      *
-     * @param \wiese\ApproximateDateTime\DateTimeData $end
+     * @param DateTimeData $end
      * @return self
      */
     public function setEnd(DateTimeData $end) : self
@@ -66,7 +66,7 @@ class Range
     /**
      * Disect the range into individual ranges on the lowest set unit
      *
-     * @return \wiese\ApproximateDateTime\Ranges
+     * @return Ranges
      */
     public function filet() : Ranges
     {

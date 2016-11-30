@@ -30,7 +30,7 @@ class ClueParser
 
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\ApproximateDateTimeInterface::getClues()
+     * @see ApproximateDateTimeInterface::getClues()
      */
     public function getClues() : array
     {
@@ -73,7 +73,7 @@ class ClueParser
      *
      * @param string $rawClue
      *
-     * @return NULL|\wiese\ApproximateDateTime\Clue
+     * @return Clue|null
      */
     protected function processClue(string $rawClue) : ? Clue
     {

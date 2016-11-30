@@ -31,7 +31,7 @@ abstract class Base
     protected $timezone;
 
     /**
-     * @var \wiese\ApproximateDateTime\Config
+     * @var Config
      */
     protected $config;
 
@@ -55,7 +55,7 @@ abstract class Base
     /**
      * Set the clues to be used for the restriction of ranges
      *
-     * @param \wiese\ApproximateDateTime\Clues $clues
+     * @param Clues $clues
      * @return self
      */
     public function setClues(Clues $clues) : self
@@ -107,8 +107,8 @@ abstract class Base
     /**
      * Mend the given ranges as per the restrictions defined through clues
      *
-     * @param \wiese\ApproximateDateTime\Ranges $ranges
-     * @return \wiese\ApproximateDateTime\Ranges
+     * @param Ranges $ranges
+     * @return Ranges
      */
     abstract public function apply(Ranges $ranges) : Ranges;
 

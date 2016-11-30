@@ -15,7 +15,7 @@ class Weekday extends Base
 
     /**
      * {@inheritDoc}
-     * @see \wiese\ApproximateDateTime\OptionFilter\Base::apply()
+     * @see Base::apply()
      */
     public function apply(Ranges $ranges) : Ranges
     {
@@ -31,7 +31,7 @@ class Weekday extends Base
         $newRanges = new Ranges();
         foreach ($ranges as $range) {
             /**
-             * @var \wiese\ApproximateDateTime\Range $range
+             * @var Range $range
              */
             $this->patchRanges($newRanges, $range, $options);
         }
@@ -42,8 +42,8 @@ class Weekday extends Base
     /**
      * Add allowabled dates (defined by) $options from $range to $ranges
      *
-     * @param \wiese\ApproximateDateTime\Ranges $ranges Ranges to append matching ranges to
-     * @param \wiese\ApproximateDateTime\Range $range The existing to check for matching weekdays
+     * @param Ranges $ranges Ranges to append matching ranges to
+     * @param Range $range The existing to check for matching weekdays
      * @param array $options Allowable weekdays
      */
     protected function patchRanges(Ranges & $ranges, Range $range, array $options)
@@ -70,7 +70,7 @@ class Weekday extends Base
          */
         $moment = null;
         /**
-         * @var \wiese\ApproximateDateTime\Range $newRange
+         * @var Range $newRange
          */
         $newRange = null;
         foreach ($period as $moment) {
