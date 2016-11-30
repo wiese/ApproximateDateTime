@@ -13,18 +13,19 @@ use PHPUnit_Framework_TestCase;
 
 class DayTest extends PHPUnit_Framework_TestCase
 {
+
     /**
      * @var \DateTimeZone
      */
     protected $tz;
 
     /**
-     * @var \wiese\ApproximateDateTime\OptionFilter\Day
+     * @var Day
      */
     protected $sut;
 
     /**
-     * @var \wiese\ApproximateDateTime\Clues
+     * @var \PHPUnit_Framework_MockObject_MockObject Of Clues
      */
     protected $clues;
 

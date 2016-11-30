@@ -8,10 +8,12 @@ use wiese\ApproximateDateTime\Ranges;
 
 class Range
 {
+
     /**
      * @var DateTimeData
      */
     protected $start;
+
     /**
      * @var DateTimeData
      */

@@ -29,30 +29,35 @@ class DateTimeData
      * @var int|null
      */
     public $y;
+
     /**
      * Month
      *
      * @var int|null
      */
     public $m;
+
     /**
      * Day
      *
      * @var int|null
      */
     public $d;
+
     /**
      * Hour
      *
      * @var int|null
      */
     public $h;
+
     /**
      * Minute
      *
      * @var int|null
      */
     public $i;
+
     /**
      * Second
      *

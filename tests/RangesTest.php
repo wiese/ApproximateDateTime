@@ -11,6 +11,10 @@ use PHPUnit_Framework_TestCase;
 
 class RangesTest extends PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @var DateTimeZone
+     */
     protected $timezone;
 
     public function setUp() : void

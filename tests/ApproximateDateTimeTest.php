@@ -14,11 +14,15 @@ use PHPUnit_Framework_TestCase;
 
 class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 {
+
     /**
      * @var DateTimeZone
      */
     protected $tz;
 
+    /**
+     * @var ApproximateDateTime
+     */
     protected $sut;
 
     public function setUp() : void
@@ -501,15 +505,24 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $period = $periods[0];
 
         $this->assertEquals(new DateTime('2001-03-02 00:00:00', $this->tz), $period->getStartDate());
-        $this->assertEquals(new DateTime('2001-03-04 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+        $this->assertEquals(
+            new DateTime('2001-03-04 23:59:59', $this->tz),
+            $period->getStartDate()->add($period->getDateInterval())
+        );
 
         $period = $periods[2];
         $this->assertEquals(new DateTime('2001-03-16 00:00:00', $this->tz), $period->getStartDate());
-        $this->assertEquals(new DateTime('2001-03-18 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+        $this->assertEquals(
+            new DateTime('2001-03-18 23:59:59', $this->tz),
+            $period->getStartDate()->add($period->getDateInterval())
+        );
 
         $period = $periods[4];
         $this->assertEquals(new DateTime('2001-03-30 00:00:00', $this->tz), $period->getStartDate());
-        $this->assertEquals(new DateTime('2001-03-31 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+        $this->assertEquals(
+            new DateTime('2001-03-31 23:59:59', $this->tz),
+            $period->getStartDate()->add($period->getDateInterval())
+        );
     }
 
     public function testGenerousWhitelistStillOneRange() : void
@@ -590,23 +603,38 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $period = $periods[0];
         $this->assertEquals(new DateTime('1954-01-01 00:00:00', $this->tz), $period->getStartDate());
-        $this->assertEquals(new DateTime('1954-01-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+        $this->assertEquals(
+            new DateTime('1954-01-10 23:59:59', $this->tz),
+            $period->getStartDate()->add($period->getDateInterval())
+        );
 
         $period = $periods[1];
         $this->assertEquals(new DateTime('1954-02-01 00:00:00', $this->tz), $period->getStartDate());
-        $this->assertEquals(new DateTime('1954-02-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+        $this->assertEquals(
+            new DateTime('1954-02-10 23:59:59', $this->tz),
+            $period->getStartDate()->add($period->getDateInterval())
+        );
 
         $period = $periods[2];
         $this->assertEquals(new DateTime('1954-03-01 00:00:00', $this->tz), $period->getStartDate());
-        $this->assertEquals(new DateTime('1954-03-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+        $this->assertEquals(
+            new DateTime('1954-03-10 23:59:59', $this->tz),
+            $period->getStartDate()->add($period->getDateInterval())
+        );
 
         $period = $periods[3];
         $this->assertEquals(new DateTime('1954-04-01 00:00:00', $this->tz), $period->getStartDate());
-        $this->assertEquals(new DateTime('1954-04-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+        $this->assertEquals(
+            new DateTime('1954-04-10 23:59:59', $this->tz),
+            $period->getStartDate()->add($period->getDateInterval())
+        );
 
         $period = $periods[4];
         $this->assertEquals(new DateTime('1954-05-01 00:00:00', $this->tz), $period->getStartDate());
-        $this->assertEquals(new DateTime('1954-05-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+        $this->assertEquals(
+            new DateTime('1954-05-10 23:59:59', $this->tz),
+            $period->getStartDate()->add($period->getDateInterval())
+        );
     }
 
     public function testCompoundUnits() : void

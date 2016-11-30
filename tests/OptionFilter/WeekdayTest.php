@@ -12,16 +12,20 @@ use PHPUnit_Framework_TestCase;
 
 class WeekdayTest extends PHPUnit_Framework_TestCase
 {
+
     /**
      * @var \DateTimeZone
      */
     protected $tz;
 
     /**
-     * @var \wiese\ApproximateDateTime\OptionFilter\Day
+     * @var Weekday
      */
     protected $sut;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject Of Clues
+     */
     protected $clues;
 
     public function setUp() : void

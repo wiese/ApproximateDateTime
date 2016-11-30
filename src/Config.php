@@ -5,6 +5,7 @@ namespace wiese\ApproximateDateTime;
 
 class Config
 {
+
     /**
      * @var array
      */

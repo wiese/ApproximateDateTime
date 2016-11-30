@@ -21,6 +21,7 @@ class Clue
      * @var string
      */
     public $type;
+
     /**
      * The type of decription desired (inclusive, exclusive, comparison, ...)
      *
@@ -29,12 +30,14 @@ class Clue
      * @var int
      */
     public $filter = self::FILTER_WHITELIST;
+
     /**
      * Value to base internal calculations on (sanitized)
      *
      * @var mixed
      */
     public $value;
+
     /**
      * Value as provided by user (ClueParser)
      *

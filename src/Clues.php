@@ -15,6 +15,7 @@ use DateTime;
  */
 class Clues extends ArrayObject
 {
+
     /**
      * Year to base clues on, if no year specified
      *

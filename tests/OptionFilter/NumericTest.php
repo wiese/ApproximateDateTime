@@ -12,10 +12,20 @@ use PHPUnit_Framework_TestCase;
 
 class NumericTest extends PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @var DateTimeZone
+     */
     protected $tz;
 
+    /**
+     * @var Numeric
+     */
     protected $sut;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject Of Clues
+     */
     protected $clues;
 
     public function setUp(): void
