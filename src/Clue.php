@@ -9,6 +9,8 @@ class Clue
 {
     const FILTER_WHITELIST = 1;
     const FILTER_BLACKLIST = 2;
+    const FILTER_BEFOREEQUALS = 3;
+    const FILTER_AFTEREQUALS = 4;
 
     /**
      *

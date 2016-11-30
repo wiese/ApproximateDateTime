@@ -73,6 +73,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(59, $this->sut->getInterval()->s);
 
         $actualPeriods = $this->sut->getPeriods();
+
         $this->assertCount(1, $actualPeriods);
         $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
         $actualInterval = $actualPeriods[0]->getDateInterval();
@@ -439,69 +440,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2017-10-28 00:00:00', $this->tz), $periods[2]->getStartDate());
     }
 
-    public function testGenerousWhitelistStillOneRange() : void
-    {
-        $clues = [];
-
-        $clue = new Clue;
-        $clue->type = 'y';
-        $clue->value = 2016;
-        $clues[] = $clue;
-
-        foreach (range(1, 12) as $month) {
-            $clue = new Clue;
-            $clue->type = 'm';
-            $clue->value = $month;
-            $clues[] = $clue;
-        }
-
-        foreach (range(1, 31) as $day) {
-            $clue = new Clue;
-            $clue->type = 'd';
-            $clue->value = $day;
-            $clues[] = $clue;
-        }
-
-        $this->sut->setClues([$clue]);
-
-        $actualPeriods = $this->sut->getPeriods();
-        $this->assertCount(1, $actualPeriods);
-        $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
-        $actualInterval = $actualPeriods[0]->getDateInterval();
-        $this->assertEquals(0, $actualInterval->y);
-        $this->assertEquals(11, $actualInterval->m);
-        $this->assertEquals(30, $actualInterval->d);
-        $this->assertEquals(23, $actualInterval->h);
-        $this->assertEquals(59, $actualInterval->i);
-        $this->assertEquals(59, $actualInterval->s);
-        $this->assertEquals(365, $actualInterval->days);
-    }
-
-    public function testWinterHolidayPicture() : void
-    {
-        $this->markTestIncomplete();
-        return;
-
-        $parser = new ClueParser();
-        // '2016-??-??T??-??-??'
-        $parser->addClue('2016');
-        // '????-??-??T(12,13,14,15,16,17,18)-??-??'
-        $parser->addClue('afternoon');
-        // '????-(01,02,03)-??T??-??-??'
-        $parser->addClue('<April');
-        // '????-02-04T??-??-??'
-        $parser->addClue('>February-04');
-        $parser->addClue('!2016-03-14');
-        $parser->addClue('Weekend');
-        $parser->addClue('Summer'); // boo - needs geo-awareness
-
-
-        $this->assertEquals($this->sut, $this->sut->setClues($parser->getProcessedClues()));
-        $this->assertCount(6, $this->sut->getClues());
-        $this->assertEquals(new DateTime('2016-02-05 00:00:00', $this->tz), $this->sut->getEarliest());
-        $this->assertEquals(new DateTime('2016-13-31 23:59:59', $this->tz), $this->sut->getLatest());
-    }
-
     public function testWorkday() : void
     {
         $clue1 = new Clue;
@@ -574,6 +512,103 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2001-03-31 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
     }
 
+    public function testGenerousWhitelistStillOneRange() : void
+    {
+        $clues = [];
+
+        $clue = new Clue;
+        $clue->type = 'y';
+        $clue->value = 2016;
+        $clues[] = $clue;
+
+        foreach (range(1, 12) as $month) {
+            $clue = new Clue;
+            $clue->type = 'm';
+            $clue->value = $month;
+            $clues[] = $clue;
+        }
+
+        $this->sut->setClues($clues);
+        $actualPeriods = $this->sut->getPeriods();
+        $this->assertCount(1, $actualPeriods, 'after OptionFilter\Numeric');
+
+        foreach (range(1, 31) as $day) {
+            $clue = new Clue;
+            $clue->type = 'd';
+            $clue->value = $day;
+            $clues[] = $clue;
+        }
+
+        $this->sut->setClues($clues);
+        $actualPeriods = $this->sut->getPeriods();
+        $this->assertCount(1, $actualPeriods, 'after OptionFilter\Day');
+
+        foreach (range(1, 7) as $weekday) {
+            $clue = new Clue;
+            $clue->type = 'n';
+            $clue->value = $weekday;
+            $clues[] = $clue;
+        }
+
+        $this->sut->setClues($clues);
+
+        $actualPeriods = $this->sut->getPeriods();
+        $this->assertCount(1, $actualPeriods, 'after OptionFilter\Weekday');
+
+        $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
+        $actualInterval = $actualPeriods[0]->getDateInterval();
+        $this->assertEquals(0, $actualInterval->y);
+        $this->assertEquals(11, $actualInterval->m);
+        $this->assertEquals(30, $actualInterval->d);
+        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(59, $actualInterval->i);
+        $this->assertEquals(59, $actualInterval->s);
+        $this->assertEquals(365, $actualInterval->days);
+    }
+
+    public function testBeforeDay() : void
+    {
+        $clue1 = new Clue;
+        $clue1->type = 'y';
+        $clue1->value = 1954;
+
+        $clue2 = new Clue;
+        $clue2->type = 'm';
+        $clue2->value = 5;
+        $clue2->filter = Clue::FILTER_BEFOREEQUALS;
+
+        $clue3 = new Clue;
+        $clue3->type = 'd';
+        $clue3->value = 10;
+        $clue3->filter = Clue::FILTER_BEFOREEQUALS;
+
+        $this->sut->setClues([$clue1, $clue2, $clue3]);
+
+        $periods = $this->sut->getPeriods();
+
+        $this->assertCount(5, $periods);
+
+        $period = $periods[0];
+        $this->assertEquals(new DateTime('1954-01-01 00:00:00', $this->tz), $period->getStartDate());
+        $this->assertEquals(new DateTime('1954-01-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+
+        $period = $periods[1];
+        $this->assertEquals(new DateTime('1954-02-01 00:00:00', $this->tz), $period->getStartDate());
+        $this->assertEquals(new DateTime('1954-02-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+
+        $period = $periods[2];
+        $this->assertEquals(new DateTime('1954-03-01 00:00:00', $this->tz), $period->getStartDate());
+        $this->assertEquals(new DateTime('1954-03-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+
+        $period = $periods[3];
+        $this->assertEquals(new DateTime('1954-04-01 00:00:00', $this->tz), $period->getStartDate());
+        $this->assertEquals(new DateTime('1954-04-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+
+        $period = $periods[4];
+        $this->assertEquals(new DateTime('1954-05-01 00:00:00', $this->tz), $period->getStartDate());
+        $this->assertEquals(new DateTime('1954-05-10 23:59:59', $this->tz), $period->getStartDate()->add($period->getDateInterval()));
+    }
+
     public function testCompoundUnits() : void
     {
         $this->markTestIncomplete();
@@ -603,5 +638,30 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
             ],
             $this->sut->getPeriods()
         );
+    }
+
+    public function testWinterHolidayPicture() : void
+    {
+        $this->markTestIncomplete();
+        return;
+
+        $parser = new ClueParser();
+        // '2016-??-??T??-??-??'
+        $parser->addClue('2016');
+        // '????-??-??T(12,13,14,15,16,17,18)-??-??'
+        $parser->addClue('afternoon');
+        // '????-(01,02,03)-??T??-??-??'
+        $parser->addClue('<April');
+        // '????-02-04T??-??-??'
+        $parser->addClue('>February-04');
+        $parser->addClue('!2016-03-14');
+        $parser->addClue('Weekend');
+        $parser->addClue('Summer'); // boo - needs geo-awareness
+
+
+        $this->assertEquals($this->sut, $this->sut->setClues($parser->getProcessedClues()));
+        $this->assertCount(6, $this->sut->getClues());
+        $this->assertEquals(new DateTime('2016-02-05 00:00:00', $this->tz), $this->sut->getEarliest());
+        $this->assertEquals(new DateTime('2016-13-31 23:59:59', $this->tz), $this->sut->getLatest());
     }
 }

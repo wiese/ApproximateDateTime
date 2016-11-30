@@ -151,4 +151,23 @@ class DateTimeData
 
         return $instance;
     }
+
+    /**
+     * Get the highest level unit with an unset value
+     *
+     * @return string
+     */
+    public function getNextUnit() : string
+    {
+        $targetUnit = null;
+        // determine highest level non-set unit
+        foreach ($this as $unit => $value) {
+            if (is_null($value)) {
+                break;
+            }
+            $targetUnit = $unit;
+        }
+
+        return $targetUnit;
+    }
 }

@@ -23,6 +23,9 @@ class DayTest extends PHPUnit_Framework_TestCase
      */
     protected $sut;
 
+    /**
+     * @var \wiese\ApproximateDateTime\Clues
+     */
     protected $clues;
 
     public function setUp() : void
@@ -34,7 +37,10 @@ class DayTest extends PHPUnit_Framework_TestCase
         $this->sut->setTimezone($this->tz);
         $this->sut->setCalendar(CAL_GREGORIAN);
         // keep a reference for modification during individual tests
-        $this->clues = $this->createMock('wiese\ApproximateDateTime\Clues');
+        $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
+            // methods that are mocked; results can be manipulated later
+            ->setMethods(['getWhitelist', 'getBlacklist'])
+            ->getMock();
         $this->sut->setClues($this->clues);
     }
 
@@ -64,6 +70,35 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyAllDaysInConsecutiveMonths() : void
     {
+        // empty so far
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData($this->tz);
+        $start->y = 1998;
+        $start->m = 1;
+        $range->setStart($start);
+        $end = new DateTimeData($this->tz);
+        $end->y = 1998;
+        $end->m = 2;
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $ranges = $this->sut->apply($ranges);
+
+        $this->assertCount(1, $ranges);
+
+        $this->assertEquals(1998, $ranges[0]->getStart()->y);
+        $this->assertEquals(1, $ranges[0]->getStart()->m);
+        $this->assertEquals(1, $ranges[0]->getStart()->d);
+        $this->assertEquals(1998, $ranges[0]->getEnd()->y);
+        $this->assertEquals(2, $ranges[0]->getEnd()->m);
+        $this->assertEquals(28, $ranges[0]->getEnd()->d);
+    }
+
+    public function testApplyAllDaysThroughBigWhitelistInConsecutiveMonths() : void
+    {
+        $this->clues->method('getWhitelist')->willReturn(range(1, 31));
+
         // empty so far
         $ranges = new Ranges();
         $range = new Range();

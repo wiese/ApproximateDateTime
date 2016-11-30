@@ -48,6 +48,7 @@ abstract class Base
     public function setUnit(string $unit) : self
     {
         $this->unit = $unit;
+
         return $this;
     }
 
@@ -60,6 +61,7 @@ abstract class Base
     public function setClues(Clues $clues) : self
     {
         $this->clues = $clues;
+
         return $this;
     }
 
@@ -72,6 +74,7 @@ abstract class Base
     public function setCalendar(int $calendar) : self
     {
         $this->calendar = $calendar;
+
         return $this;
     }
 
@@ -84,6 +87,7 @@ abstract class Base
     public function setTimezone(\DateTimeZone $timezone) : self
     {
         $this->timezone = $timezone;
+
         return $this;
     }
 
@@ -96,6 +100,7 @@ abstract class Base
     public static function fromName(string $name) : self
     {
         $className = __NAMESPACE__ . '\\' . $name;
+
         return new $className();
     }
 
@@ -121,9 +126,18 @@ abstract class Base
             $max = $this->config->getMax($this->unit);
         }
 
+        $gtEq = $this->clues->getAfter($this->unit);
+        if (!is_int($gtEq)) {
+            $gtEq = $this->config->getMin($this->unit);
+        }
+        $ltEq = $this->clues->getBefore($this->unit);
+        if (!is_int($ltEq)) {
+            $ltEq = $max;
+        }
+
         $whitelist = $this->clues->getWhitelist($this->unit);
         if (empty($whitelist)) {
-            $options = range($this->config->getMin($this->unit), $max);
+            $options = range($gtEq, $ltEq);
         } else {
             $options = $whitelist;
         }

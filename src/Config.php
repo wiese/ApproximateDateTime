@@ -22,7 +22,7 @@ class Config
         'd' => [
             'filter' => 'Day',
             'min' => 1,
-            'max' => null // dynamic based on y, m, and calendar
+            'max' => null // dynamically based on y, m, and calendar
         ],
         'n' => [
             'filter' => 'Weekday',

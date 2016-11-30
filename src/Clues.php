@@ -8,6 +8,11 @@ use wiese\ApproximateDateTime\Config;
 use ArrayObject;
 use DateTime;
 
+/**
+ *
+ * @todo implement ArrayAccess interface instead
+ *
+ */
 class Clues extends ArrayObject
 {
     /**
@@ -26,6 +31,10 @@ class Clues extends ArrayObject
      * @var array Combined clue information on blacklisted dates
      */
     protected $blacklists = [];
+
+    protected $before = [];
+
+    protected $after = [];
 
     protected $cachedFilterLists = false;
 
@@ -57,6 +66,20 @@ class Clues extends ArrayObject
         return $this->blacklists[$unit];
     }
 
+    public function getBefore(string $unit) : ? int
+    {
+        $this->generateFilterLists();
+
+        return $this->before[$unit];
+    }
+
+    public function getAfter(string $unit) : ? int
+    {
+        $this->generateFilterLists();
+
+        return $this->after[$unit];
+    }
+
     public static function fromArray(array $clues)
     {
         $instance = new self();
@@ -65,17 +88,32 @@ class Clues extends ArrayObject
         return $instance;
     }
 
+    public function append($value)
+    {
+        parent::append($value);
+
+        $this->cachedFilterLists = false;
+    }
+
     protected function generateFilterLists() : void
     {
         if ($this->cachedFilterLists) {
             return;
         }
 
-        $this->whitelists = $this->blacklists = [];
+        // resetting from potential previous run
+        $this->whitelists
+        = $this->blacklists
+        = $this->before
+        = $this->after = [];
 
+        // initialize once to save on repeated checks later
         foreach (array_keys(Config::$units) as $unit) {
-            $this->whitelists[$unit] = [];
-            $this->blacklists[$unit] = [];
+            $this->whitelists[$unit]
+            = $this->blacklists[$unit] = [];
+
+            $this->before[$unit]
+            = $this->after[$unit] = null;
         }
 
         foreach ($this as $clue) {
@@ -88,6 +126,34 @@ class Clues extends ArrayObject
                 case Clue::FILTER_BLACKLIST:
                     $this->blacklists[$clue->type][] = $clue->value;
                     break;
+                case Clue::FILTER_BEFOREEQUALS:
+                    if (is_array($clue->value)) {
+                        foreach ($clue->value as $unit => $value) {
+                            // hoops as null always wins min()
+                            if (is_null($this->before[$unit])) {
+                                $this->before[$unit] = $value;
+                            } else {
+                                $this->before[$unit] = min($value, $this->before[$unit]);
+                            }
+                        }
+                    } else {
+                        if (is_null($this->before[$clue->type])) {
+                            $this->before[$clue->type] = $clue->value;
+                        } else {
+                            $this->before[$clue->type] = min($clue->value, $this->before[$clue->type]);
+                        }
+                    }
+
+                    break;
+                case Clue::FILTER_AFTEREQUALS:
+                    if (is_array($clue->value)) {
+                        foreach ($clue->value as $unit => $value) {
+                            $this->after[$unit] = max($value, $this->after[$unit]);
+                        }
+                    } else {
+                        $this->after[$clue->type] = max($clue->value, $this->after[$clue->type]);
+                    }
+                    break;
             }
         }
 
@@ -99,6 +165,7 @@ class Clues extends ArrayObject
         array_walk($this->whitelists, $sanitizeArray);
         array_walk($this->blacklists, $sanitizeArray);
 
+        // @todo what if default year is blacklisted?
         if (empty($this->whitelists['y'])) {
             $this->whitelists['y'][] = $this->defaultYear;
         }
