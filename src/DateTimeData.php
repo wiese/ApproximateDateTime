@@ -66,6 +66,13 @@ class DateTimeData
     public $s;
 
     /**
+     * Indicator if the day (d) is the last one in the month (m) & year (y) - to avoid recomputation
+     *
+     * @var bool
+     */
+    public $dayIsLastInMonth = false;
+
+    /**
      * @var \DateTimeZone
      */
     protected $timezone;
@@ -122,7 +129,9 @@ class DateTimeData
     public function merge(self $other) : self
     {
         foreach ($other as $property => $value) {
-            if ($property === 'timezone') {
+            if ($property === 'dayIsLastInMonth') {
+                continue;
+            } elseif ($property === 'timezone') {
                 if ($value->getName() !== $this->timezone->getName()) {
                     throw new Exception('Can not merge DateTimeData objects w/ different timezones!');
                 }

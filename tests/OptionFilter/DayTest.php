@@ -40,7 +40,7 @@ class DayTest extends PHPUnit_Framework_TestCase
         // keep a reference for modification during individual tests
         $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
             // methods that are mocked; results can be manipulated later
-            ->setMethods(['getWhitelist', 'getBlacklist'])
+            ->setMethods(['getWhitelist', 'getBlacklist', 'getAfter', 'getBefore'])
             ->getMock();
         $this->sut->setClues($this->clues);
     }
@@ -385,7 +385,6 @@ class DayTest extends PHPUnit_Framework_TestCase
     {
         $this->clues->method('getWhitelist')->willReturn(array(27, 29));
 
-        // empty so far
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
@@ -440,5 +439,48 @@ class DayTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1969, $ranges[3]->getEnd()->y);
         $this->assertEquals(8, $ranges[3]->getEnd()->m);
         $this->assertEquals(29, $ranges[3]->getEnd()->d);
+    }
+
+    public function testApplyBeforeAndAfterOverMonthBorder() : void
+    {
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData($this->tz);
+        $start->y = 1960;
+        $start->m = 2;
+        $range->setStart($start);
+        $end = new DateTimeData($this->tz);
+        $end->y = 1960;
+        $end->m = 3;
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $this->clues->method('getAfter')->willReturn(28);
+        $this->clues->method('getBefore')->willReturn(2);
+
+        $ranges = $this->sut->apply($ranges);
+
+        $this->assertCount(3, $ranges);
+
+        $this->assertEquals(1960, $ranges[0]->getStart()->y);
+        $this->assertEquals(2, $ranges[0]->getStart()->m);
+        $this->assertEquals(1, $ranges[0]->getStart()->d);
+        $this->assertEquals(1960, $ranges[0]->getEnd()->y);
+        $this->assertEquals(2, $ranges[0]->getEnd()->m);
+        $this->assertEquals(2, $ranges[0]->getEnd()->d);
+
+        $this->assertEquals(1960, $ranges[1]->getStart()->y);
+        $this->assertEquals(2, $ranges[1]->getStart()->m);
+        $this->assertEquals(28, $ranges[1]->getStart()->d);
+        $this->assertEquals(1960, $ranges[1]->getEnd()->y);
+        $this->assertEquals(3, $ranges[1]->getEnd()->m);
+        $this->assertEquals(2, $ranges[1]->getEnd()->d);
+
+        $this->assertEquals(1960, $ranges[2]->getStart()->y);
+        $this->assertEquals(3, $ranges[2]->getStart()->m);
+        $this->assertEquals(28, $ranges[2]->getStart()->d);
+        $this->assertEquals(1960, $ranges[2]->getEnd()->y);
+        $this->assertEquals(3, $ranges[2]->getEnd()->m);
+        $this->assertEquals(31, $ranges[2]->getEnd()->d);
     }
 }

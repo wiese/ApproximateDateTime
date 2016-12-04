@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\OptionFilter;
 
+use wiese\ApproximateDateTime\ApproximateDateTime;
 use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\Ranges;
@@ -36,10 +37,17 @@ abstract class Base
      */
     protected $config;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $log;
+
     public function __construct()
     {
         $this->config = new Config;
+        $this->log = ApproximateDateTime::getLog();
     }
+
     /**
      * Set the unit the OptionFilter is supposed to be working on
      *
@@ -85,7 +93,7 @@ abstract class Base
      * @param \DateTimeZone $timezone
      * @return self
      */
-    public function setTimezone(\DateTimeZone $timezone) : self
+    public function setTimezone(DateTimeZone $timezone) : self
     {
         $this->timezone = $timezone;
 
@@ -117,41 +125,53 @@ abstract class Base
      * Determine the range of allowable values from all clues, and limits
      *
      * @param int $overrideMax
-     * @return array
+     * @return int[]
      */
     protected function getAllowableOptions(int $overrideMax = null) : array
     {
+        $this->log->debug('getAllowableOptions', [$this->unit, $overrideMax]);
+
         if (is_int($overrideMax)) {
             $max = $overrideMax;
         } else {
             $max = $this->config->getMax($this->unit);
         }
 
-        $gtEq = $this->clues->getAfter($this->unit);
-        if (!is_int($gtEq)) {
-            $gtEq = $this->config->getMin($this->unit);
-        }
+        $min = $this->config->getMin($this->unit);
         $ltEq = $this->clues->getBefore($this->unit);
-        if (!is_int($ltEq)) {
-            $ltEq = $max;
+        $gtEq = $this->clues->getAfter($this->unit);
+
+        $this->log->debug('bounds', [$min, $max, $ltEq, $gtEq]);
+
+        $options = $this->clues->getWhitelist($this->unit);
+
+        if (is_int($min) && is_int($max)) { // y does not know extremes
+            $minToMax = range($min, $max);
+
+            if (empty($options)) {
+                $options = $minToMax;
+            } else {
+                $options = array_intersect($options, $minToMax);
+            }
         }
 
-        $whitelist = $this->clues->getWhitelist($this->unit);
-
-        if (!is_null($gtEq) && !is_null($ltEq)) {
-            $options = range($gtEq, $ltEq);
-        } else {
-            // @todo y has no min/max, but may have gt or lt. enforce on whitelist items
-            $options = $whitelist;
+        $validPerBeforeAfter = [];
+        if ($ltEq) {
+            $validPerBeforeAfter = array_merge($validPerBeforeAfter, range($min, $ltEq));
+        }
+        if ($gtEq) {
+            $validPerBeforeAfter = array_merge($validPerBeforeAfter, range($gtEq, $max));
         }
 
-        if (!empty($whitelist)) {
-            $options = array_intersect($options, $whitelist);
+        if ($validPerBeforeAfter) {
+            $options = array_intersect($options, $validPerBeforeAfter);
         }
 
         $options = array_diff($options, $this->clues->getBlacklist($this->unit));
         $options = array_values($options); // resetting keys to be sequential
         // array_unique?
+
+        $this->log->debug('options ' . $this->unit, [$options]);
 
         return $options;
     }

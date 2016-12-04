@@ -543,6 +543,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->sut->setClues($clues);
         $actualPeriods = $this->sut->getPeriods();
+
         $this->assertCount(1, $actualPeriods, 'after month whitelist');
 
         foreach (range(1, 31) as $day) {
@@ -635,6 +636,67 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
             new DateTime('1954-05-10 23:59:59', $this->tz),
             $period->getStartDate()->add($period->getDateInterval())
         );
+    }
+
+    public function testComplexBeforeAndAfter() : void
+    {
+        $clue1 = new Clue;
+        $clue1->type = 'y';
+        $clue1->value = 1960;
+        $clue1->filter = Clue::FILTER_WHITELIST;
+
+        $clue2 = new Clue;
+        $clue2->type = 'm';
+        $clue2->value = 2;
+        $clue2->filter = Clue::FILTER_WHITELIST;
+
+        $clue3 = new Clue;
+        $clue3->type = 'm';
+        $clue3->value = 3;
+        $clue3->filter = Clue::FILTER_WHITELIST;
+
+        $clue4 = new Clue;
+        $clue4->type = 'd';
+        $clue4->value = 28;
+        $clue4->filter = Clue::FILTER_AFTEREQUALS;
+
+        $clue5 = new Clue;
+        $clue5->type = 'd';
+        $clue5->value = 3;
+        $clue5->filter = Clue::FILTER_BEFOREEQUALS;
+
+        $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]);
+
+        $actualPeriods = $this->sut->getPeriods();
+
+        $this->assertCount(3, $actualPeriods);
+
+        $this->assertEquals(new DateTime('1960-02-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
+        $actualInterval = $actualPeriods[0]->getDateInterval();
+        $this->assertEquals(0, $actualInterval->y);
+        $this->assertEquals(0, $actualInterval->m);
+        $this->assertEquals(2, $actualInterval->d);
+        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(59, $actualInterval->i);
+        $this->assertEquals(59, $actualInterval->s);
+
+        $this->assertEquals(new DateTime('1960-02-28 00:00:00', $this->tz), $actualPeriods[1]->getStartDate());
+        $actualInterval = $actualPeriods[1]->getDateInterval();
+        $this->assertEquals(0, $actualInterval->y);
+        $this->assertEquals(0, $actualInterval->m);
+        $this->assertEquals(4, $actualInterval->d);
+        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(59, $actualInterval->i);
+        $this->assertEquals(59, $actualInterval->s);
+
+        $this->assertEquals(new DateTime('1960-03-28 00:00:00', $this->tz), $actualPeriods[2]->getStartDate());
+        $actualInterval = $actualPeriods[2]->getDateInterval();
+        $this->assertEquals(0, $actualInterval->y);
+        $this->assertEquals(0, $actualInterval->m);
+        $this->assertEquals(3, $actualInterval->d);
+        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(59, $actualInterval->i);
+        $this->assertEquals(59, $actualInterval->s);
     }
 
     public function testCompoundUnits() : void

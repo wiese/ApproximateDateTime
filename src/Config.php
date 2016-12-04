@@ -63,6 +63,9 @@ class Config
         'h-i-s' => 's',
     ];
 
+    public static $logHandler = 'Monolog\\Handler\\NullHandler';
+    //public static $logHandler = null;
+
     /**
      * Get the minimum valid value for the given unit
      *
