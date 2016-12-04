@@ -128,7 +128,8 @@ class DateTimeData
      */
     public function merge(self $other) : self
     {
-        foreach ($other as $property => $value) {
+        $properties = get_object_vars($other);
+        foreach ($properties as $property => $value) {
             if ($property === 'dayIsLastInMonth') {
                 continue;
             } elseif ($property === 'timezone') {
@@ -174,8 +175,8 @@ class DateTimeData
     public function getNextUnit() : string
     {
         $targetUnit = null;
-        // determine highest level non-set unit
-        foreach ($this as $unit => $value) {
+        $properties = get_object_vars($this);
+        foreach ($properties as $unit => $value) {
             if (is_null($value)) {
                 break;
             }
