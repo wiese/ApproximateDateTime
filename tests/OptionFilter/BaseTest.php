@@ -99,6 +99,15 @@ class BaseTest extends ParentTest
         $this->assertEquals(range(8, 18), $this->getAllowableOptions());
     }
 
+    public function testBeforeAndAfterInversed() : void
+    {
+        $this->sut->setUnit('i');
+
+        $this->mockClues(18, 8, [], []);
+
+        $this->assertEquals(array_merge(range(0, 8), range(18, 59)), $this->getAllowableOptions());
+    }
+
     protected function getAllowableOptions(int $overrideMax = null) : array
     {
         $method = new ReflectionMethod($this->sut, 'getAllowableOptions');

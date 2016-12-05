@@ -131,12 +131,7 @@ abstract class Base
     {
         $this->log->debug('getAllowableOptions', [$this->unit, $overrideMax]);
 
-        if (is_int($overrideMax)) {
-            $max = $overrideMax;
-        } else {
-            $max = $this->config->getMax($this->unit);
-        }
-
+        $max = is_int($overrideMax) ? $overrideMax : $this->config->getMax($this->unit);
         $min = $this->config->getMin($this->unit);
         $ltEq = $this->clues->getBefore($this->unit);
         $gtEq = $this->clues->getAfter($this->unit);
