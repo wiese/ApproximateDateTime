@@ -112,17 +112,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * {@inheritDoc}
-     * @see ApproximateDateTimeInterface::getInterval()
-     */
-    public function getInterval() : DateInterval
-    {
-        $diff = $this->getEarliest()->diff($this->getLatest());
-
-        return $diff;
-    }
-
-    /**
-     * {@inheritDoc}
      * @see ApproximateDateTimeInterface::getPeriods()
      */
     public function getPeriods() : array

@@ -71,11 +71,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->sut->isPossible(new DateTime('2017-01-02', $this->tz)));
         $this->assertFalse($this->sut->isPossible(new DateTime('2015-12-31', $this->tz)));
 
-        $this->assertEquals(365, $this->sut->getInterval()->days);
-        $this->assertEquals(23, $this->sut->getInterval()->h);
-        $this->assertEquals(59, $this->sut->getInterval()->i);
-        $this->assertEquals(59, $this->sut->getInterval()->s);
-
         $actualPeriods = $this->sut->getPeriods();
 
         $this->assertCount(1, $actualPeriods);
@@ -116,11 +111,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($this->sut->isPossible(new DateTime('1984-01-03', $this->tz)));
         $this->assertFalse($this->sut->isPossible(new DateTime('1990-07-12', $this->tz)));
 
-        $this->assertEquals(729, $this->sut->getInterval()->days);
-        $this->assertEquals(23, $this->sut->getInterval()->h);
-        $this->assertEquals(59, $this->sut->getInterval()->i);
-        $this->assertEquals(59, $this->sut->getInterval()->s);
-
         $actualPeriods = $this->sut->getPeriods();
         $this->assertCount(1, $actualPeriods);
         $this->assertEquals(new DateTime('1985-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
@@ -152,11 +142,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(new DateTime('2001-03-01 00:00:00', $this->tz), $this->sut->getEarliest());
         $this->assertEquals(new DateTime('2001-04-30 23:59:59', $this->tz), $this->sut->getLatest());
-
-        $this->assertEquals(60, $this->sut->getInterval()->days);
-        $this->assertEquals(23, $this->sut->getInterval()->h);
-        $this->assertEquals(59, $this->sut->getInterval()->i);
-        $this->assertEquals(59, $this->sut->getInterval()->s);
 
         $actualPeriods = $this->sut->getPeriods();
         $this->assertCount(1, $actualPeriods);
@@ -192,10 +177,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(new DateTime('2010-03-28 00:00:00', $this->tz), $this->sut->getEarliest());
         $this->assertEquals(new DateTime('2010-03-30 23:59:59', $this->tz), $this->sut->getLatest());
-
-        $this->assertEquals(23, $this->sut->getInterval()->h);
-        $this->assertEquals(59, $this->sut->getInterval()->i);
-        $this->assertEquals(59, $this->sut->getInterval()->s);
 
         $this->assertEquals(
             [
@@ -272,11 +253,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $this->sut->getEarliest());
         $this->assertEquals(new DateTime('1985-01-23 07:11:32', $this->tz), $this->sut->getLatest());
-
-        $this->assertEquals(0, $this->sut->getInterval()->days);
-        $this->assertEquals(0, $this->sut->getInterval()->h);
-        $this->assertEquals(0, $this->sut->getInterval()->i);
-        $this->assertEquals(0, $this->sut->getInterval()->s);
 
         $this->assertEquals(
             [

@@ -38,17 +38,6 @@ interface ApproximateDateTimeInterface
     public function getLatest() : ? DateTimeInterface;
 
     /**
-     * Get the interval in between earliest and latest possible moment
-     *
-     * @todo Does and can not cover holes in between. Lose and let user
-     * calculate herself (from getPeriods()) if she needs this information
-     * of questionable quality?
-     *
-     * @return DateInterval
-     */
-    public function getInterval() : DateInterval;
-
-    /**
      * Get all valid periods, i.e. start & interval, matching the clues
      *
      * @return DatePeriod[]
