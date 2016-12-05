@@ -141,11 +141,11 @@ abstract class Base
         $ltEq = $this->clues->getBefore($this->unit);
         $gtEq = $this->clues->getAfter($this->unit);
 
-        $this->log->debug('bounds', [$min, $max, $ltEq, $gtEq]);
+        $this->log->debug('bounds', [$min, $max, $gtEq, $ltEq]);
 
         $options = $this->clues->getWhitelist($this->unit);
 
-        if (is_int($min) && is_int($max)) { // y does not know extremes
+        if (is_int($min) && is_int($max)) { // e.g. y does not know extremes
             $minToMax = range($min, $max);
 
             if (empty($options)) {
@@ -156,12 +156,19 @@ abstract class Base
         }
 
         $validPerBeforeAfter = [];
-        if ($ltEq) {
-            $validPerBeforeAfter = array_merge($validPerBeforeAfter, range($min, $ltEq));
+
+        if (is_int($gtEq) && is_int($ltEq) && $gtEq < $ltEq) {
+            $validPerBeforeAfter = range($gtEq, $ltEq);
+        } else {
+            if (is_int($gtEq)) {
+                $validPerBeforeAfter = array_unique(array_merge($validPerBeforeAfter, range($gtEq, $max)));
+            }
+            if (is_int($ltEq)) {
+                $validPerBeforeAfter = array_unique(array_merge($validPerBeforeAfter, range($min, $ltEq)));
+            }
         }
-        if ($gtEq) {
-            $validPerBeforeAfter = array_merge($validPerBeforeAfter, range($gtEq, $max));
-        }
+
+        $this->log->debug('validPerBeforeAfter', [$validPerBeforeAfter]);
 
         if ($validPerBeforeAfter) {
             $options = array_intersect($options, $validPerBeforeAfter);

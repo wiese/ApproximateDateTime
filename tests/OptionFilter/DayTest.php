@@ -3,15 +3,13 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
-use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\OptionFilter\Day;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
-use PHPUnit_Framework_TestCase;
 
-class DayTest extends PHPUnit_Framework_TestCase
+class DayTest extends ParentTest
 {
 
     /**
@@ -23,11 +21,6 @@ class DayTest extends PHPUnit_Framework_TestCase
      * @var Day
      */
     protected $sut;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject Of Clues
-     */
-    protected $clues;
 
     public function setUp() : void
     {
@@ -47,6 +40,8 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyAllDaysInMonth() : void
     {
+        $this->mockClues(null, null, [], []);
+
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
@@ -71,7 +66,8 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyAllDaysInConsecutiveMonths() : void
     {
-        // empty so far
+        $this->mockClues(null, null, [], []);
+
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
@@ -98,9 +94,8 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyAllDaysThroughBigWhitelistInConsecutiveMonths() : void
     {
-        $this->clues->method('getWhitelist')->willReturn(range(1, 31));
+        $this->mockClues(null, null, range(1, 31), []);
 
-        // empty so far
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
@@ -127,7 +122,8 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyAllDaysInSeparateMonths() : void
     {
-        // empty so far
+        $this->mockClues(null, null, [], []);
+
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
@@ -150,7 +146,6 @@ class DayTest extends PHPUnit_Framework_TestCase
         $range->setEnd($end);
         $ranges->append($range);
 
-
         $ranges = $this->sut->apply($ranges);
 
         $this->assertCount(2, $ranges);
@@ -172,8 +167,7 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyConsecutiveDaysInMonth() : void
     {
-        $this->clues->method('getWhitelist')->willReturn(array(3, 4, 5));
-        $this->clues->method('getBlacklist')->willReturn(array(5));
+        $this->mockClues(null, null, [3, 4, 5], [5]);
 
         $ranges = new Ranges();
         $range = new Range();
@@ -201,9 +195,8 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyConsecutiveDaysInConsecutiveMonths() : void
     {
-        $this->clues->method('getWhitelist')->willReturn(array(7, 8, 9));
+        $this->mockClues(null, null, [7, 8, 9], []);
 
-        // empty so far
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
@@ -237,9 +230,8 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplyConsecutiveDaysInSeparateMonths() : void
     {
-        $this->clues->method('getWhitelist')->willReturn(array(27, 28));
+        $this->mockClues(null, null, [27, 28], []);
 
-        // empty so far
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
@@ -284,8 +276,7 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplySeparateDaysInMonth() : void
     {
-        $this->clues->method('getWhitelist')->willReturn(array(3, 4, 5));
-        $this->clues->method('getBlacklist')->willReturn(array(4));
+        $this->mockClues(null, null, [3, 4, 5], [4]);
 
         $ranges = new Ranges();
         $range = new Range();
@@ -320,7 +311,7 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplySeparateDaysInConsecutiveMonths() : void
     {
-        $this->clues->method('getWhitelist')->willReturn(array(10, 12));
+        $this->mockClues(null, null, [10, 12], []);
 
         $ranges = new Ranges();
         $range = new Range();
@@ -383,7 +374,7 @@ class DayTest extends PHPUnit_Framework_TestCase
 
     public function testApplySeparateDaysInSeparateMonths() : void
     {
-        $this->clues->method('getWhitelist')->willReturn(array(27, 29));
+        $this->mockClues(null, null, [27, 29], []);
 
         $ranges = new Ranges();
         $range = new Range();
@@ -455,8 +446,7 @@ class DayTest extends PHPUnit_Framework_TestCase
         $range->setEnd($end);
         $ranges->append($range);
 
-        $this->clues->method('getAfter')->willReturn(28);
-        $this->clues->method('getBefore')->willReturn(2);
+        $this->mockClues(28, 2, [], []);
 
         $ranges = $this->sut->apply($ranges);
 

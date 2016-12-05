@@ -3,20 +3,10 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
-use PHPUnit_Framework_TestCase;
+use ReflectionMethod;
 
-class BaseTest extends PHPUnit_Framework_TestCase
+class BaseTest extends ParentTest
 {
-
-    /**
-     * @var BaseIncarnation
-     */
-    protected $sut;
-
-    /**
-     * @var PHPUnit_Framework_MockObject_MockObject Of Clues
-     */
-    protected $clues;
 
     public function setUp() : void
     {
@@ -32,27 +22,53 @@ class BaseTest extends PHPUnit_Framework_TestCase
     {
         $this->sut->setUnit('d');
 
-        $this->assertEquals(range(1, 30), $this->getAllowableOptions(30));
+        $this->mockClues(null, null, [], []);
 
-        $this->clues->method('getBefore')->willReturn(3);
+        $this->assertEquals(range(1, 30), $this->getAllowableOptions(30));
+    }
+
+    public function testGetAllowableOptionsForDaysWithBefore() : void
+    {
+        $this->sut->setUnit('d');
+
+        $this->mockClues(null, 3, [], []);
 
         $this->assertEquals(range(1, 3), $this->getAllowableOptions(31));
+    }
 
-        $this->clues->method('getAfter')->willReturn(27);
+    public function testGetAllowableOptionsForDaysWithBeforeAndAfter() : void
+    {
+        $this->sut->setUnit('d');
+
+        $this->mockClues(27, 3, [], []);
 
         $this->assertEquals([1, 2, 3, 27, 28, 29, 30], $this->getAllowableOptions(30));
+    }
 
-        $this->clues->method('getWhitelist')->willReturn([2, 3, 4, 5, 9, 31]);
+    public function testGetAllowableOptionsForDaysWithBeforeAfterAndWhitelist() : void
+    {
+        $this->sut->setUnit('d');
+
+        $this->mockClues(27, 3, [2, 3, 4, 5, 9, 31], []);
+
         $this->assertEquals([2, 3, 31], $this->getAllowableOptions(31));
+    }
 
-        $this->clues->method('getBlacklist')->willReturn([2]);
+    public function testGetAllowableOptionsForDaysWithAllFilters() : void
+    {
+        $this->sut->setUnit('d');
+
+        $this->mockClues(27, 3, [2, 3, 4, 5, 9, 31], [2]);
+
         $this->assertEquals([3, 31], $this->getAllowableOptions(31));
     }
 
     public function testGetAllowableOptionsGenerousWhitelist() : void
     {
         $this->sut->setUnit('d');
-        $this->clues->method('getWhitelist')->willReturn(range(1, 31));
+
+        $this->mockClues(null, null, range(1, 31), []);
+
         $this->assertEquals(range(1, 30), $this->getAllowableOptions(30));
     }
 
@@ -60,15 +76,32 @@ class BaseTest extends PHPUnit_Framework_TestCase
     {
         $this->sut->setUnit('h');
 
-        $this->assertEquals(range(0, 23), $this->getAllowableOptions());
+        $this->mockClues(null, null, [], []);
 
-        $this->clues->method('getWhitelist')->willReturn(range(0, 3));
+        $this->assertEquals(range(0, 23), $this->getAllowableOptions());
+    }
+
+    public function testGetAllowableOptionsZeroValuesAndWhitelist() : void
+    {
+        $this->sut->setUnit('h');
+
+        $this->mockClues(null, null, range(0, 3), []);
+
         $this->assertEquals(range(0, 3), $this->getAllowableOptions());
+    }
+
+    public function testBeforeAndAfter() : void
+    {
+        $this->sut->setUnit('h');
+
+        $this->mockClues(8, 18, [], []);
+
+        $this->assertEquals(range(8, 18), $this->getAllowableOptions());
     }
 
     protected function getAllowableOptions(int $overrideMax = null) : array
     {
-        $method = new \ReflectionMethod($this->sut, 'getAllowableOptions');
+        $method = new ReflectionMethod($this->sut, 'getAllowableOptions');
         $method->setAccessible(true);
         return $method->invoke($this->sut, $overrideMax);
     }

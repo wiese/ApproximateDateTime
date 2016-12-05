@@ -665,36 +665,48 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue5->value = 3;
         $clue5->filter = Clue::FILTER_BEFOREEQUALS;
 
-        $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]);
+        $clue6 = new Clue;
+        $clue6->type = 'h';
+        $clue6->value = 8;
+        $clue6->filter = Clue::FILTER_AFTEREQUALS;
+
+        $clue7 = new Clue;
+        $clue7->type = 'h';
+        $clue7->value = 18;
+        $clue7->filter = Clue::FILTER_BEFOREEQUALS;
+
+
+        $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
 
         $actualPeriods = $this->sut->getPeriods();
 
         $this->assertCount(3, $actualPeriods);
 
-        $this->assertEquals(new DateTime('1960-02-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
+        $this->assertEquals(new DateTime('1960-02-01 08:00:00', $this->tz), $actualPeriods[0]->getStartDate());
         $actualInterval = $actualPeriods[0]->getDateInterval();
+
         $this->assertEquals(0, $actualInterval->y);
         $this->assertEquals(0, $actualInterval->m);
         $this->assertEquals(2, $actualInterval->d);
-        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(10, $actualInterval->h, 'up until the 18. hour, incl all minutes, hence 10 h, not 9');
         $this->assertEquals(59, $actualInterval->i);
         $this->assertEquals(59, $actualInterval->s);
 
-        $this->assertEquals(new DateTime('1960-02-28 00:00:00', $this->tz), $actualPeriods[1]->getStartDate());
+        $this->assertEquals(new DateTime('1960-02-28 08:00:00', $this->tz), $actualPeriods[1]->getStartDate());
         $actualInterval = $actualPeriods[1]->getDateInterval();
         $this->assertEquals(0, $actualInterval->y);
         $this->assertEquals(0, $actualInterval->m);
         $this->assertEquals(4, $actualInterval->d);
-        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(10, $actualInterval->h);
         $this->assertEquals(59, $actualInterval->i);
         $this->assertEquals(59, $actualInterval->s);
 
-        $this->assertEquals(new DateTime('1960-03-28 00:00:00', $this->tz), $actualPeriods[2]->getStartDate());
+        $this->assertEquals(new DateTime('1960-03-28 08:00:00', $this->tz), $actualPeriods[2]->getStartDate());
         $actualInterval = $actualPeriods[2]->getDateInterval();
         $this->assertEquals(0, $actualInterval->y);
         $this->assertEquals(0, $actualInterval->m);
         $this->assertEquals(3, $actualInterval->d);
-        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(10, $actualInterval->h);
         $this->assertEquals(59, $actualInterval->i);
         $this->assertEquals(59, $actualInterval->s);
     }
