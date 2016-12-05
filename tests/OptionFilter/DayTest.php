@@ -434,6 +434,8 @@ class DayTest extends ParentTest
 
     public function testApplyBeforeAndAfterOverMonthBorder() : void
     {
+        $this->mockClues(28, 2, [], []);
+
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
@@ -445,8 +447,6 @@ class DayTest extends ParentTest
         $end->m = 3;
         $range->setEnd($end);
         $ranges->append($range);
-
-        $this->mockClues(28, 2, [], []);
 
         $ranges = $this->sut->apply($ranges);
 

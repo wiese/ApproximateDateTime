@@ -8,9 +8,8 @@ use wiese\ApproximateDateTime\OptionFilter\Weekday;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
-use PHPUnit_Framework_TestCase;
 
-class WeekdayTest extends PHPUnit_Framework_TestCase
+class WeekdayTest extends ParentTest
 {
 
     /**
@@ -23,11 +22,6 @@ class WeekdayTest extends PHPUnit_Framework_TestCase
      */
     protected $sut;
 
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject Of Clues
-     */
-    protected $clues;
-
     public function setUp() : void
     {
         $this->tz = new DateTimeZone('Pacific/Guam');
@@ -39,14 +33,14 @@ class WeekdayTest extends PHPUnit_Framework_TestCase
         // keep a reference for modification during individual tests
         $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
             // methods that are mocked; results can be manipulated later
-            ->setMethods(['getWhitelist', 'getBlacklist'])
+            ->setMethods(['getWhitelist', 'getBlacklist', 'getAfter', 'getBefore'])
             ->getMock();
         $this->sut->setClues($this->clues);
     }
 
     public function testApplyAllTuesdaysInMonth() : void
     {
-        $this->clues->method('getWhitelist')->willReturn([2]);
+        $this->mockClues(null, null, [2], []);
 
         $ranges = new Ranges();
         $range = new Range();
