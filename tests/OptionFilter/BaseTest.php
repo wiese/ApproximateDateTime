@@ -18,7 +18,7 @@ class BaseTest extends ParentTest
         $this->sut->setClues($this->clues);
     }
 
-    public function testGetAllowableOptionsForDays() : void
+    public function testForDays() : void
     {
         $this->sut->setUnit('d');
 
@@ -27,7 +27,7 @@ class BaseTest extends ParentTest
         $this->assertEquals(range(1, 30), $this->getAllowableOptions(30));
     }
 
-    public function testGetAllowableOptionsForDaysWithBefore() : void
+    public function testForDaysWithBefore() : void
     {
         $this->sut->setUnit('d');
 
@@ -36,7 +36,7 @@ class BaseTest extends ParentTest
         $this->assertEquals(range(1, 3), $this->getAllowableOptions(31));
     }
 
-    public function testGetAllowableOptionsForDaysWithBeforeAndAfter() : void
+    public function testForDaysWithBeforeAndAfter() : void
     {
         $this->sut->setUnit('d');
 
@@ -45,7 +45,7 @@ class BaseTest extends ParentTest
         $this->assertEquals([1, 2, 3, 27, 28, 29, 30], $this->getAllowableOptions(30));
     }
 
-    public function testGetAllowableOptionsForDaysWithBeforeAfterAndWhitelist() : void
+    public function testForDaysWithBeforeAfterAndWhitelist() : void
     {
         $this->sut->setUnit('d');
 
@@ -54,7 +54,7 @@ class BaseTest extends ParentTest
         $this->assertEquals([2, 3, 31], $this->getAllowableOptions(31));
     }
 
-    public function testGetAllowableOptionsForDaysWithAllFilters() : void
+    public function testForDaysWithAllFilters() : void
     {
         $this->sut->setUnit('d');
 
@@ -63,7 +63,7 @@ class BaseTest extends ParentTest
         $this->assertEquals([3, 31], $this->getAllowableOptions(31));
     }
 
-    public function testGetAllowableOptionsGenerousWhitelist() : void
+    public function testGenerousWhitelist() : void
     {
         $this->sut->setUnit('d');
 
@@ -72,7 +72,7 @@ class BaseTest extends ParentTest
         $this->assertEquals(range(1, 30), $this->getAllowableOptions(30));
     }
 
-    public function testGetAllowableOptionsZeroValues() : void
+    public function testZeroValues() : void
     {
         $this->sut->setUnit('h');
 
@@ -81,7 +81,7 @@ class BaseTest extends ParentTest
         $this->assertEquals(range(0, 23), $this->getAllowableOptions());
     }
 
-    public function testGetAllowableOptionsZeroValuesAndWhitelist() : void
+    public function testZeroValuesAndWhitelist() : void
     {
         $this->sut->setUnit('h');
 
