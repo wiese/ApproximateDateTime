@@ -28,6 +28,19 @@ class CluesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals([], $this->sut->getWhitelist('h'));
         $this->assertEquals([], $this->sut->getWhitelist('i'));
         $this->assertEquals([], $this->sut->getWhitelist('s'));
+
+        $properties = ['y', 'm', 'd', 'h', 'i', 's'];
+
+        foreach ($properties as $property) {
+            $this->assertEquals([], $this->sut->getBlacklist($property));
+        }
+
+        $methods = ['getBefore', 'getAfter'];
+        foreach ($methods as $method) {
+            foreach ($properties as $property) {
+                $this->assertNull($this->sut->$method($property));
+            }
+        }
     }
 
     public function testBlackAndWhitelist() : void
