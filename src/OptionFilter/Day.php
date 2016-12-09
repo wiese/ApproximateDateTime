@@ -54,25 +54,6 @@ class Day extends Base
 
                 $this->log->debug('daysInMonth', [$daysInMonth]);
                 $this->log->debug('options', [$options]);
-/*
-                if (count($options) === $daysInMonth) { // all days this m - fast lane
-                    if ($border) {  // start of a new range
-                        $newRange = clone $filet;
-                        $newRanges->append($newRange);
-                        $newRange->getEnd()->d = array_pop($options);
-                        $newRange->getStart()->d = array_shift($options);
-                    } else { // mending existing range that spans across multiple months
-                        $newRange->getEnd()->y = $filet->getEnd()->y;
-                        $newRange->getEnd()->m = $filet->getEnd()->m;
-                        $newRange->getEnd()->d = array_pop($options);
-                        $newRange->getEnd()->dayIsLastInMonth = true;
-                    }
-
-                    $border = false;
-
-                    continue;
-                }
-*/
 
                 foreach ($options as $key => $value) { // laborious one-by-one processing
                     /**
