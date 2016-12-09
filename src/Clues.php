@@ -9,9 +9,7 @@ use ArrayObject;
 use DateTime;
 
 /**
- *
  * @todo implement ArrayAccess interface instead
- *
  */
 class Clues extends ArrayObject
 {
@@ -33,10 +31,19 @@ class Clues extends ArrayObject
      */
     protected $blacklists = [];
 
+    /**
+     * @var array Combined clue information on "before" values for individual units
+     */
     protected $before = [];
 
+    /**
+     * @var array Combined clue information on "after" values for individual units
+     */
     protected $after = [];
 
+    /**
+     * @var bool Flag to avoid repeated runs of self::generateFilterLists()
+     */
     protected $cachedFilterLists = false;
 
     public function __construct()
@@ -103,18 +110,13 @@ class Clues extends ArrayObject
         }
 
         // resetting from potential previous run
-        $this->whitelists
-        = $this->blacklists
-        = $this->before
-        = $this->after = [];
+        $this->whitelists = $this->blacklists = $this->before = $this->after = [];
 
-        // initialize once to save on repeated checks later
+        // initialize once to avoid repeated checks later
         foreach (Config::$units as $unit => $settings) {
-            $this->whitelists[$unit]
-            = $this->blacklists[$unit] = [];
+            $this->whitelists[$unit] = $this->blacklists[$unit] = [];
 
-            $this->before[$unit]
-            = $this->after[$unit] = null;
+            $this->before[$unit] = $this->after[$unit] = null;
         }
 
         foreach ($this as $clue) {
