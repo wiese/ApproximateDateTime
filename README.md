@@ -28,8 +28,7 @@ of options to avoid, or information on an occurence *before* or *after* a certai
 data point, for any given unit. All of this information can be provided 
 simulatanously and will be prioritized accordingly.
 
-By default, if no year is explicitly provided - i.e. *whitelist*ed - the current 
-year will be used.
+By default, if no year is explicitly *whitelist*ed, the current year will be used.
 
 ### Clue precedence
 1. Blacklist
