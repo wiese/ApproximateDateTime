@@ -733,7 +733,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         // '????-02-04T??-??-??'
         $parser->addClue('>February-04');
         $parser->addClue('!2016-03-14');
-        $parser->addClue('Weekend');
+        $parser->addClue('Weekend'); // boo - needs extended calendar definition
         $parser->addClue('Summer'); // boo - needs geo-awareness
 
 
