@@ -109,7 +109,7 @@ class Clues extends ArrayObject
         = $this->after = [];
 
         // initialize once to save on repeated checks later
-        foreach (array_keys(Config::$units) as $unit) {
+        foreach (Config::$units as $unit => $settings) {
             $this->whitelists[$unit]
             = $this->blacklists[$unit] = [];
 
