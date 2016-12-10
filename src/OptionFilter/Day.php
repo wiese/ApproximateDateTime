@@ -19,19 +19,37 @@ class Day extends Base
         // @todo desired behaviour on empty $ranges?
 
         // fast lane
-        if (empty($this->clues->getWhitelist($this->unit))
-            && empty($this->clues->getBlacklist($this->unit))
-            && empty($this->clues->getAfter($this->unit))
-            && empty($this->clues->getBefore($this->unit))
-        ) { // all days in all m
-            foreach ($ranges as & $range) {
-                $range->getStart()->d = $this->config->getMin($this->unit);
-                $range->getEnd()->d = $this->daysInMonth($range->getEnd());
-            }
-
-            return $ranges;
+        if (!$this->clues->unitHasRestrictions($this->unit)) { // all days in all m
+            return $this->applyWithoutRestrictions($ranges);
         }
 
+        return $this->applyWithRestrictions($ranges);
+    }
+
+    /**
+     * Modify the ranges per day options for simple cases where entire months are covered
+     *
+     * @param Ranges $ranges
+     * @return Ranges
+     */
+    protected function applyWithoutRestrictions(Ranges $ranges) : Ranges
+    {
+        foreach ($ranges as & $range) {
+            $range->getStart()->d = $this->config->getMin($this->unit);
+            $range->getEnd()->d = $this->daysInMonth($range->getEnd());
+        }
+
+        return $ranges;
+    }
+
+    /**
+     * Modify the ranges per day options for complex cases, including e.g. blacklisted days, ...
+     *
+     * @param Ranges $ranges
+     * @return Ranges
+     */
+    protected function applyWithRestrictions(Ranges $ranges) : Ranges
+    {
         $newRanges = new Ranges();
         $newRange = null;
 
@@ -42,12 +60,10 @@ class Day extends Base
             $filets = $range->filet();
 
             foreach ($filets as $filet) {
-
                 /**
                  * @var Range $filet A range of one month
                  */
-
-                $this->log->info('filet: ' . $filet->getStart()->toString() . ' - ' . $filet->getEnd()->toString());
+                $this->log->info('filet', [$filet->getStart()->toString(), $filet->getEnd()->toString()]);
 
                 $daysInMonth = $this->daysInMonth($filet->getEnd());
                 $options = $this->getAllowableOptions($daysInMonth);
@@ -61,8 +77,7 @@ class Day extends Base
                      * @var int $value
                      */
 
-                    $this->log->info('one-by-one processing d ' . $value);
-
+                    $this->log->info('one-by-one processing d', [$value]);
 
                     if (!$newRange
                         || ($newRange && $newRange->getEnd()->dayIsLastInMonth && $value !== 1)
@@ -72,9 +87,7 @@ class Day extends Base
                         $newRanges->append($newRange);
                     }
 
-                    $newRange->getEnd()->y = $filet->getEnd()->y;
-                    $newRange->getEnd()->m = $filet->getEnd()->m;
-                    $newRange->getEnd()->d = $value;
+                    $newRange->getEnd()->setDate($filet->getEnd()->y, $filet->getEnd()->m, $value);
                     $newRange->getEnd()->dayIsLastInMonth = false;
 
                     if (!isset($options[$key + 1]) // last
@@ -90,7 +103,7 @@ class Day extends Base
                     if ($newRange) {
                         $this->log->info('range', [$newRange->getStart()->toString(), $newRange->getEnd()->toString()]);
                     } else {
-                        $this->log->info('reset newRange after ' . $value);
+                        $this->log->info('reset newRange', [$value]);
                     }
                 }
             }

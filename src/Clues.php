@@ -60,6 +60,12 @@ class Clues extends ArrayObject
         return $this;
     }
 
+    /**
+     * Get options explicitly allowed for the unit given
+     *
+     * @param string $unit
+     * @return array
+     */
     public function getWhitelist(string $unit) : array
     {
         $this->generateFilterLists();
@@ -67,6 +73,12 @@ class Clues extends ArrayObject
         return $this->whitelists[$unit];
     }
 
+    /**
+     * Get options explicitly disallowed for the unit given
+     *
+     * @param string $unit
+     * @return array
+     */
     public function getBlacklist(string $unit) : array
     {
         $this->generateFilterLists();
@@ -74,6 +86,12 @@ class Clues extends ArrayObject
         return $this->blacklists[$unit];
     }
 
+    /**
+     * Get value the unit given has to be smaller/equal than
+     *
+     * @param string $unit
+     * @return int|null
+     */
     public function getBefore(string $unit) : ? int
     {
         $this->generateFilterLists();
@@ -81,11 +99,31 @@ class Clues extends ArrayObject
         return $this->before[$unit];
     }
 
+    /**
+     * Get value the unit given has to be bigger/equal than
+     *
+     * @param string $unit
+     * @return int|null
+     */
     public function getAfter(string $unit) : ? int
     {
         $this->generateFilterLists();
 
         return $this->after[$unit];
+    }
+
+    /**
+     * Check if clues provide a restriction for the given unit (e.g. a blacklisted day)
+     *
+     * @param string $unit
+     * @return bool
+     */
+    public function unitHasRestrictions(string $unit) : bool
+    {
+        return !empty($this->getWhitelist($unit))
+            || !empty($this->getBlacklist($unit))
+            || !empty($this->getAfter($unit))
+            || !empty($this->getBefore($unit));
     }
 
     public static function fromArray(array $clues)

@@ -148,6 +148,40 @@ class DateTimeData
     }
 
     /**
+     * Set the date information part to a different date
+     *
+     * @param int $year
+     * @param int $month
+     * @param int $day
+     * @return DateTimeData
+     */
+    public function setDate(int $year, int $month, int $day) : self
+    {
+        $this->y = $year;
+        $this->m = $month;
+        $this->d = $day;
+
+        return $this;
+    }
+
+    /**
+     * Set the time information part to a different time
+     *
+     * @param int $hour
+     * @param int $minute
+     * @param int $second
+     * @return DateTimeData
+     */
+    public function setTime(int $hour, int $minute, int $second) : self
+    {
+        $this->h = $hour;
+        $this->i = $minute;
+        $this->s = $second;
+
+        return $this;
+    }
+
+    /**
      * Create an instance from the information contained in a DateTime object
      *
      * @param \DateTimeInterface $dateTime
