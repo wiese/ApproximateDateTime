@@ -712,7 +712,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                new DatePeriod(new DateTime('2007-10-30 09:37:14', $this->tz), new DateInterval('PT1S'), 1),
+                new DatePeriod(new DateTime('2007-10-30 09:37:14', $this->tz), new DateInterval('PT0S'), 1),
             ],
             $this->sut->getPeriods()
         );
