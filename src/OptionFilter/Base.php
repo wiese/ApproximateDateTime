@@ -165,7 +165,7 @@ abstract class Base
 
         $this->log->debug('validPerBeforeAfter', [$validPerBeforeAfter]);
 
-        if ($validPerBeforeAfter) {
+        if (!empty($validPerBeforeAfter)) {
             $options = array_intersect($options, $validPerBeforeAfter);
         }
 
