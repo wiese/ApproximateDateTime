@@ -6,6 +6,7 @@ namespace wiese\ApproximateDateTime\OptionFilter;
 use wiese\ApproximateDateTime\ApproximateDateTime;
 use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\Config;
+use wiese\ApproximateDateTime\Log;
 use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
 
@@ -45,7 +46,7 @@ abstract class Base
     public function __construct()
     {
         $this->config = new Config;
-        $this->log = ApproximateDateTime::getLog();
+        $this->log = Log::get();
     }
 
     /**

@@ -126,7 +126,7 @@ class Clues extends ArrayObject
             || !empty($this->getBefore($unit));
     }
 
-    public static function fromArray(array $clues)
+    public static function fromArray(array $clues) : self
     {
         $instance = new self();
         $instance->exchangeArray($clues);

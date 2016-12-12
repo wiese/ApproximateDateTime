@@ -4,8 +4,7 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime;
 
 use wiese\ApproximateDateTime\Clues;
-use Psr\Log\LoggerInterface;
-use Monolog\Logger;
+use wiese\ApproximateDateTime\Log;
 use DateInterval;
 use DatePeriod;
 use DateTimeInterface;
@@ -152,18 +151,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $this->getEarliest();
     }
 
-    public static function getLog() : LoggerInterface
-    {
-        $logger = new Logger('ApproximateDateTime');
-
-        $handler = Config::$logHandler;
-        if (is_string($handler)) {
-            $logger->pushHandler(new $handler);
-        }
-
-        return $logger;
-    }
-
     protected function calculateBoundaries() : void
     {
         $ranges = new Ranges();
@@ -176,7 +163,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
             $ranges = $filter->apply($ranges);
 
-            self::getLog()->debug('+++ ' . $unit . ' complete. ranges:', [count($ranges)]);
+            Log::get()->debug('+++ ' . $unit . ' complete. ranges:', [count($ranges)]);
         }
 
         // @todo remove specific times (compound units)
