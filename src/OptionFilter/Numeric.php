@@ -7,6 +7,13 @@ use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 
+/**
+ * Apply restrictions to existing ranges that can by expressed by static numbers, e.g. 'month 2' is allowed.
+ * Is repeatedly applied to ranges for all units that do not have ticks, like the dynamic number of days, or
+ * date-dependency of a weekday.
+ *
+ * @package wiese\ApproximateDateTime\OptionFilter
+ */
 class Numeric extends Base
 {
     /**

@@ -9,6 +9,12 @@ use wiese\ApproximateDateTime\Ranges;
 use DateInterval;
 use DatePeriod;
 
+/**
+ * Apply weekday restrictions (e.g. 'sunday') to existing ranges.
+ * Trickier than the ordinary numeric operation as the weekday depends on a complete date of year, month, and day.
+ *
+ * @package wiese\ApproximateDateTime\OptionFilter
+ */
 class Weekday extends Base
 {
     const DATE_FORMAT_WEEKDAY = 'N';
