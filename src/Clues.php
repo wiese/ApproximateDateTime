@@ -181,16 +181,7 @@ class Clues extends ArrayObject
             return;
         }
 
-        // resetting from potential previous run
-        $this->whitelists = $this->blacklists = $this->before = $this->after = [];
-
-        // initialize once to avoid repeated checks later
-        $allUnits = array_keys(Config::$compoundUnits);
-        foreach ($allUnits as $unit) {
-            $this->whitelists[$unit] = $this->blacklists[$unit] = [];
-
-            $this->before[$unit] = $this->after[$unit] = null;
-        }
+        $this->initializeLists();
 
         foreach ($this as $clue) {
             // @todo validate value
@@ -213,13 +204,8 @@ class Clues extends ArrayObject
             }
         }
 
-        $sanitizeArray = function (& $value) {
-            array_unique($value, SORT_REGULAR);
-            sort($value); // list in order of values
-        };
-
-        array_walk($this->whitelists, $sanitizeArray);
-        array_walk($this->blacklists, $sanitizeArray);
+        array_walk($this->whitelists, [$this, 'listSanitizingCallback']);
+        array_walk($this->blacklists, [$this, 'listSanitizingCallback']);
 
         // @todo what if default year is blacklisted?
         if (empty($this->whitelists['y'])) {
@@ -245,5 +231,24 @@ class Clues extends ArrayObject
         }
 
         return $new->isBigger($existing) ? $new : $existing;
+    }
+
+    protected function initializeLists() : void
+    {
+        // resetting from potential previous run
+        $this->whitelists = $this->blacklists = $this->before = $this->after = [];
+
+        // initialize once to avoid repeated checks later
+        $allUnits = array_keys(Config::$compoundUnits);
+        foreach ($allUnits as $unit) {
+            $this->whitelists[$unit] = $this->blacklists[$unit] = [];
+
+            $this->before[$unit] = $this->after[$unit] = null;
+        }
+    }
+
+    protected function listSanitizingCallback(& $arrayValue) {
+        array_unique($arrayValue, SORT_REGULAR);
+        sort($arrayValue); // list in order of values
     }
 }
