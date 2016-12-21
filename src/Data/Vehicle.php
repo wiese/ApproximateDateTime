@@ -192,7 +192,7 @@ abstract class Vehicle
     {
         $this->resetValues();
 
-        foreach ($array AS $unit => $value) {
+        foreach ($array as $unit => $value) {
             $this->set($unit, $value);
         }
 
@@ -225,8 +225,7 @@ abstract class Vehicle
 
             if (is_int($here) && is_null($there) || is_int($there) && is_null($here)) {
                 throw new \Exception('Can not compare objects with different units set.');
-            }
-            elseif (is_int($here) && is_int($there) && $here !== $there) {  // equality leads to continued check
+            } elseif (is_int($here) && is_int($there) && $here !== $there) {  // equality leads to continued check
                 return ($here < $there) ? -1 : 1;
             }
         }
@@ -270,7 +269,7 @@ abstract class Vehicle
     public function getSetUnits() : array
     {
         $set = [];
-        foreach (self::$options AS $unit) {
+        foreach (self::$options as $unit) {
             if (!is_null($this->get($unit))) {
                 $set[] = $unit;
             }
