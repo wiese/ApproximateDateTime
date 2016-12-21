@@ -3,14 +3,13 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\OptionFilter;
 
-use wiese\ApproximateDateTime\ApproximateDateTime;
 use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\Log;
 use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
 
-abstract class Base
+abstract class Base implements OptionFilterInterface
 {
 
     /**
@@ -50,75 +49,44 @@ abstract class Base
     }
 
     /**
-     * Set the unit the OptionFilter is supposed to be working on
-     *
-     * @param string $unit
-     * @return self
+     * {@inheritDoc}
+     * @see OptionFilterInterface::setUnit()
      */
-    public function setUnit(string $unit) : self
+    public function setUnit(string $unit) : void
     {
         $this->unit = $unit;
-
-        return $this;
     }
 
     /**
-     * Set the clues to be used for the restriction of ranges
-     *
-     * @param Clues $clues
-     * @return self
+     * {@inheritDoc}
+     * @see OptionFilterInterface::setClues()
      */
-    public function setClues(Clues $clues) : self
+    public function setClues(Clues $clues) : void
     {
         $this->clues = $clues;
-
-        return $this;
     }
 
     /**
-     * Set the calendar to be used for date calculations
-     *
-     * @param int $calendar
-     * @return self
+     * {@inheritDoc}
+     * @see OptionFilterInterface::setCalendar()
      */
-    public function setCalendar(int $calendar) : self
+    public function setCalendar(int $calendar) : void
     {
         $this->calendar = $calendar;
-
-        return $this;
     }
 
     /**
-     * Set the timezone to be used for date/time calculations
-     *
-     * @param \DateTimeZone $timezone
-     * @return self
+     * {@inheritDoc}
+     * @see OptionFilterInterface::setTimezone()
      */
-    public function setTimezone(DateTimeZone $timezone) : self
+    public function setTimezone(DateTimeZone $timezone) : void
     {
         $this->timezone = $timezone;
-
-        return $this;
     }
 
     /**
-     * Instantiate a concrete OptionFilter by name
-     *
-     * @param string $name
-     * @return self
-     */
-    public static function fromName(string $name) : self
-    {
-        $className = __NAMESPACE__ . '\\' . $name;
-
-        return new $className();
-    }
-
-    /**
-     * Mend the given ranges as per the restrictions defined through clues
-     *
-     * @param Ranges $ranges
-     * @return Ranges
+     * {@inheritDoc}
+     * @see OptionFilterInterface::apply()
      */
     abstract public function apply(Ranges $ranges) : Ranges;
 

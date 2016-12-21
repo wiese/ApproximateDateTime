@@ -1,8 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace wiese\ApproximateDateTime\OptionFilter;
+namespace wiese\ApproximateDateTime\OptionFilter\Incarnation;
 
+use wiese\ApproximateDateTime\OptionFilter\Base;
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
@@ -12,7 +13,7 @@ use wiese\ApproximateDateTime\Ranges;
  * Is repeatedly applied to ranges for all units that do not have ticks, like the dynamic number of days, or
  * date-dependency of a weekday.
  *
- * @package wiese\ApproximateDateTime\OptionFilter
+ * @package wiese\ApproximateDateTime\OptionFilter\Incarnation
  */
 class Numeric extends Base
 {

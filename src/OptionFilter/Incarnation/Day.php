@@ -1,8 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace wiese\ApproximateDateTime\OptionFilter;
+namespace wiese\ApproximateDateTime\OptionFilter\Incarnation;
 
+use wiese\ApproximateDateTime\OptionFilter\Base;
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
@@ -12,7 +13,7 @@ use function cal_days_in_month;
  * Apply day restrictions (n-th day of month, that is) to existing ranges.
  * Trickier than the ordinary numeric operation as the number of days in a month depends on calendar, year, and month.
  *
- * @package wiese\ApproximateDateTime\OptionFilter
+ * @package wiese\ApproximateDateTime\OptionFilter\Incarnation
  */
 class Day extends Base
 {

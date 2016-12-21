@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use wiese\ApproximateDateTime\Clues;
+use wiese\ApproximateDateTime\OptionFilter\Factory as FilterFactory;
 use wiese\ApproximateDateTime\Log;
 use DateInterval;
 use DatePeriod;
@@ -151,11 +151,16 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $this->getEarliest();
     }
 
+    /**
+     * Use all filters to calculate the ranges
+     */
     protected function calculateBoundaries() : void
     {
         $ranges = new Ranges();
+
+        $filterFactory = new FilterFactory;
         foreach (Config::$units as $unit => $settings) {
-            $filter = OptionFilter\Base::fromName($settings['filter']);
+            $filter = $filterFactory->produce($settings['filter']);
             $filter->setUnit($unit);
             $filter->setClues($this->clues);
             $filter->setCalendar($this->calendar);

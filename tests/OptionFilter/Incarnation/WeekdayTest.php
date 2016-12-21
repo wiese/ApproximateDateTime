@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace wiese\ApproximateDateTime\Tests\OptionFilter;
+namespace wiese\ApproximateDateTime\Tests\OptionFilter\Incarnation;
 
+use wiese\ApproximateDateTime\Tests\OptionFilter\ParentTest;
 use wiese\ApproximateDateTime\DateTimeData;
-use wiese\ApproximateDateTime\OptionFilter\Weekday;
+use wiese\ApproximateDateTime\OptionFilter\Incarnation\Weekday;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;

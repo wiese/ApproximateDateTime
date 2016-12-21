@@ -1,8 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace wiese\ApproximateDateTime\OptionFilter;
+namespace wiese\ApproximateDateTime\OptionFilter\Incarnation;
 
+use wiese\ApproximateDateTime\OptionFilter\Base;
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
@@ -13,7 +14,7 @@ use DatePeriod;
  * Apply weekday restrictions (e.g. 'sunday') to existing ranges.
  * Trickier than the ordinary numeric operation as the weekday depends on a complete date of year, month, and day.
  *
- * @package wiese\ApproximateDateTime\OptionFilter
+ * @package wiese\ApproximateDateTime\OptionFilter\Incarnation
  */
 class Weekday extends Base
 {
@@ -52,7 +53,7 @@ class Weekday extends Base
      * @param Range $range The existing to check for matching weekdays
      * @param array $options Allowable weekdays
      */
-    protected function patchRanges(Ranges & $ranges, Range $range, array $options)
+    protected function patchRanges(Ranges & $ranges, Range $range, array $options) : void
     {
         $dayIterationInterval = new DateInterval('P1D');
 

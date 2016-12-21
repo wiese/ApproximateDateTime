@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace wiese\ApproximateDateTime\Tests\OptionFilter;
+namespace wiese\ApproximateDateTime\Tests\OptionFilter\Incarnation;
 
 use wiese\ApproximateDateTime\DateTimeData;
-use wiese\ApproximateDateTime\OptionFilter\Numeric;
+use wiese\ApproximateDateTime\OptionFilter\Incarnation\Numeric;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
