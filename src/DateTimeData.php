@@ -10,7 +10,7 @@ use Exception;
 
 /**
  * A data vehicle for partially known information about a DateTime.
- * Typically information gets added from greater to smally unit, adding precision.
+ * Typically information gets added from greater to smaller unit, adding precision.
  */
 class DateTimeData
 {
@@ -218,5 +218,20 @@ class DateTimeData
         }
 
         return $targetUnit;
+    }
+
+    /**
+     * @tutorial per RFC Comparable
+     *
+     * @param DateTimeData $other
+     * @return int
+     */
+    public function compareTo(self $other) : int
+    {
+        if ($this == $other) {
+            return 0;
+        }
+
+        return ($this->toString() < $other->toString()) ? -1 : 1;
     }
 }

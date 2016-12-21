@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-class Clue
+use wiese\ApproximateDateTime\Data\Vehicle;
+
+class Clue extends Vehicle
 {
     /**
      * Options describing the effect of the clue (in $filter)
@@ -16,13 +18,6 @@ class Clue
     const FILTER_AFTEREQUALS = 4;
 
     /**
-     * The unit this clue further describes
-     *
-     * @var string
-     */
-    public $type;
-
-    /**
      * The type of decription desired (inclusive, exclusive, comparison, ...)
      *
      * @tutorial Defaults to whitelist - it's most likely, hence convenience
@@ -30,13 +25,6 @@ class Clue
      * @var int
      */
     public $filter = self::FILTER_WHITELIST;
-
-    /**
-     * Value to base internal calculations on (sanitized)
-     *
-     * @var mixed
-     */
-    public $value;
 
     /**
      * Value as provided by user (ClueParser)
