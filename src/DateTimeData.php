@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime;
 
 use DateTime;
+use wiese\ApproximateDateTime\DateTimeFormats;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
@@ -14,13 +15,6 @@ use Exception;
  */
 class DateTimeData
 {
-    const FORMAT_YEAR = 'Y';
-    const FORMAT_MONTH = 'm';
-    const FORMAT_DAY = 'd';
-    const FORMAT_HOUR = 'H';
-    const FORMAT_MINUTE = 'i';
-    const FORMAT_SECOND = 's';
-
     const TO_STRING_FORMAT = '%d-%02d-%02dT%02d:%02d:%02d';
 
     /**
@@ -196,12 +190,12 @@ class DateTimeData
     {
         $instance = new self($dateTime->getTimezone());
 
-        $instance->y = (int) $dateTime->format(self::FORMAT_YEAR);
-        $instance->m = (int) $dateTime->format(self::FORMAT_MONTH);
-        $instance->d = (int) $dateTime->format(self::FORMAT_DAY);
-        $instance->h = (int) $dateTime->format(self::FORMAT_HOUR);
-        $instance->i = (int) $dateTime->format(self::FORMAT_MINUTE);
-        $instance->s = (int) $dateTime->format(self::FORMAT_SECOND);
+        $instance->y = (int) $dateTime->format(DateTimeFormats::YEAR);
+        $instance->m = (int) $dateTime->format(DateTimeFormats::MONTH);
+        $instance->d = (int) $dateTime->format(DateTimeFormats::DAY);
+        $instance->h = (int) $dateTime->format(DateTimeFormats::HOUR);
+        $instance->i = (int) $dateTime->format(DateTimeFormats::MINUTE);
+        $instance->s = (int) $dateTime->format(DateTimeFormats::SECOND);
 
         return $instance;
     }

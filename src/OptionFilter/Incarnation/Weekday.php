@@ -5,6 +5,7 @@ namespace wiese\ApproximateDateTime\OptionFilter\Incarnation;
 
 use wiese\ApproximateDateTime\OptionFilter\Base;
 use wiese\ApproximateDateTime\DateTimeData;
+use wiese\ApproximateDateTime\DateTimeFormats;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 use DateInterval;
@@ -18,8 +19,6 @@ use DatePeriod;
  */
 class Weekday extends Base
 {
-    const DATE_FORMAT_WEEKDAY = 'N';
-
     /**
      * {@inheritDoc}
      * @see Base::apply()
@@ -84,7 +83,7 @@ class Weekday extends Base
             /**
              * @var \DateTimeInterface $moment
              */
-            if (in_array($moment->format(self::DATE_FORMAT_WEEKDAY), $options)) {
+            if (in_array($moment->format(DateTimeFormats::WEEKDAY), $options)) {
                 if ($gap) {
                     $newRange = new Range();
                     $ranges->append($newRange); // append, keep var for edit
