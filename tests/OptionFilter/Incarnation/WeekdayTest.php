@@ -69,4 +69,27 @@ class WeekdayTest extends ParentTest
         $this->assertEquals(18, $ranges[2]->getStart()->d);
         $this->assertEquals(25, $ranges[3]->getStart()->d);
     }
+
+    public function testApplyNoDaysAllowed() : void
+    {
+        $this->mockClues(null, null, [], range(1, 7));
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData($this->tz);
+        $start->y = 2002;
+        $start->m = 1;
+        $start->d = 1;
+        $range->setStart($start);
+        $end = new DateTimeData($this->tz);
+        $end->y = 2002;
+        $end->m = 12;
+        $end->d = 31;
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $ranges = $this->sut->apply($ranges);
+
+        $this->assertCount(0, $ranges);
+    }
 }
