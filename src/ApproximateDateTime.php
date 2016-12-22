@@ -34,6 +34,13 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     protected $clues;
 
     /**
+     * Calculated matching ranges
+     *
+     * @var Ranges
+     */
+    protected $ranges;
+
+    /**
      * @param string $timezone
      */
     public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
@@ -52,9 +59,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * @param \DateTimeZone $timezone
-     * @return self
+     * @return ApproximateDateTimeInterface
      */
-    public function setTimezone(DateTimeZone $timezone) : self
+    public function setTimezone(DateTimeZone $timezone) : ApproximateDateTimeInterface
     {
         $this->timezone = $timezone;
 
@@ -65,9 +72,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * Set the default year used when no respective clue given
      *
      * @param int $year
-     * @return self
+     * @return ApproximateDateTimeInterface
      */
-    public function setDefaultYear(int $year) : self
+    public function setDefaultYear(int $year) : ApproximateDateTimeInterface
     {
         $this->clues->setDefaultYear($year);
 
@@ -77,14 +84,21 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     /**
      * Set the clues to digest
      *
+     * @fixme This is for prototyping only. Should probably take Clues object or solved differently altogether
+     *
      * @param array $clues
-     * @return self
+     * @return ApproximateDateTimeInterface
      */
-    public function setClues(array $clues) : self
+    public function setClues(array $clues) : ApproximateDateTimeInterface
     {
         $this->clues = Clues::fromArray($clues);
 
         return $this;
+    }
+
+    public function getClues(): Clues
+    {
+        return $this->clues;
     }
 
     /**

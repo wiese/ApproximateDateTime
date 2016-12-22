@@ -11,17 +11,19 @@ interface ApproximateDateTimeInterface
 {
 
     /**
-     * Add a clue to (further) describe the date and time
+     * Set the clues to describe the date and time
      *
-     * @param string $clue
+     * @fixme Should probably go into constructor
+     *
+     * @param array $clues
      * @return self
      */
-//	public function addClue(string $clue) : self;
+    public function setClues(array $clues) : self;
 
     /**
-     * @return string[]
+     * @return Clues
      */
-//	public function getClues() : array;
+    public function getClues() : Clues;
 
     /**
      * Get the first valid moment described by the clues
