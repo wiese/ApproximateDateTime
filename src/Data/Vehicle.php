@@ -220,9 +220,7 @@ abstract class Vehicle
     {
         $this->assertUnit($unit);
 
-        $setterMethod = 'set' . strtoupper($unit);
-
-        $this->$setterMethod($value);
+        call_user_func([$this, 'set' . strtoupper($unit)], $value);
 
         return $this;
     }
