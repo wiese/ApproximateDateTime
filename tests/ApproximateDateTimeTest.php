@@ -700,4 +700,16 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('2016-02-05 00:00:00', $this->tz), $this->sut->getEarliest());
         $this->assertEquals(new DateTime('2016-13-31 23:59:59', $this->tz), $this->sut->getLatest());
     }
+
+    public function testPayday() : void
+    {
+        $clue1 = new Clue;
+        $clue1->setY(2007);
+
+        $clue2 = new Clue;
+        $clue2->setD(15);
+
+        $this->assertEquals($this->sut, $this->sut->setClues([$clue1, $clue2]));
+        $this->assertCount(12, $this->sut->getPeriods());
+    }
 }

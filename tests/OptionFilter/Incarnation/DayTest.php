@@ -474,4 +474,22 @@ class DayTest extends ParentTest
         $this->assertEquals(3, $ranges[2]->getEnd()->m);
         $this->assertEquals(31, $ranges[2]->getEnd()->d);
     }
+
+    public function testDaysInMonthException() : void
+    {
+        $this->expectException('UnexpectedValueException');
+        $this->expectExceptionMessage('Can not calculate days in month on DateTimeData without y or m.');
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData($this->tz);
+        $start->y = 1968;
+        $range->setStart($start);
+        $end = new DateTimeData($this->tz);
+        $end->y = 1969;
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $this->sut->apply($ranges);
+    }
 }

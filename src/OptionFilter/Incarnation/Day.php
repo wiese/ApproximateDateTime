@@ -7,6 +7,7 @@ use wiese\ApproximateDateTime\OptionFilter\Base;
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
+use UnexpectedValueException;
 use function cal_days_in_month;
 
 /**
@@ -122,13 +123,16 @@ class Day extends Base
     /**
      * Get the number of days in the month as per given $data (its y & m)
      *
-     * @todo Exception handling if DateTimeData not qualified (yet)
-     *
      * @param DateTimeData $data
      * @return int
+     * @throws \UnexpectedValueException
      */
     protected function daysInMonth(DateTimeData $data)
     {
+        if (!is_int($data->y) || !is_int($data->m)) {
+            throw new UnexpectedValueException('Can not calculate days in month on DateTimeData without y or m.');
+        }
+
         return cal_days_in_month($this->calendar, $data->m, $data->y);
     }
 }
