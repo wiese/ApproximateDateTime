@@ -17,7 +17,7 @@ class DateTimeData
     const FORMAT_YEAR = 'Y';
     const FORMAT_MONTH = 'm';
     const FORMAT_DAY = 'd';
-    const FORMAT_HOUR = 'h';
+    const FORMAT_HOUR = 'H';
     const FORMAT_MINUTE = 'i';
     const FORMAT_SECOND = 's';
 
@@ -84,17 +84,22 @@ class DateTimeData
 
     /**
      * Convert current information into a DateTime object.
-     * Unset time values yield 00:00:00
+     * Incomplete time values yield 00:00:00
      *
-     * @return \DateTime
+     * @return DateTimeInterface
      */
-    public function toDateTime() : DateTime
+    public function toDateTime() : DateTimeInterface
     {
+        if (!is_int($this->y) || !is_int($this->m) || !is_int($this->d)) {
+            throw new \LogicException('DateTime can not be created from incompletely populated DateTimeData.');
+        }
+
         $datetime = new DateTime();
         $datetime->setTimezone($this->timezone);
         $datetime->setDate($this->y, $this->m, $this->d);
+        $datetime->setTime(0, 0, 0);
 
-        if (isset($this->h)) {
+        if (is_int($this->h) && is_int($this->i) && is_int($this->s)) {
             $datetime->setTime($this->h, $this->i, $this->s);
         }
 

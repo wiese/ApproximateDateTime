@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime\Tests;
 
 use wiese\ApproximateDateTime\DateTimeData;
+use DateTime;
 use DateTimeZone;
-use Exception;
 use PHPUnit_Framework_TestCase;
 
 class DateTimeDataTest extends PHPUnit_Framework_TestCase
@@ -78,5 +78,53 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $sut->s = 5;
 
         $this->assertEquals('2007-08-30T09:27:05', $sut->toString());
+    }
+
+    public function testToDateTime() : void
+    {
+        $tz = new DateTimeZone('Europe/Berlin');
+        $sut = new DateTimeData($tz);
+
+        $sut->y = 2009;
+        $sut->m = 11;
+        $sut->d = 3;
+
+        $res = $sut->toDateTime();
+        $this->assertInstanceOf('DateTimeInterface', $res);
+        $this->assertEquals(2009, $res->format('Y'));
+        $this->assertEquals(11, $res->format('m'));
+        $this->assertEquals(3, $res->format('d'));
+        $this->assertEquals(0, $res->format('H'));
+        $this->assertEquals(0, $res->format('i'));
+        $this->assertEquals(0, $res->format('s'));
+    }
+
+    public function testToDateTimeException() : void
+    {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('DateTime can not be created from incompletely populated DateTimeData.');
+
+        $tz = new DateTimeZone('Europe/Berlin');
+        $sut = new DateTimeData($tz);
+
+        $sut->y = 2009;
+        $sut->m = 12;
+
+        $sut->toDateTime();
+    }
+
+    public function testFromDateTime() : void
+    {
+        $tz = new DateTimeZone('Europe/Berlin');
+        $dateTime = new DateTime('1999-05-10 15:30:21', $tz);
+
+        $sut = DateTimeData::fromDateTime($dateTime);
+
+        $this->assertEquals(1999, $sut->y);
+        $this->assertEquals(5, $sut->m);
+        $this->assertEquals(10, $sut->d);
+        $this->assertEquals(15, $sut->h);
+        $this->assertEquals(30, $sut->i);
+        $this->assertEquals(21, $sut->s);
     }
 }
