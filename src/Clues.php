@@ -5,7 +5,7 @@ namespace wiese\ApproximateDateTime;
 
 use wiese\ApproximateDateTime\Clue;
 use wiese\ApproximateDateTime\Config;
-use wiese\ApproximateDateTime\DateTimeFormats;
+use wiese\ApproximateDateTime\DateTimeFormat;
 use ArrayObject;
 use DateTime;
 
@@ -49,7 +49,7 @@ class Clues extends ArrayObject
 
     public function __construct()
     {
-        $this->setDefaultYear((int) (new DateTime())->format(DateTimeFormats::YEAR));
+        $this->setDefaultYear((int) (new DateTime())->format(DateTimeFormat::YEAR));
         parent::__construct();
     }
 

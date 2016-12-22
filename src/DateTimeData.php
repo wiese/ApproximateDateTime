@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
+use wiese\ApproximateDateTime\DateTimeFormat;
 use DateTime;
-use wiese\ApproximateDateTime\DateTimeFormats;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
@@ -190,12 +190,12 @@ class DateTimeData
     {
         $instance = new self($dateTime->getTimezone());
 
-        $instance->y = (int) $dateTime->format(DateTimeFormats::YEAR);
-        $instance->m = (int) $dateTime->format(DateTimeFormats::MONTH);
-        $instance->d = (int) $dateTime->format(DateTimeFormats::DAY);
-        $instance->h = (int) $dateTime->format(DateTimeFormats::HOUR);
-        $instance->i = (int) $dateTime->format(DateTimeFormats::MINUTE);
-        $instance->s = (int) $dateTime->format(DateTimeFormats::SECOND);
+        $instance->y = (int) $dateTime->format(DateTimeFormat::YEAR);
+        $instance->m = (int) $dateTime->format(DateTimeFormat::MONTH);
+        $instance->d = (int) $dateTime->format(DateTimeFormat::DAY);
+        $instance->h = (int) $dateTime->format(DateTimeFormat::HOUR);
+        $instance->i = (int) $dateTime->format(DateTimeFormat::MINUTE);
+        $instance->s = (int) $dateTime->format(DateTimeFormat::SECOND);
 
         return $instance;
     }

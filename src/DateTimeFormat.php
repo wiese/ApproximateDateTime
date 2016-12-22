@@ -9,7 +9,7 @@ namespace wiese\ApproximateDateTime;
  *
  * @package wiese\ApproximateDateTime
  */
-interface DateTimeFormats
+interface DateTimeFormat
 {
     const YEAR = 'Y';
     const MONTH = 'n';
