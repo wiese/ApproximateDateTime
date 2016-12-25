@@ -15,24 +15,24 @@ class RangeTest extends PHPUnit_Framework_TestCase
 
         $sut = new Range();
         $start = new DateTimeData($timezone);
-        $start->y = 1914;
+        $start->setY(1914);
         $sut->setStart($start);
         $end = new DateTimeData($timezone);
-        $end->y = 1918;
+        $end->setY(1918);
         $sut->setEnd($end);
 
         $ranges = $sut->filet();
 
         $this->assertCount(5, $ranges);
 
-        $this->assertEquals(1914, $ranges[0]->getStart()->y);
-        $this->assertNull($ranges[0]->getEnd()->m);
-        $this->assertEquals(1914, $ranges[0]->getEnd()->y);
-        $this->assertNull($ranges[0]->getEnd()->m);
-        $this->assertEquals(1918, $ranges[4]->getStart()->y);
-        $this->assertNull($ranges[4]->getEnd()->m);
-        $this->assertEquals(1918, $ranges[4]->getEnd()->y);
-        $this->assertNull($ranges[4]->getEnd()->m);
+        $this->assertEquals(1914, $ranges[0]->getStart()->getY());
+        $this->assertNull($ranges[0]->getEnd()->getM());
+        $this->assertEquals(1914, $ranges[0]->getEnd()->getY());
+        $this->assertNull($ranges[0]->getEnd()->getM());
+        $this->assertEquals(1918, $ranges[4]->getStart()->getY());
+        $this->assertNull($ranges[4]->getEnd()->getM());
+        $this->assertEquals(1918, $ranges[4]->getEnd()->getY());
+        $this->assertNull($ranges[4]->getEnd()->getM());
     }
 
     public function testFiletMonths() : void
@@ -41,24 +41,24 @@ class RangeTest extends PHPUnit_Framework_TestCase
 
         $sut = new Range();
         $start = new DateTimeData($timezone);
-        $start->y = 1914;
-        $start->m = 2;
+        $start->setY(1914);
+        $start->setM(2);
         $sut->setStart($start);
         $end = new DateTimeData($timezone);
-        $end->y = 1914;
-        $end->m = 4;
+        $end->setY(1914);
+        $end->setM(4);
         $sut->setEnd($end);
 
         $ranges = $sut->filet();
 
         $this->assertCount(3, $ranges);
 
-        $this->assertEquals(1914, $ranges[0]->getStart()->y);
-        $this->assertEquals(2, $ranges[0]->getStart()->m);
-        $this->assertEquals(1914, $ranges[1]->getStart()->y);
-        $this->assertEquals(3, $ranges[1]->getStart()->m);
-        $this->assertEquals(1914, $ranges[2]->getStart()->y);
-        $this->assertEquals(4, $ranges[2]->getStart()->m);
+        $this->assertEquals(1914, $ranges[0]->getStart()->getY());
+        $this->assertEquals(2, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1914, $ranges[1]->getStart()->getY());
+        $this->assertEquals(3, $ranges[1]->getStart()->getM());
+        $this->assertEquals(1914, $ranges[2]->getStart()->getY());
+        $this->assertEquals(4, $ranges[2]->getStart()->getM());
     }
 
     public function testFiletYearsAndMonths() : void
@@ -67,23 +67,23 @@ class RangeTest extends PHPUnit_Framework_TestCase
 
         $sut = new Range();
         $start = new DateTimeData($timezone);
-        $start->y = 1914;
-        $start->m = 2;
+        $start->setY(1914);
+        $start->setM(2);
         $sut->setStart($start);
         $end = new DateTimeData($timezone);
-        $end->y = 1918;
-        $end->m = 4;
+        $end->setY(1918);
+        $end->setM(4);
         $sut->setEnd($end);
 
         $ranges = $sut->filet();
 
         $this->assertCount(3, $ranges);
 
-        $this->assertEquals(1914, $ranges[0]->getStart()->y);
-        $this->assertEquals(2, $ranges[0]->getStart()->m);
-        $this->assertEquals(1914, $ranges[1]->getStart()->y);
-        $this->assertEquals(3, $ranges[1]->getStart()->m);
-        $this->assertEquals(1914, $ranges[2]->getStart()->y);
-        $this->assertEquals(4, $ranges[2]->getStart()->m);
+        $this->assertEquals(1914, $ranges[0]->getStart()->getY());
+        $this->assertEquals(2, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1914, $ranges[1]->getStart()->getY());
+        $this->assertEquals(3, $ranges[1]->getStart()->getM());
+        $this->assertEquals(1914, $ranges[2]->getStart()->getY());
+        $this->assertEquals(4, $ranges[2]->getStart()->getM());
     }
 }

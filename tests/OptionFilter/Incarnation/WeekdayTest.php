@@ -46,14 +46,14 @@ class WeekdayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 2001;
-        $start->m = 9;
-        $start->d = 1;
+        $start->setY(2001);
+        $start->setM(9);
+        $start->setD(1);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 2001;
-        $end->m = 9;
-        $end->d = 30;
+        $end->setY(2001);
+        $end->setM(9);
+        $end->setD(30);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -61,13 +61,13 @@ class WeekdayTest extends ParentTest
 
         $this->assertCount(4, $ranges);
 
-        $this->assertEquals(2001, $ranges[0]->getStart()->y);
-        $this->assertEquals(9, $ranges[0]->getStart()->m);
+        $this->assertEquals(2001, $ranges[0]->getStart()->getY());
+        $this->assertEquals(9, $ranges[0]->getStart()->getM());
 
-        $this->assertEquals(4, $ranges[0]->getStart()->d);
-        $this->assertEquals(11, $ranges[1]->getStart()->d);
-        $this->assertEquals(18, $ranges[2]->getStart()->d);
-        $this->assertEquals(25, $ranges[3]->getStart()->d);
+        $this->assertEquals(4, $ranges[0]->getStart()->getD());
+        $this->assertEquals(11, $ranges[1]->getStart()->getD());
+        $this->assertEquals(18, $ranges[2]->getStart()->getD());
+        $this->assertEquals(25, $ranges[3]->getStart()->getD());
     }
 
     public function testApplyNoDaysAllowed() : void
@@ -77,14 +77,14 @@ class WeekdayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 2002;
-        $start->m = 1;
-        $start->d = 1;
+        $start->setY(2002);
+        $start->setM(1);
+        $start->setD(1);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 2002;
-        $end->m = 12;
-        $end->d = 31;
+        $end->setY(2002);
+        $end->setM(12);
+        $end->setD(31);
         $range->setEnd($end);
         $ranges->append($range);
 

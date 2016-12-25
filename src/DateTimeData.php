@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
+use wiese\ApproximateDateTime\Data\Vehicle;
 use wiese\ApproximateDateTime\DateTimeFormat;
 use DateTime;
 use DateTimeInterface;
@@ -13,51 +14,9 @@ use Exception;
  * A data vehicle for partially known information about a DateTime.
  * Typically information gets added from greater to smaller unit, adding precision.
  */
-class DateTimeData
+class DateTimeData extends Vehicle
 {
     const TO_STRING_FORMAT = '%d-%02d-%02dT%02d:%02d:%02d';
-
-    /**
-     * Year
-     *
-     * @var int|null
-     */
-    public $y;
-
-    /**
-     * Month
-     *
-     * @var int|null
-     */
-    public $m;
-
-    /**
-     * Day
-     *
-     * @var int|null
-     */
-    public $d;
-
-    /**
-     * Hour
-     *
-     * @var int|null
-     */
-    public $h;
-
-    /**
-     * Minute
-     *
-     * @var int|null
-     */
-    public $i;
-
-    /**
-     * Second
-     *
-     * @var int|null
-     */
-    public $s;
 
     /**
      * Indicator if the day (d) is the last one in the month (m) & year (y) - to avoid recomputation
@@ -217,20 +176,5 @@ class DateTimeData
         }
 
         return $targetUnit;
-    }
-
-    /**
-     * @tutorial per RFC Comparable
-     *
-     * @param DateTimeData $other
-     * @return int
-     */
-    public function compareTo(self $other) : int
-    {
-        if ($this == $other) {
-            return 0;
-        }
-
-        return ($this->toString() < $other->toString()) ? -1 : 1;
     }
 }

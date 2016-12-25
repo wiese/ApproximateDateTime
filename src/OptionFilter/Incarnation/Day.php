@@ -43,8 +43,8 @@ class Day extends Base
     protected function applyWithoutRestrictions(Ranges $ranges) : Ranges
     {
         foreach ($ranges as & $range) {
-            $range->getStart()->d = $this->config->getMin($this->unit);
-            $range->getEnd()->d = $this->daysInMonth($range->getEnd());
+            $range->getStart()->setD($this->config->getMin($this->unit));
+            $range->getEnd()->setD($this->daysInMonth($range->getEnd()));
         }
 
         return $ranges;
@@ -88,14 +88,14 @@ class Day extends Base
                     $this->log->info('one-by-one processing d', [$value]);
 
                     if (!$newRange
-                        || ($newRange && $newRange->getEnd()->dayIsLastInMonth && $value !== 1)
+                        || ($newRange instanceof Range && $newRange->getEnd()->dayIsLastInMonth && $value !== 1)
                     ) {
                         $newRange = clone $filet;
-                        $newRange->getStart()->d = $value;
+                        $newRange->getStart()->setD($value);
                         $newRanges->append($newRange);
                     }
 
-                    $newRange->getEnd()->setDate($filet->getEnd()->y, $filet->getEnd()->m, $value);
+                    $newRange->getEnd()->setDate($filet->getEnd()->getY(), $filet->getEnd()->getM(), $value);
                     $newRange->getEnd()->dayIsLastInMonth = false;
 
                     if (!isset($options[$key + 1]) // last
@@ -129,10 +129,10 @@ class Day extends Base
      */
     protected function daysInMonth(DateTimeData $data)
     {
-        if (!is_int($data->y) || !is_int($data->m)) {
+        if (!is_int($data->getY()) || !is_int($data->getM())) {
             throw new UnexpectedValueException('Can not calculate days in month on DateTimeData without y or m.');
         }
 
-        return cal_days_in_month($this->calendar, $data->m, $data->y);
+        return cal_days_in_month($this->calendar, $data->getM(), $data->getY());
     }
 }

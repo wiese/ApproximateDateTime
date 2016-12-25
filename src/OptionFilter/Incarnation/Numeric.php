@@ -31,7 +31,7 @@ class Numeric extends Base
                 || $options[$key - 1] != $value - 1 // first of a block
             ) {
                 $start = new DateTimeData($this->timezone);
-                $start->{$this->unit} = $value;
+                $start->set($this->unit, $value);
                 $range = new Range();
                 $range->setStart($start);
             }
@@ -39,7 +39,7 @@ class Numeric extends Base
                 || $options[$key + 1] != $value + 1 // last of a block
             ) {
                 $end = new DateTimeData($this->timezone);
-                $end->{$this->unit} = $value;
+                $end->set($this->unit, $value);
                 $range->setEnd($end);
                 $newRanges->append($range);
             }

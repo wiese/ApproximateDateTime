@@ -37,13 +37,8 @@ class Ranges extends ArrayObject
 
     public function sort() : void
     {
-        $this->uasort(function ($range1, $range2) {
-            $a = $range1->getStart()->toString();
-            $b = $range2->getStart()->toString();
-            if ($a == $b) {
-                return 0;
-            }
-            return ($a < $b) ? -1 : 1;
+        $this->uasort(function (Range $range1, Range $range2) {
+            return ($range1->getStart()->compareTo($range2->getStart()));
         });
 
         // @fixme mental way of ordering keys after value ordering

@@ -52,8 +52,8 @@ class NumericTest extends PHPUnit_Framework_TestCase
         $ranges = $this->sut->apply($ranges);
 
         $this->assertCount(1, $ranges);
-        $this->assertEquals(2011, $ranges[0]->getStart()->y);
-        $this->assertEquals(2012, $ranges[0]->getEnd()->y);
+        $this->assertEquals(2011, $ranges[0]->getStart()->getY());
+        $this->assertEquals(2012, $ranges[0]->getEnd()->getY());
     }
 
     public function testApplySeparateRange() : void
@@ -67,12 +67,12 @@ class NumericTest extends PHPUnit_Framework_TestCase
         $ranges = $this->sut->apply($ranges);
 
         $this->assertCount(3, $ranges);
-        $this->assertEquals(2008, $ranges[0]->getStart()->y);
-        $this->assertEquals(2008, $ranges[0]->getEnd()->y);
-        $this->assertEquals(2010, $ranges[1]->getStart()->y);
-        $this->assertEquals(2010, $ranges[1]->getEnd()->y);
-        $this->assertEquals(2039, $ranges[2]->getStart()->y);
-        $this->assertEquals(2040, $ranges[2]->getEnd()->y);
+        $this->assertEquals(2008, $ranges[0]->getStart()->getY());
+        $this->assertEquals(2008, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(2010, $ranges[1]->getStart()->getY());
+        $this->assertEquals(2010, $ranges[1]->getEnd()->getY());
+        $this->assertEquals(2039, $ranges[2]->getStart()->getY());
+        $this->assertEquals(2040, $ranges[2]->getEnd()->getY());
     }
 
     public function testWithMergePreexisting() : void
@@ -83,19 +83,19 @@ class NumericTest extends PHPUnit_Framework_TestCase
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1995;
+        $start->setY(1995);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1995;
+        $end->setY(1995);
         $range->setEnd($end);
         $ranges->append($range);
 
         $ranges = $this->sut->apply($ranges);
 
         $this->assertCount(1, $ranges);
-        $this->assertEquals(1995, $ranges[0]->getStart()->y);
-        $this->assertEquals(3, $ranges[0]->getStart()->m);
-        $this->assertEquals(1995, $ranges[0]->getEnd()->y);
-        $this->assertEquals(4, $ranges[0]->getEnd()->m);
+        $this->assertEquals(1995, $ranges[0]->getStart()->getY());
+        $this->assertEquals(3, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1995, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(4, $ranges[0]->getEnd()->getM());
     }
 }

@@ -32,4 +32,35 @@ class Clue extends Vehicle
      * @var mixed
      */
     public $rawValue;
+
+    /**
+     * Numeric representation of a weekday, Monday through Sunday
+     *
+     * @example 1 | 7
+     *
+     * @var int|null
+     */
+    protected $n;
+
+    protected static $options = ['y', 'm', 'd', 'n', 'h', 'i' , 's'];
+
+    /**
+     * @return int|null
+     */
+    public function getN() : ? int
+    {
+        return $this->n;
+    }
+
+    /**
+     * Set the numeric representation of a weekday
+     *
+     * @param int|null $n The week. 1 for Monday through 7 for Sunday
+     * @return self
+     */
+    public function setN(int $n = null) : self
+    {
+        $this->n = $n;
+        return $this;
+    }
 }

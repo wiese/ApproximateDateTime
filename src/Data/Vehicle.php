@@ -3,6 +3,11 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Data;
 
+/**
+ * @todo use a trait instead? inheritance between unrelated objects seems off.
+ *
+ * @package wiese\ApproximateDateTime\Data
+ */
 abstract class Vehicle
 {
 
@@ -32,15 +37,6 @@ abstract class Vehicle
     protected $d;
 
     /**
-     * Numeric representation of a weekday, Monday through Sunday
-     *
-     * @example 1 | 7
-     *
-     * @var int|null
-     */
-    protected $n;
-
-    /**
      * Representation of an hour
      *
      * @example 0 | 23
@@ -67,7 +63,7 @@ abstract class Vehicle
      */
     protected $s;
 
-    protected static $options = ['y', 'm', 'd', 'n', 'h', 'i' , 's'];
+    protected static $options = ['y', 'm', 'd', 'h', 'i' , 's'];
 
     /**
      * @return int|null
@@ -126,26 +122,6 @@ abstract class Vehicle
     public function setD(int $d = null) : self
     {
         $this->d = $d;
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getN() : ? int
-    {
-        return $this->n;
-    }
-
-    /**
-     * Set the numeric representation of a weekday
-     *
-     * @param int|null $n The week. 1 for Monday through 7 for Sunday
-     * @return self
-     */
-    public function setN(int $n = null) : self
-    {
-        $this->n = $n;
         return $this;
     }
 
@@ -264,7 +240,7 @@ abstract class Vehicle
      */
     public function compareTo(self $other) : int
     {
-        foreach (self::$options as $unit) {
+        foreach (static::$options as $unit) {
             $here = $this->get($unit);
             $there = $other->get($unit);
 
@@ -319,7 +295,7 @@ abstract class Vehicle
     public function getSetUnits() : array
     {
         $set = [];
-        foreach (self::$options as $unit) {
+        foreach (static::$options as $unit) {
             if (!is_null($this->get($unit))) {
                 $set[] = $unit;
             }
@@ -335,7 +311,7 @@ abstract class Vehicle
      */
     protected function resetValues() : self
     {
-        foreach (self::$options as $unit) {
+        foreach (static::$options as $unit) {
             $this->set($unit, null);
         }
 
@@ -348,7 +324,7 @@ abstract class Vehicle
      */
     protected function assertUnit(string $unit) : void
     {
-        if (!in_array($unit, self::$options)) {
+        if (!in_array($unit, static::$options)) {
             throw new \InvalidArgumentException('Unknow date unit ' . $unit);
         }
     }

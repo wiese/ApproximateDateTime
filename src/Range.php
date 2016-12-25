@@ -76,13 +76,13 @@ class Range
 
         $targetUnit = $this->start->getNextUnit();
 
-        $min = $this->start->{$targetUnit};
-        $max = $this->end->{$targetUnit};
+        $min = $this->start->get($targetUnit);
+        $max = $this->end->get($targetUnit);
 
         for ($value = $min; $value <= $max; $value++) {
             $range = clone $this;
-            $range->getStart()->{$targetUnit} = $value;
-            $range->getEnd()->{$targetUnit} = $value;
+            $range->getStart()->set($targetUnit, $value);
+            $range->getEnd()->set($targetUnit, $value);
 
             $ranges->append($range);
         }

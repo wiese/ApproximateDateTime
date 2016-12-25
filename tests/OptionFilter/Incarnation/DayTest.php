@@ -46,23 +46,23 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1993;
-        $start->m = 5;
+        $start->setY(1993);
+        $start->setM(5);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1993;
-        $end->m = 5;
+        $end->setY(1993);
+        $end->setM(5);
         $range->setEnd($end);
         $ranges->append($range);
 
         $ranges = $this->sut->apply($ranges);
 
-        $this->assertEquals(1993, $ranges[0]->getStart()->y);
-        $this->assertEquals(5, $ranges[0]->getStart()->m);
-        $this->assertEquals(1, $ranges[0]->getStart()->d);
-        $this->assertEquals(1993, $ranges[0]->getEnd()->y);
-        $this->assertEquals(5, $ranges[0]->getEnd()->m);
-        $this->assertEquals(31, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1993, $ranges[0]->getStart()->getY());
+        $this->assertEquals(5, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1993, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(5, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(31, $ranges[0]->getEnd()->getD());
     }
 
     public function testApplyAllDaysInConsecutiveMonths() : void
@@ -72,12 +72,12 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1998;
-        $start->m = 1;
+        $start->setY(1998);
+        $start->setM(1);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1998;
-        $end->m = 2;
+        $end->setY(1998);
+        $end->setM(2);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -85,12 +85,12 @@ class DayTest extends ParentTest
 
         $this->assertCount(1, $ranges);
 
-        $this->assertEquals(1998, $ranges[0]->getStart()->y);
-        $this->assertEquals(1, $ranges[0]->getStart()->m);
-        $this->assertEquals(1, $ranges[0]->getStart()->d);
-        $this->assertEquals(1998, $ranges[0]->getEnd()->y);
-        $this->assertEquals(2, $ranges[0]->getEnd()->m);
-        $this->assertEquals(28, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1998, $ranges[0]->getStart()->getY());
+        $this->assertEquals(1, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1998, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(2, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(28, $ranges[0]->getEnd()->getD());
     }
 
     public function testApplyAllDaysThroughBigWhitelistInConsecutiveMonths() : void
@@ -100,12 +100,12 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1998;
-        $start->m = 1;
+        $start->setY(1998);
+        $start->setM(1);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1998;
-        $end->m = 2;
+        $end->setY(1998);
+        $end->setM(2);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -113,12 +113,12 @@ class DayTest extends ParentTest
 
         $this->assertCount(1, $ranges);
 
-        $this->assertEquals(1998, $ranges[0]->getStart()->y);
-        $this->assertEquals(1, $ranges[0]->getStart()->m);
-        $this->assertEquals(1, $ranges[0]->getStart()->d);
-        $this->assertEquals(1998, $ranges[0]->getEnd()->y);
-        $this->assertEquals(2, $ranges[0]->getEnd()->m);
-        $this->assertEquals(28, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1998, $ranges[0]->getStart()->getY());
+        $this->assertEquals(1, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1998, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(2, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(28, $ranges[0]->getEnd()->getD());
     }
 
     public function testApplyAllDaysInSeparateMonths() : void
@@ -128,22 +128,22 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1953;
-        $start->m = 10;
+        $start->setY(1953);
+        $start->setM(10);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1953;
-        $end->m = 10;
+        $end->setY(1953);
+        $end->setM(10);
         $range->setEnd($end);
         $ranges->append($range);
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1954;
-        $start->m = 5;
+        $start->setY(1954);
+        $start->setM(5);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1954;
-        $end->m = 5;
+        $end->setY(1954);
+        $end->setM(5);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -151,19 +151,19 @@ class DayTest extends ParentTest
 
         $this->assertCount(2, $ranges);
 
-        $this->assertEquals(1953, $ranges[0]->getStart()->y);
-        $this->assertEquals(10, $ranges[0]->getStart()->m);
-        $this->assertEquals(1, $ranges[0]->getStart()->d);
-        $this->assertEquals(1953, $ranges[0]->getEnd()->y);
-        $this->assertEquals(10, $ranges[0]->getEnd()->m);
-        $this->assertEquals(31, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1953, $ranges[0]->getStart()->getY());
+        $this->assertEquals(10, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1953, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(10, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(31, $ranges[0]->getEnd()->getD());
 
-        $this->assertEquals(1954, $ranges[1]->getStart()->y);
-        $this->assertEquals(5, $ranges[1]->getStart()->m);
-        $this->assertEquals(1, $ranges[1]->getStart()->d);
-        $this->assertEquals(1954, $ranges[1]->getEnd()->y);
-        $this->assertEquals(5, $ranges[1]->getEnd()->m);
-        $this->assertEquals(31, $ranges[1]->getEnd()->d);
+        $this->assertEquals(1954, $ranges[1]->getStart()->getY());
+        $this->assertEquals(5, $ranges[1]->getStart()->getM());
+        $this->assertEquals(1, $ranges[1]->getStart()->getD());
+        $this->assertEquals(1954, $ranges[1]->getEnd()->getY());
+        $this->assertEquals(5, $ranges[1]->getEnd()->getM());
+        $this->assertEquals(31, $ranges[1]->getEnd()->getD());
     }
 
     public function testApplyConsecutiveDaysInMonth() : void
@@ -173,12 +173,12 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1958;
-        $start->m = 11;
+        $start->setY(1958);
+        $start->setM(11);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1958;
-        $end->m = 11;
+        $end->setY(1958);
+        $end->setM(11);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -186,12 +186,12 @@ class DayTest extends ParentTest
 
         $this->assertCount(1, $ranges);
 
-        $this->assertEquals(1958, $ranges[0]->getStart()->y);
-        $this->assertEquals(11, $ranges[0]->getStart()->m);
-        $this->assertEquals(3, $ranges[0]->getStart()->d);
-        $this->assertEquals(1958, $ranges[0]->getEnd()->y);
-        $this->assertEquals(11, $ranges[0]->getEnd()->m);
-        $this->assertEquals(4, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1958, $ranges[0]->getStart()->getY());
+        $this->assertEquals(11, $ranges[0]->getStart()->getM());
+        $this->assertEquals(3, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1958, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(11, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(4, $ranges[0]->getEnd()->getD());
     }
 
     public function testApplyConsecutiveDaysInConsecutiveMonths() : void
@@ -201,12 +201,12 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1997;
-        $start->m = 11;
+        $start->setY(1997);
+        $start->setM(11);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1997;
-        $end->m = 12;
+        $end->setY(1997);
+        $end->setM(12);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -214,19 +214,19 @@ class DayTest extends ParentTest
 
         $this->assertCount(2, $ranges);
 
-        $this->assertEquals(1997, $ranges[0]->getStart()->y);
-        $this->assertEquals(11, $ranges[0]->getStart()->m);
-        $this->assertEquals(7, $ranges[0]->getStart()->d);
-        $this->assertEquals(1997, $ranges[0]->getEnd()->y);
-        $this->assertEquals(11, $ranges[0]->getEnd()->m);
-        $this->assertEquals(9, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1997, $ranges[0]->getStart()->getY());
+        $this->assertEquals(11, $ranges[0]->getStart()->getM());
+        $this->assertEquals(7, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1997, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(11, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(9, $ranges[0]->getEnd()->getD());
 
-        $this->assertEquals(1997, $ranges[1]->getStart()->y);
-        $this->assertEquals(12, $ranges[1]->getStart()->m);
-        $this->assertEquals(7, $ranges[1]->getStart()->d);
-        $this->assertEquals(1997, $ranges[1]->getEnd()->y);
-        $this->assertEquals(12, $ranges[1]->getEnd()->m);
-        $this->assertEquals(9, $ranges[1]->getEnd()->d);
+        $this->assertEquals(1997, $ranges[1]->getStart()->getY());
+        $this->assertEquals(12, $ranges[1]->getStart()->getM());
+        $this->assertEquals(7, $ranges[1]->getStart()->getD());
+        $this->assertEquals(1997, $ranges[1]->getEnd()->getY());
+        $this->assertEquals(12, $ranges[1]->getEnd()->getM());
+        $this->assertEquals(9, $ranges[1]->getEnd()->getD());
     }
 
     public function testApplyConsecutiveDaysInSeparateMonths() : void
@@ -236,23 +236,23 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1962;
-        $start->m = 12;
+        $start->setY(1962);
+        $start->setM(12);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1962;
-        $end->m = 12;
+        $end->setY(1962);
+        $end->setM(12);
         $range->setEnd($end);
         $ranges->append($range);
 
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1963;
-        $start->m = 9;
+        $start->setY(1963);
+        $start->setM(9);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1963;
-        $end->m = 9;
+        $end->setY(1963);
+        $end->setM(9);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -260,19 +260,19 @@ class DayTest extends ParentTest
 
         $this->assertCount(2, $ranges);
 
-        $this->assertEquals(1962, $ranges[0]->getStart()->y);
-        $this->assertEquals(12, $ranges[0]->getStart()->m);
-        $this->assertEquals(27, $ranges[0]->getStart()->d);
-        $this->assertEquals(1962, $ranges[0]->getEnd()->y);
-        $this->assertEquals(12, $ranges[0]->getEnd()->m);
-        $this->assertEquals(28, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1962, $ranges[0]->getStart()->getY());
+        $this->assertEquals(12, $ranges[0]->getStart()->getM());
+        $this->assertEquals(27, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1962, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(12, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(28, $ranges[0]->getEnd()->getD());
 
-        $this->assertEquals(1963, $ranges[1]->getStart()->y);
-        $this->assertEquals(9, $ranges[1]->getStart()->m);
-        $this->assertEquals(27, $ranges[1]->getStart()->d);
-        $this->assertEquals(1963, $ranges[1]->getEnd()->y);
-        $this->assertEquals(9, $ranges[1]->getEnd()->m);
-        $this->assertEquals(28, $ranges[1]->getEnd()->d);
+        $this->assertEquals(1963, $ranges[1]->getStart()->getY());
+        $this->assertEquals(9, $ranges[1]->getStart()->getM());
+        $this->assertEquals(27, $ranges[1]->getStart()->getD());
+        $this->assertEquals(1963, $ranges[1]->getEnd()->getY());
+        $this->assertEquals(9, $ranges[1]->getEnd()->getM());
+        $this->assertEquals(28, $ranges[1]->getEnd()->getD());
     }
 
     public function testApplySeparateDaysInMonth() : void
@@ -282,12 +282,12 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1958;
-        $start->m = 11;
+        $start->setY(1958);
+        $start->setM(11);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1958;
-        $end->m = 11;
+        $end->setY(1958);
+        $end->setM(11);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -295,19 +295,19 @@ class DayTest extends ParentTest
 
         $this->assertCount(2, $ranges);
 
-        $this->assertEquals(1958, $ranges[0]->getStart()->y);
-        $this->assertEquals(11, $ranges[0]->getStart()->m);
-        $this->assertEquals(3, $ranges[0]->getStart()->d);
-        $this->assertEquals(1958, $ranges[0]->getEnd()->y);
-        $this->assertEquals(11, $ranges[0]->getEnd()->m);
-        $this->assertEquals(3, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1958, $ranges[0]->getStart()->getY());
+        $this->assertEquals(11, $ranges[0]->getStart()->getM());
+        $this->assertEquals(3, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1958, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(11, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(3, $ranges[0]->getEnd()->getD());
 
-        $this->assertEquals(1958, $ranges[1]->getStart()->y);
-        $this->assertEquals(11, $ranges[1]->getStart()->m);
-        $this->assertEquals(5, $ranges[1]->getStart()->d);
-        $this->assertEquals(1958, $ranges[1]->getEnd()->y);
-        $this->assertEquals(11, $ranges[1]->getEnd()->m);
-        $this->assertEquals(5, $ranges[1]->getEnd()->d);
+        $this->assertEquals(1958, $ranges[1]->getStart()->getY());
+        $this->assertEquals(11, $ranges[1]->getStart()->getM());
+        $this->assertEquals(5, $ranges[1]->getStart()->getD());
+        $this->assertEquals(1958, $ranges[1]->getEnd()->getY());
+        $this->assertEquals(11, $ranges[1]->getEnd()->getM());
+        $this->assertEquals(5, $ranges[1]->getEnd()->getD());
     }
 
     public function testApplySeparateDaysInConsecutiveMonths() : void
@@ -317,12 +317,12 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1930;
-        $start->m = 6;
+        $start->setY(1930);
+        $start->setM(6);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1930;
-        $end->m = 8;
+        $end->setY(1930);
+        $end->setM(8);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -330,47 +330,47 @@ class DayTest extends ParentTest
 
         $this->assertCount(6, $ranges);
 
-        $this->assertEquals(1930, $ranges[0]->getStart()->y);
-        $this->assertEquals(6, $ranges[0]->getStart()->m);
-        $this->assertEquals(10, $ranges[0]->getStart()->d);
-        $this->assertEquals(1930, $ranges[0]->getEnd()->y);
-        $this->assertEquals(6, $ranges[0]->getEnd()->m);
-        $this->assertEquals(10, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1930, $ranges[0]->getStart()->getY());
+        $this->assertEquals(6, $ranges[0]->getStart()->getM());
+        $this->assertEquals(10, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1930, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(6, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(10, $ranges[0]->getEnd()->getD());
 
-        $this->assertEquals(1930, $ranges[1]->getStart()->y);
-        $this->assertEquals(6, $ranges[1]->getStart()->m);
-        $this->assertEquals(12, $ranges[1]->getStart()->d);
-        $this->assertEquals(1930, $ranges[1]->getEnd()->y);
-        $this->assertEquals(6, $ranges[1]->getEnd()->m);
-        $this->assertEquals(12, $ranges[1]->getEnd()->d);
+        $this->assertEquals(1930, $ranges[1]->getStart()->getY());
+        $this->assertEquals(6, $ranges[1]->getStart()->getM());
+        $this->assertEquals(12, $ranges[1]->getStart()->getD());
+        $this->assertEquals(1930, $ranges[1]->getEnd()->getY());
+        $this->assertEquals(6, $ranges[1]->getEnd()->getM());
+        $this->assertEquals(12, $ranges[1]->getEnd()->getD());
 
-        $this->assertEquals(1930, $ranges[2]->getStart()->y);
-        $this->assertEquals(7, $ranges[2]->getStart()->m);
-        $this->assertEquals(10, $ranges[2]->getStart()->d);
-        $this->assertEquals(1930, $ranges[2]->getEnd()->y);
-        $this->assertEquals(7, $ranges[2]->getEnd()->m);
-        $this->assertEquals(10, $ranges[2]->getEnd()->d);
+        $this->assertEquals(1930, $ranges[2]->getStart()->getY());
+        $this->assertEquals(7, $ranges[2]->getStart()->getM());
+        $this->assertEquals(10, $ranges[2]->getStart()->getD());
+        $this->assertEquals(1930, $ranges[2]->getEnd()->getY());
+        $this->assertEquals(7, $ranges[2]->getEnd()->getM());
+        $this->assertEquals(10, $ranges[2]->getEnd()->getD());
 
-        $this->assertEquals(1930, $ranges[3]->getStart()->y);
-        $this->assertEquals(7, $ranges[3]->getStart()->m);
-        $this->assertEquals(12, $ranges[3]->getStart()->d);
-        $this->assertEquals(1930, $ranges[3]->getEnd()->y);
-        $this->assertEquals(7, $ranges[3]->getEnd()->m);
-        $this->assertEquals(12, $ranges[3]->getEnd()->d);
+        $this->assertEquals(1930, $ranges[3]->getStart()->getY());
+        $this->assertEquals(7, $ranges[3]->getStart()->getM());
+        $this->assertEquals(12, $ranges[3]->getStart()->getD());
+        $this->assertEquals(1930, $ranges[3]->getEnd()->getY());
+        $this->assertEquals(7, $ranges[3]->getEnd()->getM());
+        $this->assertEquals(12, $ranges[3]->getEnd()->getD());
 
-        $this->assertEquals(1930, $ranges[4]->getStart()->y);
-        $this->assertEquals(8, $ranges[4]->getStart()->m);
-        $this->assertEquals(10, $ranges[4]->getStart()->d);
-        $this->assertEquals(1930, $ranges[4]->getEnd()->y);
-        $this->assertEquals(8, $ranges[4]->getEnd()->m);
-        $this->assertEquals(10, $ranges[4]->getEnd()->d);
+        $this->assertEquals(1930, $ranges[4]->getStart()->getY());
+        $this->assertEquals(8, $ranges[4]->getStart()->getM());
+        $this->assertEquals(10, $ranges[4]->getStart()->getD());
+        $this->assertEquals(1930, $ranges[4]->getEnd()->getY());
+        $this->assertEquals(8, $ranges[4]->getEnd()->getM());
+        $this->assertEquals(10, $ranges[4]->getEnd()->getD());
 
-        $this->assertEquals(1930, $ranges[5]->getStart()->y);
-        $this->assertEquals(8, $ranges[5]->getStart()->m);
-        $this->assertEquals(12, $ranges[5]->getStart()->d);
-        $this->assertEquals(1930, $ranges[5]->getEnd()->y);
-        $this->assertEquals(8, $ranges[5]->getEnd()->m);
-        $this->assertEquals(12, $ranges[5]->getEnd()->d);
+        $this->assertEquals(1930, $ranges[5]->getStart()->getY());
+        $this->assertEquals(8, $ranges[5]->getStart()->getM());
+        $this->assertEquals(12, $ranges[5]->getStart()->getD());
+        $this->assertEquals(1930, $ranges[5]->getEnd()->getY());
+        $this->assertEquals(8, $ranges[5]->getEnd()->getM());
+        $this->assertEquals(12, $ranges[5]->getEnd()->getD());
     }
 
     public function testApplySeparateDaysInSeparateMonths() : void
@@ -380,23 +380,23 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1969;
-        $start->m = 5;
+        $start->setY(1969);
+        $start->setM(5);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1969;
-        $end->m = 5;
+        $end->setY(1969);
+        $end->setM(5);
         $range->setEnd($end);
         $ranges->append($range);
 
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1969;
-        $start->m = 8;
+        $start->setY(1969);
+        $start->setM(8);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1969;
-        $end->m = 8;
+        $end->setY(1969);
+        $end->setM(8);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -404,33 +404,33 @@ class DayTest extends ParentTest
 
         $this->assertCount(4, $ranges);
 
-        $this->assertEquals(1969, $ranges[0]->getStart()->y);
-        $this->assertEquals(5, $ranges[0]->getStart()->m);
-        $this->assertEquals(27, $ranges[0]->getStart()->d);
-        $this->assertEquals(1969, $ranges[0]->getEnd()->y);
-        $this->assertEquals(5, $ranges[0]->getEnd()->m);
-        $this->assertEquals(27, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1969, $ranges[0]->getStart()->getY());
+        $this->assertEquals(5, $ranges[0]->getStart()->getM());
+        $this->assertEquals(27, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1969, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(5, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(27, $ranges[0]->getEnd()->getD());
 
-        $this->assertEquals(1969, $ranges[1]->getStart()->y);
-        $this->assertEquals(5, $ranges[1]->getStart()->m);
-        $this->assertEquals(29, $ranges[1]->getStart()->d);
-        $this->assertEquals(1969, $ranges[1]->getEnd()->y);
-        $this->assertEquals(5, $ranges[1]->getEnd()->m);
-        $this->assertEquals(29, $ranges[1]->getEnd()->d);
+        $this->assertEquals(1969, $ranges[1]->getStart()->getY());
+        $this->assertEquals(5, $ranges[1]->getStart()->getM());
+        $this->assertEquals(29, $ranges[1]->getStart()->getD());
+        $this->assertEquals(1969, $ranges[1]->getEnd()->getY());
+        $this->assertEquals(5, $ranges[1]->getEnd()->getM());
+        $this->assertEquals(29, $ranges[1]->getEnd()->getD());
 
-        $this->assertEquals(1969, $ranges[2]->getStart()->y);
-        $this->assertEquals(8, $ranges[2]->getStart()->m);
-        $this->assertEquals(27, $ranges[2]->getStart()->d);
-        $this->assertEquals(1969, $ranges[2]->getEnd()->y);
-        $this->assertEquals(8, $ranges[2]->getEnd()->m);
-        $this->assertEquals(27, $ranges[2]->getEnd()->d);
+        $this->assertEquals(1969, $ranges[2]->getStart()->getY());
+        $this->assertEquals(8, $ranges[2]->getStart()->getM());
+        $this->assertEquals(27, $ranges[2]->getStart()->getD());
+        $this->assertEquals(1969, $ranges[2]->getEnd()->getY());
+        $this->assertEquals(8, $ranges[2]->getEnd()->getM());
+        $this->assertEquals(27, $ranges[2]->getEnd()->getD());
 
-        $this->assertEquals(1969, $ranges[3]->getStart()->y);
-        $this->assertEquals(8, $ranges[3]->getStart()->m);
-        $this->assertEquals(29, $ranges[3]->getStart()->d);
-        $this->assertEquals(1969, $ranges[3]->getEnd()->y);
-        $this->assertEquals(8, $ranges[3]->getEnd()->m);
-        $this->assertEquals(29, $ranges[3]->getEnd()->d);
+        $this->assertEquals(1969, $ranges[3]->getStart()->getY());
+        $this->assertEquals(8, $ranges[3]->getStart()->getM());
+        $this->assertEquals(29, $ranges[3]->getStart()->getD());
+        $this->assertEquals(1969, $ranges[3]->getEnd()->getY());
+        $this->assertEquals(8, $ranges[3]->getEnd()->getM());
+        $this->assertEquals(29, $ranges[3]->getEnd()->getD());
     }
 
     public function testApplyBeforeAndAfterOverMonthBorder() : void
@@ -440,12 +440,12 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1960;
-        $start->m = 2;
+        $start->setY(1960);
+        $start->setM(2);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1960;
-        $end->m = 3;
+        $end->setY(1960);
+        $end->setM(3);
         $range->setEnd($end);
         $ranges->append($range);
 
@@ -453,26 +453,26 @@ class DayTest extends ParentTest
 
         $this->assertCount(3, $ranges);
 
-        $this->assertEquals(1960, $ranges[0]->getStart()->y);
-        $this->assertEquals(2, $ranges[0]->getStart()->m);
-        $this->assertEquals(1, $ranges[0]->getStart()->d);
-        $this->assertEquals(1960, $ranges[0]->getEnd()->y);
-        $this->assertEquals(2, $ranges[0]->getEnd()->m);
-        $this->assertEquals(2, $ranges[0]->getEnd()->d);
+        $this->assertEquals(1960, $ranges[0]->getStart()->getY());
+        $this->assertEquals(2, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1, $ranges[0]->getStart()->getD());
+        $this->assertEquals(1960, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(2, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(2, $ranges[0]->getEnd()->getD());
 
-        $this->assertEquals(1960, $ranges[1]->getStart()->y);
-        $this->assertEquals(2, $ranges[1]->getStart()->m);
-        $this->assertEquals(28, $ranges[1]->getStart()->d);
-        $this->assertEquals(1960, $ranges[1]->getEnd()->y);
-        $this->assertEquals(3, $ranges[1]->getEnd()->m);
-        $this->assertEquals(2, $ranges[1]->getEnd()->d);
+        $this->assertEquals(1960, $ranges[1]->getStart()->getY());
+        $this->assertEquals(2, $ranges[1]->getStart()->getM());
+        $this->assertEquals(28, $ranges[1]->getStart()->getD());
+        $this->assertEquals(1960, $ranges[1]->getEnd()->getY());
+        $this->assertEquals(3, $ranges[1]->getEnd()->getM());
+        $this->assertEquals(2, $ranges[1]->getEnd()->getD());
 
-        $this->assertEquals(1960, $ranges[2]->getStart()->y);
-        $this->assertEquals(3, $ranges[2]->getStart()->m);
-        $this->assertEquals(28, $ranges[2]->getStart()->d);
-        $this->assertEquals(1960, $ranges[2]->getEnd()->y);
-        $this->assertEquals(3, $ranges[2]->getEnd()->m);
-        $this->assertEquals(31, $ranges[2]->getEnd()->d);
+        $this->assertEquals(1960, $ranges[2]->getStart()->getY());
+        $this->assertEquals(3, $ranges[2]->getStart()->getM());
+        $this->assertEquals(28, $ranges[2]->getStart()->getD());
+        $this->assertEquals(1960, $ranges[2]->getEnd()->getY());
+        $this->assertEquals(3, $ranges[2]->getEnd()->getM());
+        $this->assertEquals(31, $ranges[2]->getEnd()->getD());
     }
 
     public function testDaysInMonthException() : void
@@ -483,10 +483,10 @@ class DayTest extends ParentTest
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData($this->tz);
-        $start->y = 1968;
+        $start->setY(1968);
         $range->setStart($start);
         $end = new DateTimeData($this->tz);
-        $end->y = 1969;
+        $end->setY(1969);
         $range->setEnd($end);
         $ranges->append($range);
 

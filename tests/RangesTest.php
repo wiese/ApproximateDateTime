@@ -30,10 +30,10 @@ class RangesTest extends PHPUnit_Framework_TestCase
 
         $range = new Range();
         $start = new DateTimeData($this->timezone);
-        $start->y = 2014;
+        $start->setY(2014);
         $range->setStart($start);
         $end = new DateTimeData($this->timezone);
-        $end->y = 2017;
+        $end->setY(2017);
         $range->setEnd($end);
 
         $sut2->append($range);
@@ -47,10 +47,10 @@ class RangesTest extends PHPUnit_Framework_TestCase
 
         $range = new Range();
         $start = new DateTimeData($this->timezone);
-        $start->y = 2014;
+        $start->setY(2014);
         $range->setStart($start);
         $end = new DateTimeData($this->timezone);
-        $end->y = 2017;
+        $end->setY(2017);
         $range->setEnd($end);
 
         $sut->append($range);
@@ -59,10 +59,10 @@ class RangesTest extends PHPUnit_Framework_TestCase
 
         $range = new Range();
         $start = new DateTimeData($this->timezone);
-        $start->m = 3;
+        $start->setM(3);
         $range->setStart($start);
         $end = new DateTimeData($this->timezone);
-        $end->m = 4;
+        $end->setM(4);
         $range->setEnd($end);
 
         $sut2->append($range);
@@ -70,10 +70,10 @@ class RangesTest extends PHPUnit_Framework_TestCase
         $sut = $sut->merge($sut2);
 
         $this->assertEquals(1, count($sut));
-        $this->assertEquals(2014, $sut[0]->getStart()->y);
-        $this->assertEquals(3, $sut[0]->getStart()->m);
-        $this->assertEquals(2017, $sut[0]->getEnd()->y);
-        $this->assertEquals(4, $sut[0]->getEnd()->m);
+        $this->assertEquals(2014, $sut[0]->getStart()->getY());
+        $this->assertEquals(3, $sut[0]->getStart()->getM());
+        $this->assertEquals(2017, $sut[0]->getEnd()->getY());
+        $this->assertEquals(4, $sut[0]->getEnd()->getM());
     }
 
     public function testMergeComplex() : void
@@ -82,20 +82,20 @@ class RangesTest extends PHPUnit_Framework_TestCase
 
         $range = new Range();
         $start = new DateTimeData($this->timezone);
-        $start->y = 2015;
+        $start->setY(2015);
         $range->setStart($start);
         $end = new DateTimeData($this->timezone);
-        $end->y = 2015;
+        $end->setY(2015);
         $range->setEnd($end);
 
         $sut->append($range);
 
         $range = new Range();
         $start = new DateTimeData($this->timezone);
-        $start->y = 2016;
+        $start->setY(2016);
         $range->setStart($start);
         $end = new DateTimeData($this->timezone);
-        $end->y = 2018;
+        $end->setY(2018);
         $range->setEnd($end);
 
         $sut->append($range);
@@ -105,20 +105,20 @@ class RangesTest extends PHPUnit_Framework_TestCase
 
         $range = new Range();
         $start = new DateTimeData($this->timezone);
-        $start->m = 1;
+        $start->setM(1);
         $range->setStart($start);
         $end = new DateTimeData($this->timezone);
-        $end->m = 2;
+        $end->setM(2);
         $range->setEnd($end);
 
         $sut2->append($range);
 
         $range = new Range();
         $start = new DateTimeData($this->timezone);
-        $start->m = 7;
+        $start->setM(7);
         $range->setStart($start);
         $end = new DateTimeData($this->timezone);
-        $end->m = 9;
+        $end->setM(9);
         $range->setEnd($end);
 
         $sut2->append($range);
@@ -127,24 +127,24 @@ class RangesTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(4, count($sut));
 
-        $this->assertEquals(2015, $sut[0]->getStart()->y);
-        $this->assertEquals(1, $sut[0]->getStart()->m);
-        $this->assertEquals(2015, $sut[0]->getEnd()->y);
-        $this->assertEquals(2, $sut[0]->getEnd()->m);
+        $this->assertEquals(2015, $sut[0]->getStart()->getY());
+        $this->assertEquals(1, $sut[0]->getStart()->getM());
+        $this->assertEquals(2015, $sut[0]->getEnd()->getY());
+        $this->assertEquals(2, $sut[0]->getEnd()->getM());
 
-        $this->assertEquals(2015, $sut[1]->getStart()->y);
-        $this->assertEquals(7, $sut[1]->getStart()->m);
-        $this->assertEquals(2015, $sut[1]->getEnd()->y);
-        $this->assertEquals(9, $sut[1]->getEnd()->m);
+        $this->assertEquals(2015, $sut[1]->getStart()->getY());
+        $this->assertEquals(7, $sut[1]->getStart()->getM());
+        $this->assertEquals(2015, $sut[1]->getEnd()->getY());
+        $this->assertEquals(9, $sut[1]->getEnd()->getM());
 
-        $this->assertEquals(2016, $sut[2]->getStart()->y);
-        $this->assertEquals(1, $sut[2]->getStart()->m);
-        $this->assertEquals(2018, $sut[2]->getEnd()->y);
-        $this->assertEquals(2, $sut[2]->getEnd()->m);
+        $this->assertEquals(2016, $sut[2]->getStart()->getY());
+        $this->assertEquals(1, $sut[2]->getStart()->getM());
+        $this->assertEquals(2018, $sut[2]->getEnd()->getY());
+        $this->assertEquals(2, $sut[2]->getEnd()->getM());
 
-        $this->assertEquals(2016, $sut[3]->getStart()->y);
-        $this->assertEquals(7, $sut[3]->getStart()->m);
-        $this->assertEquals(2018, $sut[3]->getEnd()->y);
-        $this->assertEquals(9, $sut[3]->getEnd()->m);
+        $this->assertEquals(2016, $sut[3]->getStart()->getY());
+        $this->assertEquals(7, $sut[3]->getStart()->getM());
+        $this->assertEquals(2018, $sut[3]->getEnd()->getY());
+        $this->assertEquals(9, $sut[3]->getEnd()->getM());
     }
 }
