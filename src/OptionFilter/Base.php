@@ -7,6 +7,7 @@ use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\Log;
 use wiese\ApproximateDateTime\Ranges;
+use Psr\Log\LoggerInterface;
 use DateTimeZone;
 
 abstract class Base implements OptionFilterInterface

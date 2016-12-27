@@ -37,7 +37,7 @@ class Ranges extends ArrayObject
 
     public function sort() : void
     {
-        $this->uasort(function (Range $range1, Range $range2) {
+        $this->uasort(function(Range $range1, Range $range2) {
             return ($range1->getStart()->compareTo($range2->getStart()));
         });
 

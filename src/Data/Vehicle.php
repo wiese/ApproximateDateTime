@@ -63,7 +63,7 @@ abstract class Vehicle
      */
     protected $s;
 
-    protected static $options = ['y', 'm', 'd', 'h', 'i' , 's'];
+    protected static $options = ['y', 'm', 'd', 'h', 'i', 's'];
 
     /**
      * @return int|null
