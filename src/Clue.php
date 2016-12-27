@@ -42,7 +42,7 @@ class Clue extends Vehicle
      */
     protected $n;
 
-    protected static $options = ['y', 'm', 'd', 'n', 'h', 'i' , 's'];
+    protected static $options = ['y', 'm', 'd', 'n', 'h', 'i', 's'];
 
     /**
      * @return int|null

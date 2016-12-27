@@ -5,7 +5,6 @@ namespace wiese\ApproximateDateTime;
 
 use wiese\ApproximateDateTime\OptionFilter\Factory as FilterFactory;
 use wiese\ApproximateDateTime\Log;
-use DateInterval;
 use DatePeriod;
 use DateTimeInterface;
 use DateTimeZone;
