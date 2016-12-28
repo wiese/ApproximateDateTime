@@ -172,8 +172,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $ranges = new Ranges();
 
         $filterFactory = new FilterFactory;
-        foreach (Config::$units as $unit => $settings) {
-            $filter = $filterFactory->produce($settings['filter']);
+        foreach (Config::$compoundUnits as $unit => $filter) {
+            $filter = $filterFactory->produce($filter);
             $filter->setUnit($unit);
             $filter->setClues($this->clues);
             $filter->setCalendar($this->calendar);

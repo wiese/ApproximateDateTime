@@ -24,11 +24,15 @@ abstract class Base implements OptionFilterInterface
     protected $clues;
 
     /**
+     * @todo Not really a property of all filters (e.g. Numeric) - move away?
+     *
      * @var int
      */
     protected $calendar;
 
     /**
+     * @todo Not used directly, "only" used to construct new DateTimeData objects. Other way?
+     *
      * @var \DateTimeZone
      */
     protected $timezone;

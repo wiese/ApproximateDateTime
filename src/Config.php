@@ -9,39 +9,32 @@ class Config
     /**
      * @var array
      */
-    public static $units = [
+    public static $unitBounds = [
         'y' => [
-            'filter' => 'Numeric',
             'min' => null,
             'max' => null
         ],
         'm' => [
-            'filter' => 'Numeric',
             'min' => 1,
             'max' => 12
         ],
         'd' => [
-            'filter' => 'Day',
             'min' => 1,
             'max' => null // dynamically based on y, m, and calendar
         ],
         'n' => [
-            'filter' => 'Weekday',
             'min' => 1,
             'max' => 7
         ],
         'h' => [
-            'filter' => 'Numeric',
             'min' => 0,
             'max' => 23
         ],
         'i' => [
-            'filter' => 'Numeric',
             'min' => 0,
             'max' => 59
         ],
         's' => [
-            'filter' => 'Numeric',
             'min' => 0,
             'max' => 59
         ],
@@ -51,19 +44,19 @@ class Config
      * @var array
      */
     public static $compoundUnits = [
-        'y' => 'y',
-        'm' => 'm',
-        'd' => 'd',
-        'y-m' => 'm',
-        'm-d' => 'd',
-        'y-m-d' => 'd',
-        'n' => 'n',
-        'h' => 'h',
-        'i' => 'i',
-        's' => 's',
-        'h-i' => 'i',
-        'i-s' => 's',
-        'h-i-s' => 's',
+        'y' => 'Numeric',
+        'm' => 'Numeric',
+        'y-m' => 'Compound',
+        'd' => 'Day',
+        'm-d' => 'Compound',
+        'y-m-d' => 'Compound',
+        'n' => 'Weekday',
+        'h' => 'Numeric',
+        'i' => 'Numeric',
+        'h-i' => 'Compound',
+        's' => 'Numeric',
+        'i-s' => 'Compound',
+        'h-i-s' => 'Compound',
     ];
 
     public static $logHandler = 'Monolog\\Handler\\NullHandler';
@@ -77,7 +70,7 @@ class Config
      */
     public function getMin(string $unit) : ? int
     {
-        return self::$units[$unit]['min'];
+        return self::$unitBounds[$unit]['min'];
     }
 
     /**
@@ -88,6 +81,6 @@ class Config
      */
     public function getMax(string $unit) : ? int
     {
-        return self::$units[$unit]['max'];
+        return self::$unitBounds[$unit]['max'];
     }
 }

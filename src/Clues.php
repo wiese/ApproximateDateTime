@@ -65,7 +65,7 @@ class Clues extends ArrayObject
      * Get options explicitly allowed for the unit given
      *
      * @param string $unit
-     * @return array
+     * @return int[]
      */
     public function getWhitelist(string $unit) : array
     {
@@ -87,7 +87,7 @@ class Clues extends ArrayObject
      * Get options explicitly disallowed for the unit given
      *
      * @param string $unit
-     * @return array
+     * @return int[]
      */
     public function getBlacklist(string $unit) : array
     {
