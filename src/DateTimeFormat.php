@@ -15,7 +15,7 @@ interface DateTimeFormat
     const YEAR = 'Y';
     const MONTH = 'n';
     const DAY = 'j';
-    const HOUR = 'H';
+    const HOUR = 'G';
     const MINUTE = 'i';
     const SECOND = 's';
     const WEEKDAY = 'N';
