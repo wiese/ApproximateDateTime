@@ -56,6 +56,9 @@ class Weekday extends Base
     {
         $dayIterationInterval = new DateInterval('P1D');
 
+        // weekday should not depend on timezone so we could work w/ a dummy timezone (UTC), used to
+        // determine the applicable DataTimeData/Ranges which again could live w/o a timezone
+
         $period = new DatePeriod(
             $range->getStart()->toDateTime(),
             $dayIterationInterval,

@@ -34,6 +34,40 @@ class CompoundTest extends ParentTest
         $this->sut->setCalendar(CAL_GREGORIAN);
     }
 
+    public function testEmptyClues() : void
+    {
+        $this->init('y-m');
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData($this->tz);
+        $start->setY(1985);
+        $range->setStart($start);
+        $end = new DateTimeData($this->tz);
+        $end->setY(1985);
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $clues = new Clues();
+
+        $this->sut->setClues($clues);
+
+        $this->assertEquals($ranges, $this->sut->apply($ranges));
+    }
+
+    public function testEmptyCluesEmptyRanges() : void
+    {
+        $this->init('y-m');
+
+        $ranges = new Ranges();
+
+        $clues = new Clues();
+
+        $this->sut->setClues($clues);
+
+        $this->assertEquals($ranges, $this->sut->apply($ranges));
+    }
+
     public function testAfter() : void
     {
         $this->init('y-m');
@@ -151,5 +185,99 @@ class CompoundTest extends ParentTest
         $this->assertEquals(1975, $ranges[0]->getEnd()->getY());
         $this->assertEquals(9, $ranges[0]->getEnd()->getM());
         $this->assertEquals(26, $ranges[0]->getEnd()->getD());
+    }
+
+    public function testWhitelist() : void
+    {
+        $this->init('y-m');
+
+        // @todo also start with empty ranges once
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData($this->tz);
+        $start->setY(1975);
+        $start->setM(1);
+        $range->setStart($start);
+        $end = new DateTimeData($this->tz);
+        $end->setY(1975);
+        $end->setM(12);
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $clues = new Clues();
+
+        $clue = new Clue();
+        $clue->setY(1975);
+        $clue->setM(9);
+        $clue->filter = Clue::FILTER_WHITELIST;
+        $clues->append($clue);
+
+        $this->sut->setClues($clues);
+
+        $newRanges = $this->sut->apply($ranges);
+
+        $this->assertEquals($ranges, $newRanges);
+
+        $clues = new Clues();
+
+        $clue = new Clue();
+        $clue->setY(1976);
+        $clue->setM(9);
+        $clue->filter = Clue::FILTER_WHITELIST;
+        $clues->append($clue);
+
+        $this->sut->setClues($clues);
+
+        $newRanges = $this->sut->apply($ranges);
+
+        $this->assertCount(2, $newRanges);
+        $this->assertEquals(1975, $newRanges[0]->getStart()->getY());
+        $this->assertEquals(1, $newRanges[0]->getStart()->getM());
+        $this->assertEquals(1975, $newRanges[0]->getEnd()->getY());
+        $this->assertEquals(12, $newRanges[0]->getEnd()->getM());
+        $this->assertEquals(1976, $newRanges[1]->getStart()->getY());
+        $this->assertEquals(9, $newRanges[1]->getStart()->getM());
+        $this->assertEquals(1976, $newRanges[1]->getEnd()->getY());
+        $this->assertEquals(9, $newRanges[1]->getEnd()->getM());
+    }
+
+    public function testBlacklist() : void
+    {
+        $this->init('y-m');
+
+        // @todo also start with empty ranges once
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData($this->tz);
+        $start->setY(1975);
+        $start->setM(1);
+        $range->setStart($start);
+        $end = new DateTimeData($this->tz);
+        $end->setY(1976);
+        $end->setM(12);
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $clues = new Clues();
+        $clue = new Clue();
+        $clue->setY(1975);
+        $clue->setM(9);
+        $clue->filter = Clue::FILTER_BLACKLIST;
+        $clues->append($clue);
+        $this->sut->setClues($clues);
+
+        $newRanges = $this->sut->apply($ranges);
+
+        $this->assertCount(2, $newRanges);
+        $this->assertEquals(1975, $newRanges[0]->getStart()->getY());
+        $this->assertEquals(1, $newRanges[0]->getStart()->getM());
+        $this->assertEquals(1975, $newRanges[0]->getEnd()->getY());
+        $this->assertEquals(8, $newRanges[0]->getEnd()->getM());
+        $this->assertEquals(1975, $newRanges[1]->getStart()->getY());
+        $this->assertEquals(10, $newRanges[1]->getStart()->getM());
+        $this->assertEquals(1976, $newRanges[1]->getEnd()->getY());
+        $this->assertEquals(12, $newRanges[1]->getEnd()->getM());
     }
 }

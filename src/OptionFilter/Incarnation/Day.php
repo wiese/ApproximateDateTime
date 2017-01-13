@@ -123,6 +123,8 @@ class Day extends Base
     /**
      * Get the number of days in the month as per given $data (its y & m)
      *
+     * @todo Is this scientifically wrong in early years AD? http://php.net/manual/de/function.cal-days-in-month.php#41554
+     *
      * @param DateTimeData $data
      * @return int
      * @throws \UnexpectedValueException

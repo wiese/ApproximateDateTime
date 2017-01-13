@@ -176,6 +176,38 @@ class Clues extends ArrayObject
         $this->cachedFilterLists = false;
     }
 
+    /**
+     * Find set clues based on criteria
+     *
+     * @fixme Am I needed in this abstracted form? If at all, shouldn't the return type be Clues, too?
+     * @todo Possibility to filter for multiple types by bitmask
+     *
+     * @param int $type The type of clue to match, e.g. Clue::FILTER_WHITELIST
+     * @param array $units Units that have to be set to match; array of unit names, e.g. ['y', 'm']
+     *
+     * @return array
+     */
+    public function find(int $type, array $units = [])
+    {
+        $clues = [];
+        foreach ($this->storage as $clue) {
+            /**
+             * @var Clue $clue
+             */
+            if ($clue->filter !== $type) {
+                continue;
+            }
+
+            if (!empty($units) && $units !== $clue->getSetUnits()) {
+                continue;
+            }
+
+            $result[] = $clue;
+        }
+
+        return $clues;
+    }
+
     protected function generateFilterLists() : void
     {
         if ($this->cachedFilterLists) {

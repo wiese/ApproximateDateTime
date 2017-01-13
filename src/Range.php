@@ -66,7 +66,7 @@ class Range
     }
 
     /**
-     * Disect the range into individual ranges on the lowest set unit
+     * Disect the range into individual ranges of the most detailed unit set
      *
      * @return Ranges
      */
@@ -90,6 +90,9 @@ class Range
         return $ranges;
     }
 
+    /**
+     * Make sure children are not manipulated by copies. ImmutableDateTimeData containers as alternative?
+     */
     public function __clone()
     {
         $this->start = clone $this->start;

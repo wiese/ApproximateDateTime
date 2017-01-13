@@ -10,7 +10,7 @@ use PHPUnit_Framework_TestCase;
 
 class DateTimeDataTest extends PHPUnit_Framework_TestCase
 {
-    public function testMerge() : void
+    public function testMerge(): void
     {
         $tz = new DateTimeZone('Europe/Berlin');
         $sut = new DateTimeData($tz);
@@ -49,7 +49,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertNull($sut->getS());
     }
 
-    public function testMergeDifferentTimezones() : void
+    public function testMergeDifferentTimezones(): void
     {
         $tz = new DateTimeZone('Europe/Berlin');
         $sut = new DateTimeData($tz);
@@ -62,7 +62,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $sut->merge($sut2);
     }
 
-    public function testToString() : void
+    public function testToString(): void
     {
         $tz = new DateTimeZone('Europe/Berlin');
         $sut = new DateTimeData($tz);
@@ -80,7 +80,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('2007-08-30T09:27:05', $sut->toString());
     }
 
-    public function testToDateTime() : void
+    public function testToDateTime(): void
     {
         $tz = new DateTimeZone('Europe/Berlin');
         $sut = new DateTimeData($tz);
@@ -99,7 +99,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $res->format('s'));
     }
 
-    public function testToDateTimeException() : void
+    public function testToDateTimeException(): void
     {
         $this->expectException('LogicException');
         $this->expectExceptionMessage('DateTime can not be created from incompletely populated DateTimeData.');
@@ -113,7 +113,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $sut->toDateTime();
     }
 
-    public function testFromDateTime() : void
+    public function testFromDateTime(): void
     {
         $tz = new DateTimeZone('Europe/Berlin');
         $dateTime = new DateTime('1999-05-10 15:30:21', $tz);
@@ -128,7 +128,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(21, $sut->getS());
     }
 
-    public function testSetTime() : void
+    public function testSetTime(): void
     {
         $tz = new DateTimeZone('Atlantic/Faroe');
         $sut = new DateTimeData($tz);
@@ -148,5 +148,136 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(5, $sut->getH());
         $this->assertEquals(4, $sut->getI());
         $this->assertEquals(3, $sut->getS());
+    }
+
+    public function testIncrement(): void
+    {
+        $tz = new DateTimeZone('Atlantic/Faroe');
+        $sut = new DateTimeData($tz);
+
+        $sut->setY(44);
+        $sut->increment();
+        $this->assertEquals(45, $sut->getY());
+        $this->assertNull($sut->getM());
+        $this->assertNull($sut->getD());
+        $this->assertNull($sut->getH());
+        $this->assertNull($sut->getI());
+        $this->assertNull($sut->getS());
+
+        $sut->setM(12);
+        $sut->increment();
+        $this->assertEquals(46, $sut->getY());
+        $this->assertEquals(1, $sut->getM());
+        $this->assertNull($sut->getD());
+        $this->assertNull($sut->getH());
+        $this->assertNull($sut->getI());
+        $this->assertNull($sut->getS());
+
+        $sut->setD(30);
+        $sut->increment();
+        $this->assertEquals(46, $sut->getY());
+        $this->assertEquals(1, $sut->getM());
+        $this->assertEquals(31, $sut->getD());
+        $this->assertNull($sut->getH());
+        $this->assertNull($sut->getI());
+        $this->assertNull($sut->getS());
+
+        $sut->increment();
+        $this->assertEquals(46, $sut->getY());
+        $this->assertEquals(2, $sut->getM());
+        $this->assertEquals(1, $sut->getD());
+        $this->assertNull($sut->getH());
+        $this->assertNull($sut->getI());
+        $this->assertNull($sut->getS());
+
+        $sut->setH(11);
+        $sut->increment();
+        $this->assertEquals(46, $sut->getY());
+        $this->assertEquals(2, $sut->getM());
+        $this->assertEquals(1, $sut->getD());
+        $this->assertEquals(12, $sut->getH());
+        $this->assertNull($sut->getI());
+        $this->assertNull($sut->getS());
+
+        $sut->setI(59);
+        $sut->increment();
+        $this->assertEquals(46, $sut->getY());
+        $this->assertEquals(2, $sut->getM());
+        $this->assertEquals(1, $sut->getD());
+        $this->assertEquals(13, $sut->getH());
+        $this->assertEquals(0, $sut->getI());
+        $this->assertNull($sut->getS());
+
+        $sut->setS(59);
+        $sut->increment();
+        $this->assertEquals(46, $sut->getY());
+        $this->assertEquals(2, $sut->getM());
+        $this->assertEquals(1, $sut->getD());
+        $this->assertEquals(13, $sut->getH());
+        $this->assertEquals(1, $sut->getI());
+        $this->assertEquals(0, $sut->getS());
+
+        $sut->setH(23);
+        $sut->setI(59);
+        $sut->setS(59);
+        $sut->increment();
+        $this->assertEquals(46, $sut->getY());
+        $this->assertEquals(2, $sut->getM());
+        $this->assertEquals(2, $sut->getD());
+        $this->assertEquals(0, $sut->getH());
+        $this->assertEquals(0, $sut->getI());
+        $this->assertEquals(0, $sut->getS());
+
+        $sut->increment();
+        $this->assertEquals(46, $sut->getY());
+        $this->assertEquals(2, $sut->getM());
+        $this->assertEquals(2, $sut->getD());
+        $this->assertEquals(0, $sut->getH());
+        $this->assertEquals(0, $sut->getI());
+        $this->assertEquals(1, $sut->getS());
+    }
+
+    public function testDecrement(): void
+    {
+        $tz = new DateTimeZone('Atlantic/Faroe');
+        $sut = new DateTimeData($tz);
+
+        $sut->setY(2004);
+        $sut->setM(3);
+        $sut->setD(1);
+        $sut->setH(0);
+        $sut->setI(0);
+        $sut->setS(0);
+
+        $sut->decrement();
+        $this->assertEquals(2004, $sut->getY());
+        $this->assertEquals(2, $sut->getM());
+        $this->assertEquals(29, $sut->getD());
+        $this->assertEquals(23, $sut->getH());
+        $this->assertEquals(59, $sut->getI());
+        $this->assertEquals(59, $sut->getS());
+
+        $sut->decrement();
+        $this->assertEquals(2004, $sut->getY());
+        $this->assertEquals(2, $sut->getM());
+        $this->assertEquals(29, $sut->getD());
+        $this->assertEquals(23, $sut->getH());
+        $this->assertEquals(59, $sut->getI());
+        $this->assertEquals(58, $sut->getS());
+
+        $tz = new DateTimeZone('Atlantic/Faroe');
+        $sut = new DateTimeData($tz);
+
+        $sut->setY(2004);
+        $sut->setM(2);
+        $sut->setD(1);
+
+        $sut->decrement();
+        $this->assertEquals(2004, $sut->getY());
+        $this->assertEquals(1, $sut->getM());
+        $this->assertEquals(31, $sut->getD());
+        $this->isNull($sut->getH());
+        $this->isNull($sut->getI());
+        $this->isNull($sut->getS());
     }
 }
