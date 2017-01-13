@@ -11,13 +11,11 @@ class RangeTest extends PHPUnit_Framework_TestCase
 {
     public function testFiletYears() : void
     {
-        $timezone = new \DateTimeZone('Asia/Vladivostok');
-
         $sut = new Range();
-        $start = new DateTimeData($timezone);
+        $start = new DateTimeData();
         $start->setY(1914);
         $sut->setStart($start);
-        $end = new DateTimeData($timezone);
+        $end = new DateTimeData();
         $end->setY(1918);
         $sut->setEnd($end);
 
@@ -37,14 +35,12 @@ class RangeTest extends PHPUnit_Framework_TestCase
 
     public function testFiletMonths() : void
     {
-        $timezone = new \DateTimeZone('Asia/Vladivostok');
-
         $sut = new Range();
-        $start = new DateTimeData($timezone);
+        $start = new DateTimeData();
         $start->setY(1914);
         $start->setM(2);
         $sut->setStart($start);
-        $end = new DateTimeData($timezone);
+        $end = new DateTimeData();
         $end->setY(1914);
         $end->setM(4);
         $sut->setEnd($end);
@@ -63,14 +59,12 @@ class RangeTest extends PHPUnit_Framework_TestCase
 
     public function testFiletYearsAndMonths() : void
     {
-        $timezone = new \DateTimeZone('Asia/Vladivostok');
-
         $sut = new Range();
-        $start = new DateTimeData($timezone);
+        $start = new DateTimeData();
         $start->setY(1914);
         $start->setM(2);
         $sut->setStart($start);
-        $end = new DateTimeData($timezone);
+        $end = new DateTimeData();
         $end->setY(1918);
         $end->setM(4);
         $sut->setEnd($end);

@@ -8,7 +8,6 @@ use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\Log;
 use wiese\ApproximateDateTime\Ranges;
 use Psr\Log\LoggerInterface;
-use DateTimeZone;
 
 abstract class Base implements OptionFilterInterface
 {
@@ -29,13 +28,6 @@ abstract class Base implements OptionFilterInterface
      * @var int
      */
     protected $calendar;
-
-    /**
-     * @todo Not used directly, "only" used to construct new DateTimeData objects. Other way?
-     *
-     * @var \DateTimeZone
-     */
-    protected $timezone;
 
     /**
      * @var Config
@@ -78,15 +70,6 @@ abstract class Base implements OptionFilterInterface
     public function setCalendar(int $calendar) : void
     {
         $this->calendar = $calendar;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see OptionFilterInterface::setTimezone()
-     */
-    public function setTimezone(DateTimeZone $timezone) : void
-    {
-        $this->timezone = $timezone;
     }
 
     /**

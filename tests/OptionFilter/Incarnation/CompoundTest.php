@@ -9,15 +9,9 @@ use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Compound;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
-use DateTimeZone;
 
 class CompoundTest extends ParentTest
 {
-
-    /**
-     * @var \DateTimeZone
-     */
-    protected $tz;
 
     /**
      * @var Compound
@@ -26,11 +20,8 @@ class CompoundTest extends ParentTest
 
     public function init(string $unit) : void
     {
-        $this->tz = new DateTimeZone('Arctic/Longyearbyen');
-
         $this->sut = new Compound();
         $this->sut->setUnit($unit);
-        $this->sut->setTimezone($this->tz);
         $this->sut->setCalendar(CAL_GREGORIAN);
     }
 
@@ -40,10 +31,10 @@ class CompoundTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1985);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1985);
         $range->setEnd($end);
         $ranges->append($range);
@@ -74,11 +65,11 @@ class CompoundTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1994);
         $start->setM(1);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1995);
         $end->setM(11);
         $range->setEnd($end);
@@ -108,12 +99,12 @@ class CompoundTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1994);
         $start->setM(1);
         $start->setD(3);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1995);
         $end->setM(11);
         $end->setM(19);
@@ -147,12 +138,12 @@ class CompoundTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1975);
         $start->setM(9);
         $start->setD(1);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1975);
         $end->setM(9);
         $end->setM(30);
@@ -195,11 +186,11 @@ class CompoundTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1975);
         $start->setM(1);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1975);
         $end->setM(12);
         $range->setEnd($end);
@@ -250,11 +241,11 @@ class CompoundTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1975);
         $start->setM(1);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1976);
         $end->setM(12);
         $range->setEnd($end);

@@ -32,13 +32,6 @@ interface OptionFilterInterface
     public function setCalendar(int $calendar) : void;
 
     /**
-     * Set the timezone to be used for date/time calculations
-     *
-     * @param \DateTimeZone $timezone
-     */
-    public function setTimezone(DateTimeZone $timezone) : void;
-
-    /**
      * Mend the given ranges as per the restrictions defined through clues
      *
      * @param Ranges $ranges

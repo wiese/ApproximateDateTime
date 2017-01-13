@@ -10,6 +10,7 @@ use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 use DateInterval;
 use DatePeriod;
+use DateTimeZone;
 
 /**
  * Apply weekday restrictions (e.g. 'sunday') to existing ranges.
@@ -48,6 +49,9 @@ class Weekday extends Base
     /**
      * Add allowabled dates (defined by) $options from $range to $ranges
      *
+     * @tutorial We take a detour from DataTimeData to DateTime and back to calculate the weekdays.
+     * Weekday should not depend on timezone so we can work w/ a dummy timezone (UTC)
+     *
      * @param Ranges $ranges Ranges to append matching ranges to
      * @param Range $range The existing to check for matching weekdays
      * @param array $options Allowable weekdays
@@ -55,14 +59,12 @@ class Weekday extends Base
     protected function patchRanges(Ranges & $ranges, Range $range, array $options) : void
     {
         $dayIterationInterval = new DateInterval('P1D');
-
-        // weekday should not depend on timezone so we could work w/ a dummy timezone (UTC), used to
-        // determine the applicable DataTimeData/Ranges which again could live w/o a timezone
+        $timezone = new DateTimeZone('UTC');
 
         $period = new DatePeriod(
-            $range->getStart()->toDateTime(),
+            $range->getStart()->toDateTime($timezone),
             $dayIterationInterval,
-            $range->getEnd()->toDateTime()->add($dayIterationInterval) // work with end day, too
+            $range->getEnd()->toDateTime($timezone)->add($dayIterationInterval) // work with end day, too
         );
 
         /**

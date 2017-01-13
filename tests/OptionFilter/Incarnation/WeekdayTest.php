@@ -8,15 +8,9 @@ use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Weekday;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
-use DateTimeZone;
 
 class WeekdayTest extends ParentTest
 {
-
-    /**
-     * @var \DateTimeZone
-     */
-    protected $tz;
 
     /**
      * @var Weekday
@@ -25,11 +19,8 @@ class WeekdayTest extends ParentTest
 
     public function setUp() : void
     {
-        $this->tz = new DateTimeZone('Pacific/Guam');
-
         $this->sut = new Weekday();
         $this->sut->setUnit('n'); // @todo mv into filter if only one purpose?
-        $this->sut->setTimezone($this->tz);
         $this->sut->setCalendar(CAL_GREGORIAN);
         // keep a reference for modification during individual tests
         $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
@@ -45,12 +36,12 @@ class WeekdayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(2001);
         $start->setM(9);
         $start->setD(1);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(2001);
         $end->setM(9);
         $end->setD(30);
@@ -76,12 +67,12 @@ class WeekdayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(2002);
         $start->setM(1);
         $start->setD(1);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(2002);
         $end->setM(12);
         $end->setD(31);

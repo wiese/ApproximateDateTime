@@ -2,7 +2,6 @@
 
 namespace wiese\ApproximateDateTime\OptionFilter\Incarnation;
 
-use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\Clue;
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\OptionFilter\Base;
@@ -21,6 +20,7 @@ class Compound extends Base
 
         $processUnits = explode('-', $this->unit);
 
+        // @todo use Clues::find() instead or lose it
         foreach ($this->clues as $clue) {
             /**
              * @var $clue Clue
@@ -30,6 +30,7 @@ class Compound extends Base
                 continue;
             }
 
+            // @todo replace by further strategy pattern?
             if ($clue->filter === Clue::FILTER_WHITELIST) {
                 $ranges = $this->applyWhitelist($ranges, $clue);
             } elseif ($clue->filter === Clue::FILTER_BLACKLIST) {
@@ -39,7 +40,6 @@ class Compound extends Base
             } elseif ($clue->filter === Clue::FILTER_AFTEREQUALS) {
                 $ranges = $this->applyAfter($ranges, $clue);
             }
-
         }
 
         return $ranges;
@@ -105,7 +105,7 @@ class Compound extends Base
 
     /**
      * New whitelisted times are to become part of possible ranges.
-     * We would be hard-pressed to and not responsible for the internal house-keeping of Ranges so we delegate it altogether
+     * We would be hard-pressed to and are not responsible for the internal house-keeping of Ranges, which does that.
      *
      * @param Ranges $ranges
      * @param Clue $clue
@@ -114,11 +114,15 @@ class Compound extends Base
     public function applyWhitelist(Ranges $ranges, Clue $clue): Ranges
     {
         $range = new Range();
-        // from what to construct start and end?
+        $start = new DateTimeData();
+        $end = new DateTimeData();
+
         foreach ($clue->getSetUnits() as $unit) {
-            $range->getStart()->set($unit, $clue->get($unit));  // @fixme ::merge() instead? But not for Vehicle (yet)
-            $range->getEnd()->set($unit, $clue->get($unit));
+            $start->set($unit, $clue->get($unit));  // @fixme ::merge() instead? But not for Vehicle (yet)
+            $end->set($unit, $clue->get($unit));
         }
+        $range->setStart($start);
+        $range->setEnd($end);
         $ranges->append($range);
 
         return $ranges;
@@ -142,7 +146,7 @@ class Compound extends Base
             if ($range->getStart()->isBigger($clue) || $range->getEnd()->isSmaller($clue)) {
                 $newRanges->append($range); // leave range as it is
             } elseif ($range->getStart()->equals($clue) && $range->getStart()->equals($clue)) {
-                // a very short range, completely blacklisted
+                continue; // a very short range, completely blacklisted
             } elseif ($range->getStart()->equals($clue)) {
                 $range->getStart()->increment();
                 $newRanges->append($range);
@@ -174,19 +178,5 @@ class Compound extends Base
         }
 
         return $newRanges;
-    }
-
-    protected function getCompoundUnits() : array
-    {
-        $units = [];
-        foreach (Config::$compoundUnits as $unit => $smallestUnit) {
-            if ($unit === $smallestUnit) {  // "normal" unit
-                continue;
-            }
-
-            $units[] = $unit;
-        }
-
-        return $units;
     }
 }

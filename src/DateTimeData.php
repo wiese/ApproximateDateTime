@@ -8,7 +8,7 @@ use wiese\ApproximateDateTime\DateTimeFormat;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
-use Exception;
+use LogicException;
 
 /**
  * A data vehicle for partially known information about a DateTime.
@@ -26,29 +26,20 @@ class DateTimeData extends Vehicle
     public $dayIsLastInMonth = false;
 
     /**
-     * @var \DateTimeZone
-     */
-    protected $timezone;
-
-    public function __construct(DateTimeZone $timezone)
-    {
-        $this->timezone = $timezone;
-    }
-
-    /**
      * Convert current information into a DateTime object.
      * Incomplete time values yield 00:00:00
      *
+     * @param DateTimeZone $timezone
      * @return DateTimeInterface
      */
-    public function toDateTime() : DateTimeInterface
+    public function toDateTime(DateTimeZone $timezone) : DateTimeInterface
     {
         if (!is_int($this->y) || !is_int($this->m) || !is_int($this->d)) {
-            throw new \LogicException('DateTime can not be created from incompletely populated DateTimeData.');
+            throw new LogicException('DateTime can not be created from incompletely populated DateTimeData.');
         }
 
         $datetime = new DateTime();
-        $datetime->setTimezone($this->timezone);
+        $datetime->setTimezone($timezone);
         $datetime->setDate($this->y, $this->m, $this->d);
         $datetime->setTime(0, 0, 0);
 
@@ -80,7 +71,6 @@ class DateTimeData extends Vehicle
     /**
      * Merge data from another DateTimeDate object into the current one
      *
-     * @throws \Exception
      * @param self $other
      * @return self
      */
@@ -89,11 +79,6 @@ class DateTimeData extends Vehicle
         $properties = get_object_vars($other);
         foreach ($properties as $property => $value) {
             if ($property === 'dayIsLastInMonth') {
-                continue;
-            } elseif ($property === 'timezone') {
-                if ($value->getName() !== $this->timezone->getName()) {
-                    throw new Exception('Can not merge DateTimeData objects w/ different timezones!');
-                }
                 continue;
             }
 
@@ -147,7 +132,7 @@ class DateTimeData extends Vehicle
      */
     public static function fromDateTime(DateTimeInterface $dateTime) : self
     {
-        $instance = new self($dateTime->getTimezone());
+        $instance = new self;
 
         $instance->y = (int) $dateTime->format(DateTimeFormat::YEAR);
         $instance->m = (int) $dateTime->format(DateTimeFormat::MONTH);

@@ -12,8 +12,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
 {
     public function testMerge(): void
     {
-        $tz = new DateTimeZone('Europe/Berlin');
-        $sut = new DateTimeData($tz);
+        $sut = new DateTimeData();
         $sut->setY(2014);
 
         $this->assertEquals(2014, $sut->getY());
@@ -23,7 +22,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertNull($sut->getI());
         $this->assertNull($sut->getS());
 
-        $sut2 = new DateTimeData($tz);
+        $sut2 = new DateTimeData();
         $sut2->setM(3);
 
         $sut->merge($sut2);
@@ -35,7 +34,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertNull($sut->getI());
         $this->assertNull($sut->getS());
 
-        $sut3 = new DateTimeData($tz);
+        $sut3 = new DateTimeData();
         $sut3->setH(7);
         $sut3->setI(59);
 
@@ -49,23 +48,9 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertNull($sut->getS());
     }
 
-    public function testMergeDifferentTimezones(): void
-    {
-        $tz = new DateTimeZone('Europe/Berlin');
-        $sut = new DateTimeData($tz);
-
-        $tz = new DateTimeZone('Atlantic/Faroe');
-        $sut2 = new DateTimeData($tz);
-
-        $this->expectException('Exception');
-
-        $sut->merge($sut2);
-    }
-
     public function testToString(): void
     {
-        $tz = new DateTimeZone('Europe/Berlin');
-        $sut = new DateTimeData($tz);
+        $sut = new DateTimeData();
 
         $sut->setY(2007);
         $sut->setM(8);
@@ -83,13 +68,13 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
     public function testToDateTime(): void
     {
         $tz = new DateTimeZone('Europe/Berlin');
-        $sut = new DateTimeData($tz);
+        $sut = new DateTimeData();
 
         $sut->setY(2009);
         $sut->setM(11);
         $sut->setD(3);
 
-        $res = $sut->toDateTime();
+        $res = $sut->toDateTime($tz);
         $this->assertInstanceOf('DateTimeInterface', $res);
         $this->assertEquals(2009, $res->format('Y'));
         $this->assertEquals(11, $res->format('m'));
@@ -105,12 +90,12 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->expectExceptionMessage('DateTime can not be created from incompletely populated DateTimeData.');
 
         $tz = new DateTimeZone('Europe/Berlin');
-        $sut = new DateTimeData($tz);
+        $sut = new DateTimeData();
 
         $sut->setY(2009);
         $sut->setM(12);
 
-        $sut->toDateTime();
+        $sut->toDateTime($tz);
     }
 
     public function testFromDateTime(): void
@@ -130,8 +115,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
 
     public function testSetTime(): void
     {
-        $tz = new DateTimeZone('Atlantic/Faroe');
-        $sut = new DateTimeData($tz);
+        $sut = new DateTimeData();
 
         $this->assertNull($sut->getY());
         $this->assertNull($sut->getM());
@@ -152,8 +136,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
 
     public function testIncrement(): void
     {
-        $tz = new DateTimeZone('Atlantic/Faroe');
-        $sut = new DateTimeData($tz);
+        $sut = new DateTimeData();
 
         $sut->setY(44);
         $sut->increment();
@@ -239,8 +222,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
 
     public function testDecrement(): void
     {
-        $tz = new DateTimeZone('Atlantic/Faroe');
-        $sut = new DateTimeData($tz);
+        $sut = new DateTimeData();
 
         $sut->setY(2004);
         $sut->setM(3);
@@ -265,8 +247,7 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(59, $sut->getI());
         $this->assertEquals(58, $sut->getS());
 
-        $tz = new DateTimeZone('Atlantic/Faroe');
-        $sut = new DateTimeData($tz);
+        $sut = new DateTimeData();
 
         $sut->setY(2004);
         $sut->setM(2);

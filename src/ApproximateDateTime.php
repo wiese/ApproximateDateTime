@@ -108,7 +108,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $this->calculateBoundaries();
 
-        return $this->ranges[0]->getStart()->toDateTime();
+        return $this->ranges[0]->getStart()->toDateTime($this->timezone);
     }
 
     /**
@@ -119,7 +119,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $this->calculateBoundaries();
 
-        return $this->ranges[$this->ranges->count() - 1]->getEnd()->toDateTime();
+        return $this->ranges[$this->ranges->count() - 1]->getEnd()->toDateTime($this->timezone);
     }
 
     /**
@@ -132,8 +132,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $periods = [];
         foreach ($this->ranges as $range) {
-            $start = $range->getStart()->toDateTime();
-            $end = $range->getEnd()->toDateTime();
+            $start = $range->getStart()->toDateTime($this->timezone);
+            $end = $range->getEnd()->toDateTime($this->timezone);
             $periods[] = new DatePeriod($start, $start->diff($end), 1);
 
             // @todo identify patterns, set recurrences correctly, and avoid redundancy
@@ -177,7 +177,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             $filter->setUnit($unit);
             $filter->setClues($this->clues);
             $filter->setCalendar($this->calendar);
-            $filter->setTimezone($this->timezone);
 
             $ranges = $filter->apply($ranges);
 

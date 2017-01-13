@@ -91,7 +91,7 @@ class Range
     }
 
     /**
-     * Make sure children are not manipulated by copies. ImmutableDateTimeData containers as alternative?
+     * Make sure children are not manipulated via copies. ImmutableDateTimeData containers as alternative?
      */
     public function __clone()
     {

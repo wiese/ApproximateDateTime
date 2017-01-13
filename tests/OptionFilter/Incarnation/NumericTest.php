@@ -7,16 +7,10 @@ use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Numeric;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
-use DateTimeZone;
 use PHPUnit_Framework_TestCase;
 
 class NumericTest extends PHPUnit_Framework_TestCase
 {
-
-    /**
-     * @var DateTimeZone
-     */
-    protected $tz;
 
     /**
      * @var Numeric
@@ -31,8 +25,6 @@ class NumericTest extends PHPUnit_Framework_TestCase
     public function setUp(): void
     {
         $this->sut = new Numeric;
-        $this->tz = new DateTimeZone('Asia/Kathmandu');
-        $this->sut->setTimezone($this->tz);
         // keep a reference for modification during individual tests
         $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
             // methods that are mocked; results can be manipulated later
@@ -82,10 +74,10 @@ class NumericTest extends PHPUnit_Framework_TestCase
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1995);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1995);
         $range->setEnd($end);
         $ranges->append($range);

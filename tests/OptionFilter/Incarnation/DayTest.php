@@ -8,15 +8,9 @@ use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Day;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
-use DateTimeZone;
 
 class DayTest extends ParentTest
 {
-
-    /**
-     * @var \DateTimeZone
-     */
-    protected $tz;
 
     /**
      * @var Day
@@ -25,11 +19,8 @@ class DayTest extends ParentTest
 
     public function setUp() : void
     {
-        $this->tz = new DateTimeZone('Asia/Ulaanbaatar');
-
         $this->sut = new Day();
         $this->sut->setUnit('d');
-        $this->sut->setTimezone($this->tz);
         $this->sut->setCalendar(CAL_GREGORIAN);
         // keep a reference for modification during individual tests
         $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
@@ -45,11 +36,11 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1993);
         $start->setM(5);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1993);
         $end->setM(5);
         $range->setEnd($end);
@@ -71,11 +62,11 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1998);
         $start->setM(1);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1998);
         $end->setM(2);
         $range->setEnd($end);
@@ -99,11 +90,11 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1998);
         $start->setM(1);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1998);
         $end->setM(2);
         $range->setEnd($end);
@@ -127,21 +118,21 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1953);
         $start->setM(10);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1953);
         $end->setM(10);
         $range->setEnd($end);
         $ranges->append($range);
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1954);
         $start->setM(5);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1954);
         $end->setM(5);
         $range->setEnd($end);
@@ -172,11 +163,11 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1958);
         $start->setM(11);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1958);
         $end->setM(11);
         $range->setEnd($end);
@@ -200,11 +191,11 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1997);
         $start->setM(11);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1997);
         $end->setM(12);
         $range->setEnd($end);
@@ -235,22 +226,22 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1962);
         $start->setM(12);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1962);
         $end->setM(12);
         $range->setEnd($end);
         $ranges->append($range);
 
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1963);
         $start->setM(9);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1963);
         $end->setM(9);
         $range->setEnd($end);
@@ -281,11 +272,11 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1958);
         $start->setM(11);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1958);
         $end->setM(11);
         $range->setEnd($end);
@@ -316,11 +307,11 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1930);
         $start->setM(6);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1930);
         $end->setM(8);
         $range->setEnd($end);
@@ -379,22 +370,22 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1969);
         $start->setM(5);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1969);
         $end->setM(5);
         $range->setEnd($end);
         $ranges->append($range);
 
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1969);
         $start->setM(8);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1969);
         $end->setM(8);
         $range->setEnd($end);
@@ -439,11 +430,11 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1960);
         $start->setM(2);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1960);
         $end->setM(3);
         $range->setEnd($end);
@@ -482,10 +473,10 @@ class DayTest extends ParentTest
 
         $ranges = new Ranges();
         $range = new Range();
-        $start = new DateTimeData($this->tz);
+        $start = new DateTimeData();
         $start->setY(1968);
         $range->setStart($start);
-        $end = new DateTimeData($this->tz);
+        $end = new DateTimeData();
         $end->setY(1969);
         $range->setEnd($end);
         $ranges->append($range);

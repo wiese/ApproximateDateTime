@@ -29,10 +29,10 @@ class RangesTest extends PHPUnit_Framework_TestCase
         $sut2 = new Ranges();
 
         $range = new Range();
-        $start = new DateTimeData($this->timezone);
+        $start = new DateTimeData();
         $start->setY(2014);
         $range->setStart($start);
-        $end = new DateTimeData($this->timezone);
+        $end = new DateTimeData();
         $end->setY(2017);
         $range->setEnd($end);
 
@@ -46,10 +46,10 @@ class RangesTest extends PHPUnit_Framework_TestCase
         $sut = new Ranges();
 
         $range = new Range();
-        $start = new DateTimeData($this->timezone);
+        $start = new DateTimeData();
         $start->setY(2014);
         $range->setStart($start);
-        $end = new DateTimeData($this->timezone);
+        $end = new DateTimeData();
         $end->setY(2017);
         $range->setEnd($end);
 
@@ -58,10 +58,10 @@ class RangesTest extends PHPUnit_Framework_TestCase
         $sut2 = new Ranges();
 
         $range = new Range();
-        $start = new DateTimeData($this->timezone);
+        $start = new DateTimeData();
         $start->setM(3);
         $range->setStart($start);
-        $end = new DateTimeData($this->timezone);
+        $end = new DateTimeData();
         $end->setM(4);
         $range->setEnd($end);
 
@@ -81,20 +81,20 @@ class RangesTest extends PHPUnit_Framework_TestCase
         $sut = new Ranges();
 
         $range = new Range();
-        $start = new DateTimeData($this->timezone);
+        $start = new DateTimeData();
         $start->setY(2015);
         $range->setStart($start);
-        $end = new DateTimeData($this->timezone);
+        $end = new DateTimeData();
         $end->setY(2015);
         $range->setEnd($end);
 
         $sut->append($range);
 
         $range = new Range();
-        $start = new DateTimeData($this->timezone);
+        $start = new DateTimeData();
         $start->setY(2016);
         $range->setStart($start);
-        $end = new DateTimeData($this->timezone);
+        $end = new DateTimeData();
         $end->setY(2018);
         $range->setEnd($end);
 
@@ -104,20 +104,20 @@ class RangesTest extends PHPUnit_Framework_TestCase
         $sut2 = new Ranges();
 
         $range = new Range();
-        $start = new DateTimeData($this->timezone);
+        $start = new DateTimeData();
         $start->setM(1);
         $range->setStart($start);
-        $end = new DateTimeData($this->timezone);
+        $end = new DateTimeData();
         $end->setM(2);
         $range->setEnd($end);
 
         $sut2->append($range);
 
         $range = new Range();
-        $start = new DateTimeData($this->timezone);
+        $start = new DateTimeData();
         $start->setM(7);
         $range->setStart($start);
-        $end = new DateTimeData($this->timezone);
+        $end = new DateTimeData();
         $end->setM(9);
         $range->setEnd($end);
 
