@@ -33,13 +33,10 @@ class Range
      * Set the start of the range
      *
      * @param DateTimeData $start
-     * @return self
      */
-    public function setStart(DateTimeData $start) : self
+    public function setStart(DateTimeData $start) : void
     {
         $this->start = $start;
-
-        return $this;
     }
 
     /**
@@ -56,13 +53,10 @@ class Range
      * Set the end of the range
      *
      * @param DateTimeData $end
-     * @return self
      */
-    public function setEnd(DateTimeData $end) : self
+    public function setEnd(DateTimeData $end) : void
     {
         $this->end = $end;
-
-        return $this;
     }
 
     /**
@@ -76,10 +70,7 @@ class Range
 
         $targetUnit = $this->start->getNextUnit();
 
-        $min = $this->start->get($targetUnit);
-        $max = $this->end->get($targetUnit);
-
-        for ($value = $min; $value <= $max; $value++) {
+        for ($value = $this->start->get($targetUnit); $value <= $this->end->get($targetUnit); $value++) {
             $range = clone $this;
             $range->getStart()->set($targetUnit, $value);
             $range->getEnd()->set($targetUnit, $value);
