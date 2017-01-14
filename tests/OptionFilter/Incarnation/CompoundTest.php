@@ -178,7 +178,7 @@ class CompoundTest extends ParentTest
         $this->assertEquals(26, $ranges[0]->getEnd()->getD());
     }
 
-    public function testWhitelist() : void
+    public function testWhitelistMerge() : void
     {
         $this->init('y-m');
 
@@ -209,6 +209,23 @@ class CompoundTest extends ParentTest
         $newRanges = $this->sut->apply($ranges);
 
         $this->assertEquals($ranges, $newRanges);
+    }
+
+    public function testWhitelistSeparate() : void
+    {
+        $this->init('y-m');
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData();
+        $start->setY(1975);
+        $start->setM(1);
+        $range->setStart($start);
+        $end = new DateTimeData();
+        $end->setY(1975);
+        $end->setM(12);
+        $range->setEnd($end);
+        $ranges->append($range);
 
         $clues = new Clues();
 

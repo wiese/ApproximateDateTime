@@ -113,11 +113,14 @@ class Compound extends Base
      */
     public function applyWhitelist(Ranges $ranges, Clue $clue): Ranges
     {
+        $ranges = clone $ranges;
+
         $range = new Range();
         $start = new DateTimeData();
         $end = new DateTimeData();
 
-        foreach ($clue->getSetUnits() as $unit) {
+        $setUnits = $clue->getSetUnits();
+        foreach ($setUnits as $unit) {
             $start->set($unit, $clue->get($unit));  // @fixme ::merge() instead? But not for Vehicle (yet)
             $end->set($unit, $clue->get($unit));
         }
@@ -125,7 +128,60 @@ class Compound extends Base
         $range->setEnd($end);
         $ranges->append($range);
 
+        $ranges = $this->sanitizeRanges($ranges);
+
         return $ranges;
+    }
+
+    /**
+     * Clean up overlapping ranges
+     *
+     * @param Ranges $ranges
+     * @return Ranges
+     */
+    protected function sanitizeRanges(Ranges $ranges) : Ranges
+    {
+        $ranges->sort();
+
+        $nRanges = count($ranges);
+
+        $newRanges = new Ranges;
+
+        for ($i = 0; $i < $nRanges; $i++) {
+            /**
+             * @var Range $current
+             */
+            $current = $ranges[$i];
+
+            if (isset($ranges[$i + 1])) { // not the last
+                /**
+                 * @var DateTimeData $currentEnd
+                 */
+                $currentEnd = $current->getEnd();
+                /**
+                 * @var Range $current
+                 */
+                $next = $ranges[$i + 1];
+                /**
+                 * @var DateTimeData $nextStart
+                 */
+                $nextStart = $next->getStart();
+                /**
+                 * @var DateTimeData $nextEnd
+                 */
+                $nextEnd = $next->getEnd();
+                if ($nextStart->isSmaller($currentEnd) || $nextStart->equals($currentEnd)) {
+                    $this->log->debug('overlapping ranges', [$nextStart->toString(), $currentEnd->toString()]);
+                    $end = $currentEnd->isBigger($nextEnd) ? $currentEnd : $nextEnd;
+                    $current->setEnd($end); // manipulate the current to merge current and next
+                    $i++; // skip next as it is covered already
+                }
+            }
+
+            $newRanges->append($current);
+        }
+
+        return $newRanges;
     }
 
     /**

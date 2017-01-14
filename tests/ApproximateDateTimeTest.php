@@ -657,11 +657,13 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         return;
 
         $clue1 = new Clue;
+        $clue1->filter = Clue::FILTER_WHITELIST;
         $clue1->setY(2007);
         $clue1->setM(10);
         $clue1->setD(30);
 
         $clue2 = new Clue;
+        $clue2->filter = Clue::FILTER_WHITELIST;
         $clue2->setH(9);
         $clue2->setI(37);
         $clue2->setS(14);
