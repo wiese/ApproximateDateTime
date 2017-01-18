@@ -12,8 +12,7 @@ class ClueTest extends PHPUnit_Framework_TestCase
     {
         $sut = new Clue();
 
-        $sut = $sut->fromArray(['y' => 2011]);
-        $this->assertInstanceOf('wiese\ApproximateDateTime\Clue', $sut);
+        $sut->fromArray(['y' => 2011]);
         $this->assertEquals(2011, $sut->getY());
         $this->assertEquals(2011, $sut->get('y'));
         $this->assertNull($sut->getM());
@@ -22,8 +21,7 @@ class ClueTest extends PHPUnit_Framework_TestCase
         $this->assertNull($sut->getI());
         $this->assertNull($sut->getS());
 
-        $sut = $sut->fromArray(['y' => 2001, 'm' => 11, 'd' => 27, 'h' => 3, 'i' => 38, 's' => 59]);
-        $this->assertInstanceOf('wiese\ApproximateDateTime\Clue', $sut);
+        $sut->fromArray(['y' => 2001, 'm' => 11, 'd' => 27, 'h' => 3, 'i' => 38, 's' => 59]);
         $this->assertEquals(2001, $sut->getY());
         $this->assertEquals(11, $sut->getM());
         $this->assertEquals(27, $sut->getD());
@@ -31,7 +29,7 @@ class ClueTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(38, $sut->getI());
         $this->assertEquals(59, $sut->getS());
 
-        $sut = $sut->fromArray(['n' => 7]);
+        $sut->fromArray(['n' => 7]);
         $this->assertEquals(7, $sut->getN());
         $sut->setN(8);
         $this->assertEquals(8, $sut->getN());
@@ -41,6 +39,6 @@ class ClueTest extends PHPUnit_Framework_TestCase
     {
         $sut = new Clue();
         $sut->rawValue = 'not implemented';
-        $sut->type = $sut::IS_AFTEREQUALS;
+        $sut->type = Clue::IS_AFTEREQUALS;
     }
 }

@@ -20,7 +20,8 @@ class VehicleTest extends PHPUnit_Framework_TestCase
     }
     public function testFromArray() : void
     {
-        $sut = $this->sut->fromArray(['y' => 2011]);
+        $sut = $this->sut;
+        $sut->fromArray(['y' => 2011]);
         $this->assertInstanceOf('wiese\ApproximateDateTime\Data\Vehicle', $sut);
         $this->assertEquals(2011, $sut->getY());
         $this->assertEquals(2011, $sut->get('y'));
@@ -30,7 +31,8 @@ class VehicleTest extends PHPUnit_Framework_TestCase
         $this->assertNull($sut->getI());
         $this->assertNull($sut->getS());
 
-        $sut = $this->sut->fromArray(['y' => 2001, 'm' => 11, 'd' => 27, 'h' => 3, 'i' => 38, 's' => 59]);
+        $sut = $this->sut;
+        $sut->fromArray(['y' => 2001, 'm' => 11, 'd' => 27, 'h' => 3, 'i' => 38, 's' => 59]);
         $this->assertInstanceOf('wiese\ApproximateDateTime\Data\Vehicle', $sut);
         $this->assertEquals(2001, $sut->getY());
         $this->assertEquals(11, $sut->getM());
@@ -66,8 +68,10 @@ class VehicleTest extends PHPUnit_Framework_TestCase
 
     public function testCompareTo() : void
     {
-        $one = (clone $this->sut)->fromArray(['y' => 2007]);
-        $two = (clone $this->sut)->fromArray(['y' => 2007]);
+        $one = clone $this->sut;
+        $one->fromArray(['y' => 2007]);
+        $two = clone $this->sut;
+        $two->fromArray(['y' => 2007]);
 
         $this->assertEquals(0, $one->compareTo($two));
         $this->assertEquals(0, $two->compareTo($one));
@@ -75,8 +79,10 @@ class VehicleTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($one->isBigger($two));
         $this->assertFalse($one->isSmaller($two));
 
-        $one = (clone $this->sut)->fromArray(['y' => 2006]);
-        $two = (clone $this->sut)->fromArray(['y' => 2007]);
+        $one = clone $this->sut;
+        $one->fromArray(['y' => 2006]);
+        $two = clone $this->sut;
+        $two->fromArray(['y' => 2007]);
 
         $this->assertEquals(-1, $one->compareTo($two));
         $this->assertEquals(1, $two->compareTo($one));
@@ -84,8 +90,10 @@ class VehicleTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($one->isBigger($two));
         $this->assertTrue($one->isSmaller($two));
 
-        $one = (clone $this->sut)->fromArray(['y' => 2007]);
-        $two = (clone $this->sut)->fromArray(['y' => 2006]);
+        $one = clone $this->sut;
+        $one->fromArray(['y' => 2007]);
+        $two = clone $this->sut;
+        $two->fromArray(['y' => 2006]);
 
         $this->assertEquals(1, $one->compareTo($two));
         $this->assertEquals(-1, $two->compareTo($one));
@@ -93,24 +101,30 @@ class VehicleTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($one->isBigger($two));
         $this->assertFalse($one->isSmaller($two));
 
-        $one = (clone $this->sut)->fromArray(['y' => 2003, 'm' => 3, 'd' => 14]);
-        $two = (clone $this->sut)->fromArray(['y' => 2003, 'm' => 3, 'd' => 15]);
+        $one = clone $this->sut;
+        $one->fromArray(['y' => 2003, 'm' => 3, 'd' => 14]);
+        $two = clone $this->sut;
+        $two->fromArray(['y' => 2003, 'm' => 3, 'd' => 15]);
 
         $this->assertEquals(-1, $one->compareTo($two));
         $this->assertFalse($one->equals($two));
         $this->assertFalse($one->isBigger($two));
         $this->assertTrue($one->isSmaller($two));
 
-        $one = (clone $this->sut)->fromArray(['y' => 2006, 'm' => 3, 'd' => 14]);
-        $two = (clone $this->sut)->fromArray(['y' => 2003, 'm' => 3, 'd' => 15]);
+        $one = clone $this->sut;
+        $one->fromArray(['y' => 2006, 'm' => 3, 'd' => 14]);
+        $two = clone $this->sut;
+        $two->fromArray(['y' => 2003, 'm' => 3, 'd' => 15]);
 
         $this->assertEquals(1, $one->compareTo($two));
         $this->assertFalse($one->equals($two));
         $this->assertTrue($one->isBigger($two));
         $this->assertFalse($one->isSmaller($two));
 
-        $one = (clone $this->sut)->fromArray(['y' => 2007, 'm' => 10, 'd' => 30, 'h' => 9]);
-        $two = (clone $this->sut)->fromArray(['y' => 2007, 'm' => 10, 'd' => 30, 'h' => 9]);
+        $one = clone $this->sut;
+        $one->fromArray(['y' => 2007, 'm' => 10, 'd' => 30, 'h' => 9]);
+        $two = clone $this->sut;
+        $two->fromArray(['y' => 2007, 'm' => 10, 'd' => 30, 'h' => 9]);
         $this->assertEquals(0, $one->compareTo($two));
         $this->assertTrue($one->equals($two));
         $this->assertFalse($one->isBigger($two));
@@ -122,8 +136,10 @@ class VehicleTest extends PHPUnit_Framework_TestCase
         $this->expectException('Exception');
         $this->expectExceptionMessage('Can not compare objects with different units set.');
 
-        $one = (clone $this->sut)->fromArray(['y' => 2007]);
-        $two = (clone $this->sut)->fromArray(['m' => 3]);
+        $one = clone $this->sut;
+        $one->fromArray(['y' => 2007]);
+        $two = clone $this->sut;
+        $two->fromArray(['m' => 3]);
 
         $one->compareTo($two);
     }

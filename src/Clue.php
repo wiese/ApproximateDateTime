@@ -54,11 +54,9 @@ class Clue extends Vehicle
      * Set the numeric representation of a weekday
      *
      * @param int|null $n The week. 1 for Monday through 7 for Sunday
-     * @return self
      */
-    public function setN(int $n = null) : self
+    public function setN(int $n = null) : void
     {
         $this->n = $n;
-        return $this;
     }
 }

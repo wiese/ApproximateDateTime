@@ -79,12 +79,10 @@ abstract class Vehicle
      * Set the all-digit representation of a year
      *
      * @param int|null $y The year, e.g. 2016
-     * @return self
      */
-    public function setY(int $y = null) : self
+    public function setY(int $y = null) : void
     {
         $this->y = $y;
-        return $this;
     }
 
     /**
@@ -99,12 +97,10 @@ abstract class Vehicle
      * Set the representation of a month
      *
      * @param int|null $m The month, e.g. 47
-     * @return self
      */
-    public function setM(int $m = null) : self
+    public function setM(int $m = null) : void
     {
         $this->m = $m;
-        return $this;
     }
 
     /**
@@ -119,12 +115,10 @@ abstract class Vehicle
      * Set the representation of a day
      *
      * @param int|null $d The day, e.g. 29
-     * @return self
      */
-    public function setD(int $d = null) : self
+    public function setD(int $d = null) : void
     {
         $this->d = $d;
-        return $this;
     }
 
     /**
@@ -141,10 +135,9 @@ abstract class Vehicle
      * @param int|null $h The hour, e.g. 23
      * @return self
      */
-    public function setH(int $h = null) : self
+    public function setH(int $h = null) : void
     {
         $this->h = $h;
-        return $this;
     }
 
     /**
@@ -159,12 +152,10 @@ abstract class Vehicle
      * Set the representation of a minute
      *
      * @param int|null $i The minute, e.g. 59
-     * @return self
      */
-    public function setI(int $i = null) : self
+    public function setI(int $i = null) : void
     {
         $this->i = $i;
-        return $this;
     }
 
     /**
@@ -179,12 +170,10 @@ abstract class Vehicle
      * Set the representation of a second
      *
      * @param int|null $s The second, e.g. 59
-     * @return self
      */
-    public function setS(int $s = null) : self
+    public function setS(int $s = null) : void
     {
         $this->s = $s;
-        return $this;
     }
 
     /**
@@ -192,15 +181,12 @@ abstract class Vehicle
      *
      * @param string $unit
      * @param int|null $value
-     * @return self
      */
-    public function set(string $unit, int $value = null) : self
+    public function set(string $unit, int $value = null) : void
     {
         $this->assertUnit($unit);
 
         call_user_func([$this, 'set' . strtoupper($unit)], $value);
-
-        return $this;
     }
 
     /**
@@ -218,17 +204,14 @@ abstract class Vehicle
      * Populate the member values from an array
      *
      * @param array $array
-     * @return self
      */
-    public function fromArray(array $array) : self
+    public function fromArray(array $array) : void
     {
         $this->resetValues();
 
         foreach ($array as $unit => $value) {
             $this->set($unit, $value);
         }
-
-        return $this;
     }
 
     /**
@@ -372,13 +355,11 @@ abstract class Vehicle
      *
      * @return self
      */
-    protected function resetValues() : self
+    protected function resetValues() : void
     {
         foreach (static::$options as $unit) {
             $this->set($unit, null);
         }
-
-        return $this;
     }
 
     /**

@@ -255,7 +255,10 @@ class Clues extends ArrayObject
 
         // @todo what if default year is blacklisted?
         if (empty($this->whitelists['y'])) {
-            $this->whitelists['y'][] = (new Clue())->setY($this->defaultYear);
+            $yClue = new Clue();
+            $yClue->setY($this->defaultYear);
+
+            $this->whitelists['y'][] = $yClue;
         }
 
         $this->cachedFilterLists = true;
