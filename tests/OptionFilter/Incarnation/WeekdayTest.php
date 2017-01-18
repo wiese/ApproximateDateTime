@@ -48,7 +48,7 @@ class WeekdayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(4, $ranges);
 
@@ -79,7 +79,7 @@ class WeekdayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(0, $ranges);
     }

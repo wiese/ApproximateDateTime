@@ -18,11 +18,12 @@ use function cal_days_in_month;
  */
 class Day extends Base
 {
+
     /**
      * {@inheritDoc}
-     * @see Base::apply()
+     * @see OptionFilterInterface::__invoke()
      */
-    public function apply(Ranges $ranges) : Ranges
+    public function __invoke(Ranges $ranges) : Ranges
     {
         // @todo desired behaviour on empty $ranges?
 

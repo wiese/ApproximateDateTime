@@ -41,7 +41,7 @@ class NumericTest extends PHPUnit_Framework_TestCase
         // empty so far
         $ranges = new Ranges();
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(1, $ranges);
         $this->assertEquals(2011, $ranges[0]->getStart()->getY());
@@ -56,7 +56,7 @@ class NumericTest extends PHPUnit_Framework_TestCase
         // empty so far
         $ranges = new Ranges();
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(3, $ranges);
         $this->assertEquals(2008, $ranges[0]->getStart()->getY());
@@ -82,7 +82,7 @@ class NumericTest extends PHPUnit_Framework_TestCase
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(1, $ranges);
         $this->assertEquals(1995, $ranges[0]->getStart()->getY());

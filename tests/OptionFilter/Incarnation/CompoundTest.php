@@ -43,7 +43,7 @@ class CompoundTest extends ParentTest
 
         $this->sut->setClues($clues);
 
-        $this->assertEquals($ranges, $this->sut->apply($ranges));
+        $this->assertEquals($ranges, $this->sut->__invoke($ranges));
     }
 
     public function testEmptyCluesEmptyRanges() : void
@@ -56,7 +56,7 @@ class CompoundTest extends ParentTest
 
         $this->sut->setClues($clues);
 
-        $this->assertEquals($ranges, $this->sut->apply($ranges));
+        $this->assertEquals($ranges, $this->sut->__invoke($ranges));
     }
 
     public function testAfter() : void
@@ -85,7 +85,7 @@ class CompoundTest extends ParentTest
 
         $this->sut->setClues($clues);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertEquals(1994, $ranges[0]->getStart()->getY());
         $this->assertEquals(6, $ranges[0]->getStart()->getM());
@@ -122,7 +122,7 @@ class CompoundTest extends ParentTest
 
         $this->sut->setClues($clues);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertEquals(1994, $ranges[0]->getStart()->getY());
         $this->assertEquals(1, $ranges[0]->getStart()->getM());
@@ -168,7 +168,7 @@ class CompoundTest extends ParentTest
 
         $this->sut->setClues($clues);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertEquals(1975, $ranges[0]->getStart()->getY());
         $this->assertEquals(9, $ranges[0]->getStart()->getM());
@@ -206,7 +206,7 @@ class CompoundTest extends ParentTest
 
         $this->sut->setClues($clues);
 
-        $newRanges = $this->sut->apply($ranges);
+        $newRanges = $this->sut->__invoke($ranges);
 
         $this->assertEquals($ranges, $newRanges);
     }
@@ -245,7 +245,7 @@ class CompoundTest extends ParentTest
 
         $this->sut->setClues($clues);
 
-        $newRanges = $this->sut->apply($ranges);
+        $newRanges = $this->sut->__invoke($ranges);
 
         $this->assertEquals($ranges, $newRanges);
     }
@@ -276,7 +276,7 @@ class CompoundTest extends ParentTest
 
         $this->sut->setClues($clues);
 
-        $newRanges = $this->sut->apply($ranges);
+        $newRanges = $this->sut->__invoke($ranges);
 
         $this->assertCount(2, $newRanges);
         $this->assertEquals(1975, $newRanges[0]->getStart()->getY());
@@ -315,7 +315,7 @@ class CompoundTest extends ParentTest
         $clues->append($clue);
         $this->sut->setClues($clues);
 
-        $newRanges = $this->sut->apply($ranges);
+        $newRanges = $this->sut->__invoke($ranges);
 
         $this->assertCount(2, $newRanges);
         $this->assertEquals(1975, $newRanges[0]->getStart()->getY());
@@ -369,7 +369,7 @@ class CompoundTest extends ParentTest
 
         $this->sut->setClues($clues);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(3, $ranges);
 

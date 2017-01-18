@@ -8,16 +8,22 @@ use wiese\ApproximateDateTime\OptionFilter\Base;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 
+/**
+ * Apply compound restrictions to existing ranges.
+ *
+ * @package wiese\ApproximateDateTime\OptionFilter\Incarnation
+ */
 class Compound extends Base
 {
+
     /**
      * @todo What on empty range but e.g. before and after given, making it a solvable problem
      * @todo Lose that double loop?!
      *
      * {@inheritDoc}
-     * @see Base::apply()
+     * @see OptionFilterInterface::__invoke()
      */
-    public function apply(Ranges $ranges) : Ranges
+    public function __invoke(Ranges $ranges) : Ranges
     {
         $processUnits = explode('-', $this->unit);
 

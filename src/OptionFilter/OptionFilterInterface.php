@@ -5,10 +5,17 @@ namespace wiese\ApproximateDateTime\OptionFilter;
 
 use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\Ranges;
-use DateTimeZone;
 
 interface OptionFilterInterface
 {
+
+    /**
+     * Mend the given ranges as per the restrictions defined through clues
+     *
+     * @param Ranges $ranges
+     * @return Ranges
+     */
+    public function __invoke(Ranges $ranges) : Ranges;
 
     /**
      * Set the unit the OptionFilter is supposed to be working on
@@ -30,12 +37,4 @@ interface OptionFilterInterface
      * @param int $calendar
      */
     public function setCalendar(int $calendar) : void;
-
-    /**
-     * Mend the given ranges as per the restrictions defined through clues
-     *
-     * @param Ranges $ranges
-     * @return Ranges
-     */
-    public function apply(Ranges $ranges) : Ranges;
 }

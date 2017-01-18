@@ -46,7 +46,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertEquals(1993, $ranges[0]->getStart()->getY());
         $this->assertEquals(5, $ranges[0]->getStart()->getM());
@@ -72,7 +72,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(1, $ranges);
 
@@ -100,7 +100,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(1, $ranges);
 
@@ -138,7 +138,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(2, $ranges);
 
@@ -173,7 +173,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(1, $ranges);
 
@@ -201,7 +201,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(2, $ranges);
 
@@ -247,7 +247,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(2, $ranges);
 
@@ -282,7 +282,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(2, $ranges);
 
@@ -317,7 +317,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(6, $ranges);
 
@@ -391,7 +391,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(4, $ranges);
 
@@ -440,7 +440,7 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $ranges = $this->sut->apply($ranges);
+        $ranges = $this->sut->__invoke($ranges);
 
         $this->assertCount(3, $ranges);
 
@@ -481,6 +481,6 @@ class DayTest extends ParentTest
         $range->setEnd($end);
         $ranges->append($range);
 
-        $this->sut->apply($ranges);
+        $this->sut->__invoke($ranges);
     }
 }

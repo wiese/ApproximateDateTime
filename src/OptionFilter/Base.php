@@ -73,14 +73,6 @@ abstract class Base implements OptionFilterInterface
     }
 
     /**
-     * @todo __invoke() instead?
-     *
-     * {@inheritDoc}
-     * @see OptionFilterInterface::apply()
-     */
-    abstract public function apply(Ranges $ranges) : Ranges;
-
-    /**
      * Determine the range of allowable values from all clues, and limits
      *
      * @param int $overrideMax

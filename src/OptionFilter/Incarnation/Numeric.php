@@ -17,11 +17,12 @@ use wiese\ApproximateDateTime\Ranges;
  */
 class Numeric extends Base
 {
+
     /**
      * {@inheritDoc}
-     * @see Base::apply()
+     * @see OptionFilterInterface::__invoke()
      */
-    public function apply(Ranges $ranges) : Ranges
+    public function __invoke(Ranges $ranges) : Ranges
     {
         $options = $this->getAllowableOptions();
 

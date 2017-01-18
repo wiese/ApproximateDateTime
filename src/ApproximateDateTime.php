@@ -178,7 +178,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
             $filter->setClues($this->clues);
             $filter->setCalendar($this->calendar);
 
-            $ranges = $filter->apply($ranges);
+            $ranges = $filter($ranges);
 
             Log::get()->debug('+++ ' . $unit . ' complete. ranges:', [count($ranges)]);
         }
