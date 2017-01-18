@@ -22,7 +22,9 @@ class CluesTest extends PHPUnit_Framework_TestCase
 
     public function testDefault() : void
     {
-        $this->assertEquals([date('Y')], $this->sut->getWhitelist('y'));
+        $defaultYear = new Clue();
+        $defaultYear->setY((int) date('Y'));
+        $this->assertEquals([$defaultYear], $this->sut->getWhitelist('y'));
         $this->assertEquals([], $this->sut->getWhitelist('m'));
         $this->assertEquals([], $this->sut->getWhitelist('d'));
         $this->assertEquals([], $this->sut->getWhitelist('h'));
@@ -61,11 +63,11 @@ class CluesTest extends PHPUnit_Framework_TestCase
         $clue4->setD(26);
         $this->sut->append($clue4);
 
-        $this->assertEquals([1954], $this->sut->getWhitelist('y'));
+        $this->assertEquals([$clue1], $this->sut->getWhitelist('y'));
         $this->assertEquals([], $this->sut->getBlacklist('y'));
-        $this->assertEquals([7], $this->sut->getWhitelist('m'));
+        $this->assertEquals([$clue2], $this->sut->getWhitelist('m'));
         $this->assertEquals([], $this->sut->getBlacklist('m'));
-        $this->assertEquals([24, 26], $this->sut->getWhitelist('d'));
+        $this->assertEquals([$clue3, $clue4], $this->sut->getWhitelist('d'));
         $this->assertEquals([], $this->sut->getBlacklist('d'));
         $this->assertEquals([], $this->sut->getWhitelist('h'));
         $this->assertEquals([], $this->sut->getBlacklist('h'));
@@ -90,17 +92,17 @@ class CluesTest extends PHPUnit_Framework_TestCase
         $clue8->setS(33);
         $this->sut->append($clue8);
 
-        $this->assertEquals([1954], $this->sut->getWhitelist('y'));
+        $this->assertEquals([$clue1], $this->sut->getWhitelist('y'));
         $this->assertEquals([], $this->sut->getBlacklist('y'));
-        $this->assertEquals([7], $this->sut->getWhitelist('m'));
+        $this->assertEquals([$clue2], $this->sut->getWhitelist('m'));
         $this->assertEquals([], $this->sut->getBlacklist('m'));
-        $this->assertEquals([24, 26], $this->sut->getWhitelist('d'));
+        $this->assertEquals([$clue3, $clue4], $this->sut->getWhitelist('d'));
         $this->assertEquals([], $this->sut->getBlacklist('d'));
-        $this->assertEquals([9], $this->sut->getWhitelist('h'));
+        $this->assertEquals([$clue5], $this->sut->getWhitelist('h'));
         $this->assertEquals([], $this->sut->getBlacklist('h'));
-        $this->assertEquals([1, 2], $this->sut->getWhitelist('i')); // ordered
+        $this->assertEquals([$clue7, $clue6], $this->sut->getWhitelist('i')); // ordered
         $this->assertEquals([], $this->sut->getBlacklist('i'));
-        $this->assertEquals([33], $this->sut->getWhitelist('s'));
+        $this->assertEquals([$clue8], $this->sut->getWhitelist('s'));
         $this->assertEquals([], $this->sut->getBlacklist('s'));
 
         $clue9 = new Clue;
@@ -108,17 +110,17 @@ class CluesTest extends PHPUnit_Framework_TestCase
         $clue9->type = Clue::IS_BLACKLIST;
         $this->sut->append($clue9);
 
-        $this->assertEquals([1954], $this->sut->getWhitelist('y'));
+        $this->assertEquals([$clue1], $this->sut->getWhitelist('y'));
         $this->assertEquals([], $this->sut->getBlacklist('y'));
-        $this->assertEquals([7], $this->sut->getWhitelist('m'));
+        $this->assertEquals([$clue2], $this->sut->getWhitelist('m'));
         $this->assertEquals([], $this->sut->getBlacklist('m'));
-        $this->assertEquals([24, 26], $this->sut->getWhitelist('d'));
+        $this->assertEquals([$clue3, $clue4], $this->sut->getWhitelist('d'));
         $this->assertEquals([], $this->sut->getBlacklist('d'));
-        $this->assertEquals([9], $this->sut->getWhitelist('h'));
+        $this->assertEquals([$clue5], $this->sut->getWhitelist('h'));
         $this->assertEquals([], $this->sut->getBlacklist('h'));
-        $this->assertEquals([1, 2], $this->sut->getWhitelist('i'));
-        $this->assertEquals([1], $this->sut->getBlacklist('i'));
-        $this->assertEquals([33], $this->sut->getWhitelist('s'));
+        $this->assertEquals([$clue7, $clue6], $this->sut->getWhitelist('i'));
+        $this->assertEquals([$clue9], $this->sut->getBlacklist('i'));
+        $this->assertEquals([$clue8], $this->sut->getWhitelist('s'));
         $this->assertEquals([], $this->sut->getBlacklist('s'));
     }
 

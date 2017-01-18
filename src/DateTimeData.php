@@ -21,6 +21,8 @@ class DateTimeData extends Vehicle
     /**
      * Indicator if the day (d) is the last one in the month (m) & year (y) - to avoid recomputation
      *
+     * @todo Can we lose this?
+     *
      * @var bool
      */
     public $dayIsLastInMonth = false;

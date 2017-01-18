@@ -3,20 +3,19 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
+use Psr\Log\LoggerInterface;
 use wiese\ApproximateDateTime\OptionFilter\Factory as FilterFactory;
-use wiese\ApproximateDateTime\Log;
 use DatePeriod;
 use DateTimeInterface;
 use DateTimeZone;
 
 class ApproximateDateTime implements ApproximateDateTimeInterface
 {
-    const DEFAULT_TIMEZONE = 'UTC';
 
     /**
      * Timezone to use
      *
-     * @var \DateTimeZone
+     * @var DateTimeZone
      */
     protected $timezone;
 
@@ -25,7 +24,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      *
      * @var int
      */
-    protected $calendar = CAL_GREGORIAN;
+    protected $calendar;
 
     /**
      * @var Clues
@@ -40,12 +39,39 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     protected $ranges;
 
     /**
-     * @param string $timezone
+     * @var Config
      */
-    public function __construct(string $timezone = self::DEFAULT_TIMEZONE)
+    protected $config;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $log;
+
+    /**
+     * @var Manager
+     */
+    protected $manager;
+
+    /**
+     * @param string $timezone
+     * @param int    $calendar
+     */
+    public function __construct(? string $timezone = null, ? int $calendar = null)
     {
-        $this->setTimezone(new DateTimeZone($timezone));
-        $this->setClues([]);
+        $this->manager = new Manager();
+
+        $this->config = $this->manager->config;
+        $this->log = $this->manager->log;
+
+        if (is_null($timezone)) {
+            $this->setTimezone(new DateTimeZone($this->config->defaultTimezone));
+        }
+        if (is_null($calendar)) {
+            $this->setCalendar($this->config->defaultCalendar);
+        }
+
+        $this->setClues(new Clues());
     }
 
     /**
@@ -57,12 +83,31 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     }
 
     /**
-     * @param \DateTimeZone $timezone
+     * @param DateTimeZone $timezone
      * @return ApproximateDateTimeInterface
      */
     public function setTimezone(DateTimeZone $timezone) : ApproximateDateTimeInterface
     {
         $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCalendar() : int
+    {
+        return $this->calendar;
+    }
+
+    /**
+     * @param int $calendar
+     * @return ApproximateDateTimeInterface
+     */
+    public function setCalendar(int $calendar) : ApproximateDateTimeInterface
+    {
+        $this->calendar = $calendar;
 
         return $this;
     }
@@ -83,14 +128,12 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     /**
      * Set the clues to digest
      *
-     * @fixme This is for prototyping only. Should probably take Clues object or solved differently altogether
-     *
-     * @param array $clues
+     * @param Clues $clues
      * @return ApproximateDateTimeInterface
      */
-    public function setClues(array $clues) : ApproximateDateTimeInterface
+    public function setClues(Clues $clues) : ApproximateDateTimeInterface
     {
-        $this->clues = Clues::fromArray($clues);
+        $this->clues = $clues;
 
         return $this;
     }
@@ -171,8 +214,8 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $ranges = new Ranges();
 
-        $filterFactory = new FilterFactory;
-        foreach (Config::$compoundUnits as $unit => $filter) {
+        $filterFactory = new FilterFactory($this->manager);
+        foreach ($this->config->compoundUnits as $unit => $filter) {
             $filter = $filterFactory->produce($filter);
             $filter->setUnit($unit);
             $filter->setClues($this->clues);
@@ -180,7 +223,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
             $ranges = $filter($ranges);
 
-            Log::get()->debug('+++ ' . $unit . ' complete. ranges:', [count($ranges)]);
+            $this->log->debug('+++ ' . $unit . ' complete. ranges:', [count($ranges)]);
         }
 
         // @todo remove specific times (compound units)

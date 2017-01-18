@@ -13,12 +13,10 @@ interface ApproximateDateTimeInterface
     /**
      * Set the clues to describe the date and time
      *
-     * @fixme Should probably go into constructor
-     *
-     * @param array $clues
+     * @param Clues $clues
      * @return self
      */
-    public function setClues(array $clues) : self;
+    public function setClues(Clues $clues) : self;
 
     /**
      * @return Clues

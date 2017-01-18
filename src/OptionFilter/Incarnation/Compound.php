@@ -25,27 +25,24 @@ class Compound extends Base
      */
     public function __invoke(Ranges $ranges) : Ranges
     {
-        $processUnits = explode('-', $this->unit);
-
-        $before = $this->clues->findOne(Clue::IS_BEFOREEQUALS, $processUnits);
+        $before = $this->clues->getBefore($this->unit);
         if ($before instanceof Clue) {
             $ranges = $this->applyBefore($ranges, $before);
         }
 
-        $after = $this->clues->findOne(Clue::IS_AFTEREQUALS, $processUnits);
+        $after = $this->clues->getAfter($this->unit);
         if ($after instanceof Clue) {
             $ranges = $this->applyAfter($ranges, $after);
         }
 
-        $filters = [
-            Clue::IS_WHITELIST => 'applyWhitelist',
-            Clue::IS_BLACKLIST => 'applyBlacklist'
-        ];
-        foreach ($filters as $filter => $method) {
-            $clues = $this->clues->find($filter, $processUnits);
-            foreach ($clues as $clue) {
-                $ranges = call_user_func([$this, $method], $ranges, $clue);
-            }
+        $clues = $this->clues->getWhitelist($this->unit);
+        foreach ($clues as $clue) {
+            $ranges = $this->applyWhitelist($ranges, $clue);
+        }
+
+        $clues = $this->clues->getBlacklist($this->unit);
+        foreach ($clues as $clue) {
+            $ranges = $this->applyBlacklist($ranges, $clue);
         }
 
         return $ranges;
@@ -214,10 +211,10 @@ class Compound extends Base
             } elseif ($range->getStart()->equals($clue) && $range->getStart()->equals($clue)) {
                 continue; // a very short range, completely blacklisted
             } elseif ($range->getStart()->equals($clue)) {
-                $range->getStart()->increment();
+                $this->incrementDataVehicle($range->getStart());
                 $newRanges->append($range);
             } elseif ($range->getEnd()->equals($clue)) {
-                $range->getEnd()->decrement();
+                $this->decrementDataVehicle($range->getEnd());
                 $newRanges->append($range);
             } elseif ($range->getStart()->isSmaller($clue) && $range->getEnd()->isBigger($clue)) {
                 $newRange = clone $range;
@@ -226,7 +223,7 @@ class Compound extends Base
                 foreach ($clue->getSetUnits() as $unit) {
                     $end->set($unit, $clue->get($unit));  // @fixme ::merge() instead? But not for Vehicle (yet)
                 }
-                $end->decrement();
+                $this->decrementDataVehicle($end);
                 $newRanges->append($range);
 
 
@@ -235,7 +232,7 @@ class Compound extends Base
                 foreach ($clue->getSetUnits() as $unit) {
                     $start->set($unit, $clue->get($unit));  // @fixme ::merge() instead? But not for Vehicle (yet)
                 }
-                $start->increment();
+                $this->incrementDataVehicle($start);
 
                 $newRanges->append($newRange);
             } else {
@@ -244,5 +241,65 @@ class Compound extends Base
         }
 
         return $newRanges;
+    }
+
+    protected function incrementDataVehicle(DateTimeData $data) : void
+    {
+        $setUnits = array_reverse($data->getSetUnits());
+
+        if (empty($setUnits)) {
+            return;
+        }
+
+        foreach ($setUnits as $unit) {
+            $maxValue = $this->config->getMax($unit);
+
+            if ($unit === 'd') {
+                $maxValue = cal_days_in_month(CAL_GREGORIAN, $data->getM(), $data->getY());
+            }
+
+            $currentValue = $data->get($unit);
+            if (is_null($maxValue) || $currentValue < $maxValue) {
+                $data->set($unit, $currentValue + 1);
+                break;
+            } else {
+                $data->set($unit, $this->config->getMin($unit));
+            }
+        }
+    }
+
+    protected function decrementDataVehicle(DateTimeData $data) : void
+    {
+        $setUnits = array_reverse($data->getSetUnits());
+
+        if (empty($setUnits)) {
+            return;
+        }
+
+        foreach ($setUnits as $unit) {
+            $minValue = $this->config->getMin($unit);
+
+            $currentValue = $data->get($unit);
+            if (is_null($minValue) || $currentValue > $minValue) {
+                $data->set($unit, $currentValue - 1);
+                break;
+            } else {
+                if ($unit === 'd') {
+                    $mMin = $this->config->getMin('m');
+                    if ($data->getM() > $mMin) {
+                        $y = $data->getY();
+                        $m = $data->getM() - 1;
+                    } else {
+                        $y = $data->getY() - 1;
+                        $m = $mMin;
+                    }
+                    $maxValue = cal_days_in_month(CAL_GREGORIAN, $m, $y);
+                } else {
+                    $maxValue = $this->config->getMax($unit);
+                }
+
+                $data->set($unit, $maxValue);
+            }
+        }
     }
 }

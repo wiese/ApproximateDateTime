@@ -3,32 +3,25 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter\Incarnation;
 
+use Psr\Log\NullLogger;
+use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\DateTimeData;
+use wiese\ApproximateDateTime\Manager;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Numeric;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
-use PHPUnit_Framework_TestCase;
+use wiese\ApproximateDateTime\Tests\OptionFilter\ParentTest;
 
-class NumericTest extends PHPUnit_Framework_TestCase
+class NumericTest extends ParentTest
 {
-
-    /**
-     * @var Numeric
-     */
-    protected $sut;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject Of Clues
-     */
-    protected $clues;
 
     public function setUp(): void
     {
-        $this->sut = new Numeric;
+        $this->sut = new Numeric(new Config(), new NullLogger());
         // keep a reference for modification during individual tests
         $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
             // methods that are mocked; results can be manipulated later
-            ->setMethods(['getWhitelist', 'getBlacklist'])
+            ->setMethods(['getWhitelist', 'getBlacklist', 'getBefore', 'getAfter'])
             ->getMock();
         $this->sut->setClues($this->clues);
     }
@@ -36,7 +29,8 @@ class NumericTest extends PHPUnit_Framework_TestCase
     public function testApplyConsecutive() : void
     {
         $this->sut->setUnit('y');
-        $this->clues->method('getWhitelist')->willReturn([2011, 2012]);
+
+        $this->mockClues(null, null, [2011, 2012], []);
 
         // empty so far
         $ranges = new Ranges();
@@ -51,7 +45,8 @@ class NumericTest extends PHPUnit_Framework_TestCase
     public function testApplySeparateRange() : void
     {
         $this->sut->setUnit('y');
-        $this->clues->method('getWhitelist')->willReturn([2008, 2010, 2039, 2040]);
+
+        $this->mockClues(null, null, [2008, 2010, 2039, 2040], []);
 
         // empty so far
         $ranges = new Ranges();
@@ -70,7 +65,8 @@ class NumericTest extends PHPUnit_Framework_TestCase
     public function testWithMergePreexisting() : void
     {
         $this->sut->setUnit('m');
-        $this->clues->method('getWhitelist')->willReturn([3, 4]);
+
+        $this->mockClues(null, null, [3, 4], []);
 
         $ranges = new Ranges();
         $range = new Range();

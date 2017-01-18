@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\OptionFilter;
 
+use Psr\Log\LoggerInterface;
+use wiese\ApproximateDateTime\Clue;
 use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\Config;
-use wiese\ApproximateDateTime\Log;
-use wiese\ApproximateDateTime\Ranges;
-use Psr\Log\LoggerInterface;
+use LogicException;
 
 abstract class Base implements OptionFilterInterface
 {
@@ -39,10 +39,10 @@ abstract class Base implements OptionFilterInterface
      */
     protected $log;
 
-    public function __construct()
+    public function __construct(Config $config, LoggerInterface $log)
     {
-        $this->config = new Config;
-        $this->log = Log::get();
+        $this->config = $config;
+        $this->log = $log;
     }
 
     /**
@@ -84,12 +84,12 @@ abstract class Base implements OptionFilterInterface
 
         $max = is_int($overrideMax) ? $overrideMax : $this->config->getMax($this->unit);
         $min = $this->config->getMin($this->unit);
-        $ltEq = $this->clues->getBefore($this->unit);
-        $gtEq = $this->clues->getAfter($this->unit);
+        $ltEq = $this->getNumericClueValue($this->clues->getBefore($this->unit), $this->unit);
+        $gtEq = $this->getNumericClueValue($this->clues->getAfter($this->unit), $this->unit);
 
         $this->log->debug('bounds', [$min, $max, $gtEq, $ltEq]);
 
-        $options = $this->clues->getWhitelist($this->unit);
+        $options = $this->getNumericCluesValues($this->clues->getWhitelist($this->unit), $this->unit);
 
         if (is_int($min) && is_int($max)) { // e.g. y does not know extremes
             $minToMax = range($min, $max);
@@ -120,12 +120,45 @@ abstract class Base implements OptionFilterInterface
             $options = array_intersect($options, $validPerBeforeAfter);
         }
 
-        $options = array_diff($options, $this->clues->getBlacklist($this->unit));
+        $options = array_diff(
+            $options,
+            $this->getNumericCluesValues($this->clues->getBlacklist($this->unit), $this->unit)
+        );
         $options = array_values($options); // resetting keys to be sequential
         // array_unique?
 
         $this->log->debug('options ' . $this->unit, [$options]);
 
         return $options;
+    }
+
+    protected function getNumericClueValue(? Clue $clue, string $unit) : ? int
+    {
+        if (is_null($clue)) {
+            return null;
+        }
+
+        if ($clue->getSetUnits() !== [$unit]) {
+            throw new LogicException('Clue not fit for this simplification');
+        }
+
+        return $clue->get($unit);
+    }
+
+    protected function getNumericCluesValues(array $clues, string $unit) : array
+    {
+        $results = [];
+
+        if (!empty($clues)) {
+            foreach ($clues as $clue) {
+                if ($clue->getSetUnits() !== [$unit]) {
+                    throw new LogicException('A Clue was not fit for this simplification');
+                }
+
+                $results[] = $clue->get($unit);
+            }
+        }
+
+        return $results;
     }
 }

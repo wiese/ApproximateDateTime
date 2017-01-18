@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter\Incarnation;
 
+use Psr\Log\NullLogger;
+use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\Tests\OptionFilter\ParentTest;
 use wiese\ApproximateDateTime\DateTimeData;
+use wiese\ApproximateDateTime\Manager;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Weekday;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
@@ -19,7 +22,7 @@ class WeekdayTest extends ParentTest
 
     public function setUp() : void
     {
-        $this->sut = new Weekday();
+        $this->sut = new Weekday(new Config(), new NullLogger());
         $this->sut->setUnit('n'); // @todo mv into filter if only one purpose?
         $this->sut->setCalendar(CAL_GREGORIAN);
         // keep a reference for modification during individual tests

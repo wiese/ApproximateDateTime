@@ -3,11 +3,19 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\OptionFilter;
 
+use wiese\ApproximateDateTime\Manager;
 use wiese\ApproximateDateTime\OptionFilter\OptionFilterInterface;
 use UnexpectedValueException;
 
 class Factory
 {
+
+    protected $manager;
+
+    public function __construct(Manager $manager)
+    {
+        $this->manager = $manager;
+    }
 
     /**
      * Create an instance of OptionFilter by name
@@ -23,6 +31,6 @@ class Factory
             throw new UnexpectedValueException("Filter type $name not implemented.");
         }
 
-        return new $className();
+        return new $className($this->manager->config, $this->manager->log);
     }
 }

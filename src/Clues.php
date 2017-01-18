@@ -65,86 +65,68 @@ class Clues extends ArrayObject
      * Get options explicitly allowed for the unit given
      *
      * @param string $unit
-     * @return int[]
+     * @return Clue[]
      */
     public function getWhitelist(string $unit) : array
     {
         $this->generateFilterLists();
 
-        if (strpos($unit, '-') !== false) {
-            throw new \Exception('Not implemented for compound units, yet.');
+        if (empty($this->whitelists[$unit])) {
+            return [];
         }
 
-        $whitelists = [];
-        foreach ($this->whitelists[$unit] as $clue) {
-            $whitelists[] = $clue->get($unit);
-        }
-
-        return $whitelists;
+        return $this->whitelists[$unit];
     }
 
     /**
      * Get options explicitly disallowed for the unit given
      *
      * @param string $unit
-     * @return int[]
+     * @return Clue[]
      */
     public function getBlacklist(string $unit) : array
     {
         $this->generateFilterLists();
 
-        if (strpos($unit, '-') !== false) {
-            throw new \Exception('Not implemented for compound units, yet.');
+        if (empty($this->blacklists[$unit])) {
+            return [];
         }
 
-        $blacklist = [];
-        foreach ($this->blacklists[$unit] as $clue) {
-            $blacklist[] = $clue->get($unit);
-        }
-
-        return $blacklist;
+        return $this->blacklists[$unit];
     }
 
     /**
      * Get value the unit given has to be smaller/equal than
      *
      * @param string $unit
-     * @return int|null
+     * @return Clue|null
      */
-    public function getBefore(string $unit) : ? int
+    public function getBefore(string $unit) : ? Clue
     {
         $this->generateFilterLists();
 
-        if (strpos($unit, '-') !== false) {
-            throw new \Exception('Not implemented for compound units, yet.');
-        }
-
-        if (is_null($this->before[$unit])) {
+        if (!isset($this->before[$unit])) {
             return null;
         }
 
-        return $this->before[$unit]->get($unit);
+        return $this->before[$unit];
     }
 
     /**
      * Get value the unit given has to be bigger/equal than
      *
      * @param string $unit
-     * @return int|null
+     * @return Clue|null
      */
-    public function getAfter(string $unit) : ? int
+    public function getAfter(string $unit) : ? Clue
     {
         $this->generateFilterLists();
 
-        if (strpos($unit, '-') !== false) {
-            throw new \Exception('Not implemented for compound units, yet.');
-        }
-
-        if (is_null($this->after[$unit])) {
+        if (!isset($this->after[$unit])) {
             return null;
         }
 
-        return $this->after[$unit]->get($unit);
+        return $this->after[$unit];
     }
 
     /**
@@ -161,64 +143,11 @@ class Clues extends ArrayObject
             || !empty($this->getBefore($unit));
     }
 
-    public static function fromArray(array $clues) : self
-    {
-        $instance = new self();
-        $instance->exchangeArray($clues);
-
-        return $instance;
-    }
-
     public function append($value)
     {
         parent::append($value);
 
         $this->cachedFilterLists = false;
-    }
-
-    /**
-     * Find set clues based on criteria
-     *
-     * @fixme Am I needed in this abstracted form? If at all, shouldn't the return type be Clues, too?
-     * @todo Possibility to filter for multiple types by bitmask
-     *
-     * @param int $type The type of clue to match, e.g. Clue::IS_WHITELIST
-     * @param array $units Units that have to be set to match; array of unit names, e.g. ['y', 'm']
-     *
-     * @return Clue[]
-     */
-    public function find(int $type = null, array $units = []) : array
-    {
-        $clues = [];
-        foreach ($this as $clue) {
-            /**
-             * @var Clue $clue
-             */
-            if (!is_null($type) && $clue->type !== $type) {
-                continue;
-            }
-
-            if (!empty($units) && $units !== $clue->getSetUnits()) {
-                continue;
-            }
-
-            $clues[] = $clue;
-        }
-
-        return $clues;
-    }
-
-    public function findOne(int $type = null, array $units = []) : ? Clue
-    {
-        $clues = $this->find($type, $units);
-
-        if (empty($clues)) {
-            return null;
-        } elseif (count($clues) > 1) {
-            throw new Exception('pity');
-        }
-
-        return $clues[0];
     }
 
     protected function generateFilterLists() : void
@@ -227,7 +156,7 @@ class Clues extends ArrayObject
             return;
         }
 
-        $this->initializeLists();
+        $this->whitelists = $this->blacklists = $this->before = $this->after = [];
 
         foreach ($this as $clue) {
             // @todo validate value
@@ -236,15 +165,27 @@ class Clues extends ArrayObject
 
             switch ($clue->type) {
                 case Clue::IS_WHITELIST:
+                    if (!isset($this->whitelists[$typeId]) || !is_array($this->whitelists[$typeId])) {
+                        $this->whitelists[$typeId] = [];
+                    }
                     $this->whitelists[$typeId][] = $clue;
                     break;
                 case Clue::IS_BLACKLIST:
+                    if (!isset($this->blacklists[$typeId]) || !is_array($this->blacklists[$typeId])) {
+                        $this->blacklists[$typeId] = [];
+                    }
                     $this->blacklists[$typeId][] = $clue;
                     break;
                 case Clue::IS_BEFOREEQUALS:
+                    if (!isset($this->before[$typeId])) {
+                        $this->before[$typeId] = null;
+                    }
                     $this->before[$typeId] = $this->getSmallerClueValue($this->before[$typeId], $clue);
                     break;
                 case Clue::IS_AFTEREQUALS:
+                    if (!isset($this->after[$typeId])) {
+                        $this->after[$typeId] = null;
+                    }
                     $this->after[$typeId] = $this->getBiggerClueValue($this->after[$typeId], $clue);
                     break;
             }
@@ -280,21 +221,6 @@ class Clues extends ArrayObject
         }
 
         return $new->isBigger($existing) ? $new : $existing;
-    }
-
-    /**
-     * Reset lists from potential previous runs, initialize them once to avoid repeated checks later
-     */
-    protected function initializeLists() : void
-    {
-        $this->whitelists = $this->blacklists = $this->before = $this->after = [];
-
-        $allUnits = array_keys(Config::$compoundUnits);
-        foreach ($allUnits as $unit) {
-            $this->whitelists[$unit] = $this->blacklists[$unit] = [];
-
-            $this->before[$unit] = $this->after[$unit] = null;
-        }
     }
 
     /**

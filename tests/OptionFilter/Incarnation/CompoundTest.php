@@ -2,10 +2,13 @@
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter\Incarnation;
 
-use wiese\ApproximateDateTime\Clues;
+use Psr\Log\NullLogger;
+use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\Tests\OptionFilter\ParentTest;
-use wiese\ApproximateDateTime\Clue;
+use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\DateTimeData;
+use wiese\ApproximateDateTime\Clue;
+use wiese\ApproximateDateTime\Manager;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Compound;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
@@ -20,7 +23,7 @@ class CompoundTest extends ParentTest
 
     public function init(string $unit) : void
     {
-        $this->sut = new Compound();
+        $this->sut = new Compound(new Config(), new NullLogger());
         $this->sut->setUnit($unit);
         $this->sut->setCalendar(CAL_GREGORIAN);
     }
@@ -387,5 +390,142 @@ class CompoundTest extends ParentTest
         $this->assertEquals(3, $ranges[2]->getStart()->getM());
         $this->assertEquals(1971, $ranges[2]->getEnd()->getY());
         $this->assertEquals(10, $ranges[2]->getEnd()->getM());
+    }
+
+
+    public function testIncrement(): void
+    {
+        $this->sut = new Compound(new Config(), new NullLogger());
+        $data = new DateTimeData();
+
+        $method = new \ReflectionMethod($this->sut, 'incrementDataVehicle');
+        $method->setAccessible(true);
+
+        $data->setY(44);
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(45, $data->getY());
+        $this->assertNull($data->getM());
+        $this->assertNull($data->getD());
+        $this->assertNull($data->getH());
+        $this->assertNull($data->getI());
+        $this->assertNull($data->getS());
+
+        $data->setM(12);
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(46, $data->getY());
+        $this->assertEquals(1, $data->getM());
+        $this->assertNull($data->getD());
+        $this->assertNull($data->getH());
+        $this->assertNull($data->getI());
+        $this->assertNull($data->getS());
+
+        $data->setD(30);
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(46, $data->getY());
+        $this->assertEquals(1, $data->getM());
+        $this->assertEquals(31, $data->getD());
+        $this->assertNull($data->getH());
+        $this->assertNull($data->getI());
+        $this->assertNull($data->getS());
+
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(46, $data->getY());
+        $this->assertEquals(2, $data->getM());
+        $this->assertEquals(1, $data->getD());
+        $this->assertNull($data->getH());
+        $this->assertNull($data->getI());
+        $this->assertNull($data->getS());
+
+        $data->setH(11);
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(46, $data->getY());
+        $this->assertEquals(2, $data->getM());
+        $this->assertEquals(1, $data->getD());
+        $this->assertEquals(12, $data->getH());
+        $this->assertNull($data->getI());
+        $this->assertNull($data->getS());
+
+        $data->setI(59);
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(46, $data->getY());
+        $this->assertEquals(2, $data->getM());
+        $this->assertEquals(1, $data->getD());
+        $this->assertEquals(13, $data->getH());
+        $this->assertEquals(0, $data->getI());
+        $this->assertNull($data->getS());
+
+        $data->setS(59);
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(46, $data->getY());
+        $this->assertEquals(2, $data->getM());
+        $this->assertEquals(1, $data->getD());
+        $this->assertEquals(13, $data->getH());
+        $this->assertEquals(1, $data->getI());
+        $this->assertEquals(0, $data->getS());
+
+        $data->setH(23);
+        $data->setI(59);
+        $data->setS(59);
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(46, $data->getY());
+        $this->assertEquals(2, $data->getM());
+        $this->assertEquals(2, $data->getD());
+        $this->assertEquals(0, $data->getH());
+        $this->assertEquals(0, $data->getI());
+        $this->assertEquals(0, $data->getS());
+
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(46, $data->getY());
+        $this->assertEquals(2, $data->getM());
+        $this->assertEquals(2, $data->getD());
+        $this->assertEquals(0, $data->getH());
+        $this->assertEquals(0, $data->getI());
+        $this->assertEquals(1, $data->getS());
+    }
+
+    public function testDecrement(): void
+    {
+        $this->sut = new Compound(new Config(), new NullLogger());
+        $data = new DateTimeData();
+
+        $method = new \ReflectionMethod($this->sut, 'decrementDataVehicle');
+        $method->setAccessible(true);
+
+        $data->setY(2004);
+        $data->setM(3);
+        $data->setD(1);
+        $data->setH(0);
+        $data->setI(0);
+        $data->setS(0);
+
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(2004, $data->getY());
+        $this->assertEquals(2, $data->getM());
+        $this->assertEquals(29, $data->getD());
+        $this->assertEquals(23, $data->getH());
+        $this->assertEquals(59, $data->getI());
+        $this->assertEquals(59, $data->getS());
+
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(2004, $data->getY());
+        $this->assertEquals(2, $data->getM());
+        $this->assertEquals(29, $data->getD());
+        $this->assertEquals(23, $data->getH());
+        $this->assertEquals(59, $data->getI());
+        $this->assertEquals(58, $data->getS());
+
+        $data = new DateTimeData();
+
+        $data->setY(2004);
+        $data->setM(2);
+        $data->setD(1);
+
+        $method->invoke($this->sut, $data);
+        $this->assertEquals(2004, $data->getY());
+        $this->assertEquals(1, $data->getM());
+        $this->assertEquals(31, $data->getD());
+        $this->isNull($data->getH());
+        $this->isNull($data->getI());
+        $this->isNull($data->getS());
     }
 }

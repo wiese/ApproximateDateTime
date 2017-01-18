@@ -289,67 +289,6 @@ abstract class Vehicle
         return $set;
     }
 
-
-    public function increment() : void
-    {
-        $setUnits = array_reverse($this->getSetUnits());
-
-        if (empty($setUnits)) {
-            return;
-        }
-
-        foreach ($setUnits as $unit) {
-            $maxValue = Config::$unitBounds[$unit]['max'];
-
-            if ($unit === 'd') {
-                $maxValue = cal_days_in_month(CAL_GREGORIAN, $this->getM(), $this->getY());
-            }
-
-            $currentValue = $this->get($unit);
-            if (is_null($maxValue) || $currentValue < $maxValue) {
-                $this->set($unit, $currentValue + 1);
-                break;
-            } else {
-                $this->set($unit, Config::$unitBounds[$unit]['min']);
-            }
-        }
-    }
-
-    public function decrement() : void
-    {
-        $setUnits = array_reverse($this->getSetUnits());
-
-        if (empty($setUnits)) {
-            return;
-        }
-
-        foreach ($setUnits as $unit) {
-            $minValue = Config::$unitBounds[$unit]['min'];
-
-            $currentValue = $this->get($unit);
-            if (is_null($minValue) || $currentValue > $minValue) {
-                $this->set($unit, $currentValue - 1);
-                break;
-            } else {
-                if ($unit === 'd') {
-                    $mMin = Config::$unitBounds['m']['min'];
-                    if ($this->getM() > $mMin) {
-                        $y = $this->getY();
-                        $m = $this->getM() - 1;
-                    } else {
-                        $y = $this->getY() - 1;
-                        $m = $mMin;
-                    }
-                    $maxValue = cal_days_in_month(CAL_GREGORIAN, $m, $y);
-                } else {
-                    $maxValue = Config::$unitBounds[$unit]['max'];
-                }
-
-                $this->set($unit, $maxValue);
-            }
-        }
-    }
-
     /**
      * Set all member values to null
      *

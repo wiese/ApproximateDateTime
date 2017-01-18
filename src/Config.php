@@ -6,10 +6,14 @@ namespace wiese\ApproximateDateTime;
 class Config
 {
 
+    public $defaultTimezone = 'UTC';
+
+    public $defaultCalendar = CAL_GREGORIAN;
+
     /**
      * @var array
      */
-    public static $unitBounds = [
+    public $unitBounds = [
         'y' => [
             'min' => null,
             'max' => null
@@ -43,7 +47,7 @@ class Config
     /**
      * @var array
      */
-    public static $compoundUnits = [
+    public $compoundUnits = [
         'y' => 'Numeric',
         'm' => 'Numeric',
         'y-m' => 'Compound',
@@ -59,7 +63,9 @@ class Config
         'h-i-s' => 'Compound',
     ];
 
-    public static $logHandler = 'Monolog\\Handler\\NullHandler';
+    public $logChannel = 'ApproximateDateTime';
+
+    public $logHandler = 'Monolog\\Handler\\NullHandler';
     //public static $logHandler = null;
 
     /**
@@ -70,7 +76,7 @@ class Config
      */
     public function getMin(string $unit) : ? int
     {
-        return self::$unitBounds[$unit]['min'];
+        return $this->unitBounds[$unit]['min'];
     }
 
     /**
@@ -81,6 +87,6 @@ class Config
      */
     public function getMax(string $unit) : ? int
     {
-        return self::$unitBounds[$unit]['max'];
+        return $this->unitBounds[$unit]['max'];
     }
 }
