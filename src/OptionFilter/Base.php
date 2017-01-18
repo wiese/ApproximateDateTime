@@ -73,6 +73,8 @@ abstract class Base implements OptionFilterInterface
     }
 
     /**
+     * @todo __invoke() instead?
+     *
      * {@inheritDoc}
      * @see OptionFilterInterface::apply()
      */

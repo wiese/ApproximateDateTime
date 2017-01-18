@@ -211,6 +211,45 @@ class CompoundTest extends ParentTest
         $this->assertEquals($ranges, $newRanges);
     }
 
+    public function testWhitelistMergeTouching() : void
+    {
+        $this->init('y-m');
+
+        // @todo also start with empty ranges once
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData();
+        $start->setY(1969);
+        $start->setM(5);
+        $range->setStart($start);
+        $end = new DateTimeData();
+        $end->setY(1969);
+        $end->setM(8);
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $clues = new Clues();
+
+        $clue = new Clue();
+        $clue->setY(1969);
+        $clue->setM(5);
+        $clue->filter = Clue::FILTER_WHITELIST;
+        $clues->append($clue);
+
+        $clue = new Clue();
+        $clue->setY(1969);
+        $clue->setM(8);
+        $clue->filter = Clue::FILTER_WHITELIST;
+        $clues->append($clue);
+
+        $this->sut->setClues($clues);
+
+        $newRanges = $this->sut->apply($ranges);
+
+        $this->assertEquals($ranges, $newRanges);
+    }
+
     public function testWhitelistSeparate() : void
     {
         $this->init('y-m');
@@ -287,5 +326,66 @@ class CompoundTest extends ParentTest
         $this->assertEquals(10, $newRanges[1]->getStart()->getM());
         $this->assertEquals(1976, $newRanges[1]->getEnd()->getY());
         $this->assertEquals(12, $newRanges[1]->getEnd()->getM());
+    }
+
+    public function testMix() : void
+    {
+        $this->init('y-m-d');
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData();
+        $start->setY(1971);
+        $start->setM(1);
+        $start->setD(1);
+        $range->setStart($start);
+        $end = new DateTimeData();
+        $end->setY(1971);
+        $end->setM(1);
+        $end->setD(31);
+        $range->setEnd($end);
+        $ranges->append($range);
+        $range = new Range();
+        $start = new DateTimeData();
+        $start->setY(1971);
+        $start->setM(3);
+        $start->setD(1);
+        $range->setStart($start);
+        $end = new DateTimeData();
+        $end->setY(1971);
+        $end->setM(10);
+        $end->setD(31);
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $clues = new Clues();
+
+        $clue = new Clue();
+        $clue->setY(1971);
+        $clue->setM(2);
+        $clue->setD(14);
+        $clue->filter = Clue::FILTER_WHITELIST;
+        $clues->append($clue);
+
+        $this->sut->setClues($clues);
+
+        $ranges = $this->sut->apply($ranges);
+
+        $this->assertCount(3, $ranges);
+
+        $this->assertEquals(1971, $ranges[0]->getStart()->getY());
+        $this->assertEquals(1, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1971, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(1, $ranges[0]->getEnd()->getM());
+        $this->assertEquals(1971, $ranges[1]->getStart()->getY());
+        $this->assertEquals(2, $ranges[1]->getStart()->getM());
+        $this->assertEquals(14, $ranges[1]->getStart()->getD());
+        $this->assertEquals(1971, $ranges[1]->getEnd()->getY());
+        $this->assertEquals(2, $ranges[1]->getEnd()->getM());
+        $this->assertEquals(14, $ranges[1]->getEnd()->getD());
+        $this->assertEquals(1971, $ranges[2]->getStart()->getY());
+        $this->assertEquals(3, $ranges[2]->getStart()->getM());
+        $this->assertEquals(1971, $ranges[2]->getEnd()->getY());
+        $this->assertEquals(10, $ranges[2]->getEnd()->getM());
     }
 }

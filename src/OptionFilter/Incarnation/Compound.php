@@ -11,41 +11,41 @@ use wiese\ApproximateDateTime\Ranges;
 class Compound extends Base
 {
     /**
+     * @todo What on empty range but e.g. before and after given, making it a solvable problem
+     * @todo Lose that double loop?!
+     *
      * {@inheritDoc}
      * @see Base::apply()
      */
-    public function apply(Ranges $ranges): Ranges
+    public function apply(Ranges $ranges) : Ranges
     {
-        // @todo What on empty range but e.g. before and after given, making it a solvable problem
-
         $processUnits = explode('-', $this->unit);
 
-        // @todo use Clues::find() instead or lose it
-        foreach ($this->clues as $clue) {
-            /**
-             * @var $clue Clue
-             */
+        $before = $this->clues->findOne(Clue::FILTER_BEFOREEQUALS, $processUnits);
+        if ($before instanceof Clue) {
+            $ranges = $this->applyBefore($ranges, $before);
+        }
 
-            if ($processUnits !== $clue->getSetUnits()) {
-                continue;
-            }
+        $after = $this->clues->findOne(Clue::FILTER_AFTEREQUALS, $processUnits);
+        if ($after instanceof Clue) {
+            $ranges = $this->applyAfter($ranges, $after);
+        }
 
-            // @todo replace by further strategy pattern?
-            if ($clue->filter === Clue::FILTER_WHITELIST) {
-                $ranges = $this->applyWhitelist($ranges, $clue);
-            } elseif ($clue->filter === Clue::FILTER_BLACKLIST) {
-                $ranges = $this->applyBlacklist($ranges, $clue);
-            } elseif ($clue->filter === Clue::FILTER_BEFOREEQUALS) {
-                $ranges = $this->applyBefore($ranges, $clue);
-            } elseif ($clue->filter === Clue::FILTER_AFTEREQUALS) {
-                $ranges = $this->applyAfter($ranges, $clue);
+        $filters = [
+            Clue::FILTER_WHITELIST => 'applyWhitelist',
+            Clue::FILTER_BLACKLIST => 'applyBlacklist'
+        ];
+        foreach ($filters as $filter => $method) {
+            $clues = $this->clues->find($filter, $processUnits);
+            foreach ($clues as $clue) {
+                $ranges = call_user_func([$this, $method], $ranges, $clue);
             }
         }
 
         return $ranges;
     }
 
-    public function applyAfter(Ranges $ranges, Clue $clue): Ranges
+    protected function applyAfter(Ranges $ranges, Clue $clue) : Ranges
     {
         $newRanges = new Ranges();
 
@@ -74,7 +74,7 @@ class Compound extends Base
         return $newRanges;
     }
 
-    public function applyBefore(Ranges $ranges, Clue $clue): Ranges
+    protected function applyBefore(Ranges $ranges, Clue $clue) : Ranges
     {
         $newRanges = new Ranges();
 
@@ -105,28 +105,32 @@ class Compound extends Base
 
     /**
      * New whitelisted times are to become part of possible ranges.
-     * We would be hard-pressed to and are not responsible for the internal house-keeping of Ranges, which does that.
      *
      * @param Ranges $ranges
      * @param Clue $clue
      * @return Ranges
      */
-    public function applyWhitelist(Ranges $ranges, Clue $clue): Ranges
+    protected function applyWhitelist(Ranges $ranges, Clue $clue) : Ranges
     {
-        $ranges = clone $ranges;
-
-        $range = new Range();
-        $start = new DateTimeData();
-        $end = new DateTimeData();
+        $ranges = clone $ranges; // don't manipulate the input
 
         $setUnits = $clue->getSetUnits();
-        foreach ($setUnits as $unit) {
-            $start->set($unit, $clue->get($unit));  // @fixme ::merge() instead? But not for Vehicle (yet)
-            $end->set($unit, $clue->get($unit));
+
+        if (in_array('y', $setUnits)) {
+            $range = new Range();
+            $start = new DateTimeData();
+            $end = new DateTimeData();
+
+            foreach ($setUnits as $unit) {
+                $start->set($unit, $clue->get($unit)); // @fixme ::merge() instead? But not for Vehicle (yet)
+                $end->set($unit, $clue->get($unit));
+            }
+            $range->setStart($start);
+            $range->setEnd($end);
+            $ranges->append($range);
+        } else {
+            // @todo Merge info into existing higher-level unit ranges. See ApproximateDateTimeTest::testCompoundUnits()
         }
-        $range->setStart($start);
-        $range->setEnd($end);
-        $ranges->append($range);
 
         $ranges = $this->sanitizeRanges($ranges);
 
@@ -191,7 +195,7 @@ class Compound extends Base
      * @param Clue $clue
      * @return Ranges
      */
-    public function applyBlacklist(Ranges $ranges, Clue $clue): Ranges
+    protected function applyBlacklist(Ranges $ranges, Clue $clue) : Ranges
     {
         $newRanges = new Ranges();
 

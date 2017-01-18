@@ -8,6 +8,9 @@ use wiese\ApproximateDateTime\Data\Vehicle;
 class Clue extends Vehicle
 {
     /**
+     * @todo visibility
+     * @todo rename IS_*
+     *
      * Options describing the effect of the clue (in $filter)
      *
      * @var integer

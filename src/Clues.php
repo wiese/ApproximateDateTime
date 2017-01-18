@@ -185,16 +185,16 @@ class Clues extends ArrayObject
      * @param int $type The type of clue to match, e.g. Clue::FILTER_WHITELIST
      * @param array $units Units that have to be set to match; array of unit names, e.g. ['y', 'm']
      *
-     * @return array
+     * @return Clue[]
      */
-    public function find(int $type, array $units = [])
+    public function find(int $type = null, array $units = []) : array
     {
         $clues = [];
-        foreach ($this->storage as $clue) {
+        foreach ($this as $clue) {
             /**
              * @var Clue $clue
              */
-            if ($clue->filter !== $type) {
+            if (!is_null($type) && $clue->filter !== $type) {
                 continue;
             }
 
@@ -202,10 +202,23 @@ class Clues extends ArrayObject
                 continue;
             }
 
-            $result[] = $clue;
+            $clues[] = $clue;
         }
 
         return $clues;
+    }
+
+    public function findOne(int $type = null, array $units = []) : ? Clue
+    {
+        $clues = $this->find($type, $units);
+
+        if (empty($clues)) {
+            return null;
+        } elseif (count($clues) > 1) {
+            throw new Exception('pity');
+        }
+
+        return $clues[0];
     }
 
     protected function generateFilterLists() : void
