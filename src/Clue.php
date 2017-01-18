@@ -8,17 +8,12 @@ use wiese\ApproximateDateTime\Data\Vehicle;
 class Clue extends Vehicle
 {
     /**
-     * @todo visibility
-     * @todo rename IS_*
-     *
-     * Options describing the effect of the clue (in $filter)
-     *
-     * @var integer
+     * Options describing the effect of the clue (in $type)
      */
-    const FILTER_WHITELIST = 1;
-    const FILTER_BLACKLIST = 2;
-    const FILTER_BEFOREEQUALS = 3;
-    const FILTER_AFTEREQUALS = 4;
+    public const IS_WHITELIST = 1;
+    public const IS_BLACKLIST = 2;
+    public const IS_BEFOREEQUALS = 4;
+    public const IS_AFTEREQUALS = 8;
 
     /**
      * The type of decription desired (inclusive, exclusive, comparison, ...)
@@ -27,7 +22,7 @@ class Clue extends Vehicle
      *
      * @var int
      */
-    public $filter = self::FILTER_WHITELIST;
+    public $type = self::IS_WHITELIST;
 
     /**
      * Value as provided by user (ClueParser)

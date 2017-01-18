@@ -21,19 +21,19 @@ class Compound extends Base
     {
         $processUnits = explode('-', $this->unit);
 
-        $before = $this->clues->findOne(Clue::FILTER_BEFOREEQUALS, $processUnits);
+        $before = $this->clues->findOne(Clue::IS_BEFOREEQUALS, $processUnits);
         if ($before instanceof Clue) {
             $ranges = $this->applyBefore($ranges, $before);
         }
 
-        $after = $this->clues->findOne(Clue::FILTER_AFTEREQUALS, $processUnits);
+        $after = $this->clues->findOne(Clue::IS_AFTEREQUALS, $processUnits);
         if ($after instanceof Clue) {
             $ranges = $this->applyAfter($ranges, $after);
         }
 
         $filters = [
-            Clue::FILTER_WHITELIST => 'applyWhitelist',
-            Clue::FILTER_BLACKLIST => 'applyBlacklist'
+            Clue::IS_WHITELIST => 'applyWhitelist',
+            Clue::IS_BLACKLIST => 'applyBlacklist'
         ];
         foreach ($filters as $filter => $method) {
             $clues = $this->clues->find($filter, $processUnits);

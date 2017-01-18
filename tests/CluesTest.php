@@ -105,7 +105,7 @@ class CluesTest extends PHPUnit_Framework_TestCase
 
         $clue9 = new Clue;
         $clue9->setI(1);
-        $clue9->filter = Clue::FILTER_BLACKLIST;
+        $clue9->type = Clue::IS_BLACKLIST;
         $this->sut->append($clue9);
 
         $this->assertEquals([1954], $this->sut->getWhitelist('y'));
@@ -130,7 +130,7 @@ class CluesTest extends PHPUnit_Framework_TestCase
         $clue1 = new Clue;
         $clue1->setM(5);
         $clue1->setD(10);
-        $clue1->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue1->type = Clue::IS_BEFOREEQUALS;
         $this->sut->append($clue1);
 
         $this->assertNull($this->sut->getBefore('y'));
@@ -154,7 +154,7 @@ class CluesTest extends PHPUnit_Framework_TestCase
         $clue2 = new Clue;
         $clue2->setM(3);
         $clue2->setD(12);
-        $clue2->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue2->type = Clue::IS_BEFOREEQUALS;
         $this->sut->append($clue2);
 
         $this->assertEquals(3, $this->sut->getBefore('m'));
@@ -163,7 +163,7 @@ class CluesTest extends PHPUnit_Framework_TestCase
         $clue3 = new Clue;
         $clue3->setM(11);
         $clue3->setD(4);
-        $clue3->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue3->type = Clue::IS_BEFOREEQUALS;
         $this->sut->append($clue3);
 
         $this->assertEquals(3, $this->sut->getBefore('m'));
@@ -171,7 +171,7 @@ class CluesTest extends PHPUnit_Framework_TestCase
 
         $clue4 = new Clue;
         $clue4->setY(2001);
-        $clue4->filter = Clue::FILTER_AFTEREQUALS;
+        $clue4->type = Clue::IS_AFTEREQUALS;
         $this->sut->append($clue4);
 
         $this->assertNull($this->sut->getBefore('y'));
@@ -179,7 +179,7 @@ class CluesTest extends PHPUnit_Framework_TestCase
 
         $clue5 = new Clue;
         $clue5->setY(2011);
-        $clue5->filter = Clue::FILTER_AFTEREQUALS;
+        $clue5->type = Clue::IS_AFTEREQUALS;
         $this->sut->append($clue5);
 
         $this->assertNull($this->sut->getBefore('y'));

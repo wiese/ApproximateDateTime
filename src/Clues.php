@@ -182,7 +182,7 @@ class Clues extends ArrayObject
      * @fixme Am I needed in this abstracted form? If at all, shouldn't the return type be Clues, too?
      * @todo Possibility to filter for multiple types by bitmask
      *
-     * @param int $type The type of clue to match, e.g. Clue::FILTER_WHITELIST
+     * @param int $type The type of clue to match, e.g. Clue::IS_WHITELIST
      * @param array $units Units that have to be set to match; array of unit names, e.g. ['y', 'm']
      *
      * @return Clue[]
@@ -194,7 +194,7 @@ class Clues extends ArrayObject
             /**
              * @var Clue $clue
              */
-            if (!is_null($type) && $clue->filter !== $type) {
+            if (!is_null($type) && $clue->type !== $type) {
                 continue;
             }
 
@@ -234,17 +234,17 @@ class Clues extends ArrayObject
 
             $typeId = implode('-', $clue->getSetUnits());
 
-            switch ($clue->filter) {
-                case Clue::FILTER_WHITELIST:
+            switch ($clue->type) {
+                case Clue::IS_WHITELIST:
                     $this->whitelists[$typeId][] = $clue;
                     break;
-                case Clue::FILTER_BLACKLIST:
+                case Clue::IS_BLACKLIST:
                     $this->blacklists[$typeId][] = $clue;
                     break;
-                case Clue::FILTER_BEFOREEQUALS:
+                case Clue::IS_BEFOREEQUALS:
                     $this->before[$typeId] = $this->getSmallerClueValue($this->before[$typeId], $clue);
                     break;
-                case Clue::FILTER_AFTEREQUALS:
+                case Clue::IS_AFTEREQUALS:
                     $this->after[$typeId] = $this->getBiggerClueValue($this->after[$typeId], $clue);
                     break;
             }

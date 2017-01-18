@@ -41,6 +41,6 @@ class ClueTest extends PHPUnit_Framework_TestCase
     {
         $sut = new Clue();
         $sut->rawValue = 'not implemented';
-        $sut->filter = $sut::FILTER_AFTEREQUALS;
+        $sut->type = $sut::IS_AFTEREQUALS;
     }
 }

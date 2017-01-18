@@ -80,7 +80,7 @@ class CompoundTest extends ParentTest
         $clue = new Clue();
         $clue->setY(1994);
         $clue->setM(6);
-        $clue->filter = Clue::FILTER_AFTEREQUALS;
+        $clue->type = Clue::IS_AFTEREQUALS;
         $clues->append($clue);
 
         $this->sut->setClues($clues);
@@ -117,7 +117,7 @@ class CompoundTest extends ParentTest
         $clue->setY(1995);
         $clue->setM(10);
         $clue->setD(3);
-        $clue->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue->type = Clue::IS_BEFOREEQUALS;
         $clues->append($clue);
 
         $this->sut->setClues($clues);
@@ -156,14 +156,14 @@ class CompoundTest extends ParentTest
         $clue->setY(1975);
         $clue->setM(9);
         $clue->setD(24);
-        $clue->filter = Clue::FILTER_AFTEREQUALS;
+        $clue->type = Clue::IS_AFTEREQUALS;
         $clues->append($clue);
 
         $clue = new Clue();
         $clue->setY(1975);
         $clue->setM(9);
         $clue->setD(26);
-        $clue->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue->type = Clue::IS_BEFOREEQUALS;
         $clues->append($clue);
 
         $this->sut->setClues($clues);
@@ -201,7 +201,7 @@ class CompoundTest extends ParentTest
         $clue = new Clue();
         $clue->setY(1975);
         $clue->setM(9);
-        $clue->filter = Clue::FILTER_WHITELIST;
+        $clue->type = Clue::IS_WHITELIST;
         $clues->append($clue);
 
         $this->sut->setClues($clues);
@@ -234,13 +234,13 @@ class CompoundTest extends ParentTest
         $clue = new Clue();
         $clue->setY(1969);
         $clue->setM(5);
-        $clue->filter = Clue::FILTER_WHITELIST;
+        $clue->type = Clue::IS_WHITELIST;
         $clues->append($clue);
 
         $clue = new Clue();
         $clue->setY(1969);
         $clue->setM(8);
-        $clue->filter = Clue::FILTER_WHITELIST;
+        $clue->type = Clue::IS_WHITELIST;
         $clues->append($clue);
 
         $this->sut->setClues($clues);
@@ -271,7 +271,7 @@ class CompoundTest extends ParentTest
         $clue = new Clue();
         $clue->setY(1976);
         $clue->setM(9);
-        $clue->filter = Clue::FILTER_WHITELIST;
+        $clue->type = Clue::IS_WHITELIST;
         $clues->append($clue);
 
         $this->sut->setClues($clues);
@@ -311,7 +311,7 @@ class CompoundTest extends ParentTest
         $clue = new Clue();
         $clue->setY(1975);
         $clue->setM(9);
-        $clue->filter = Clue::FILTER_BLACKLIST;
+        $clue->type = Clue::IS_BLACKLIST;
         $clues->append($clue);
         $this->sut->setClues($clues);
 
@@ -364,7 +364,7 @@ class CompoundTest extends ParentTest
         $clue->setY(1971);
         $clue->setM(2);
         $clue->setD(14);
-        $clue->filter = Clue::FILTER_WHITELIST;
+        $clue->type = Clue::IS_WHITELIST;
         $clues->append($clue);
 
         $this->sut->setClues($clues);

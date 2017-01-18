@@ -305,7 +305,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue2->setM(7);
 
         $clue3 = new Clue;
-        $clue3->filter = Clue::FILTER_BLACKLIST;
+        $clue3->type = Clue::IS_BLACKLIST;
         $clue3->setD(1);
 
         $this->sut->setClues([$clue1, $clue2, $clue3]);
@@ -331,15 +331,15 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue4->setM(9);
 
         $clue5 = new Clue;
-        $clue5->filter = Clue::FILTER_BLACKLIST;
+        $clue5->type = Clue::IS_BLACKLIST;
         $clue5->setM(8);
 
         $clue6 = new Clue;
-        $clue6->filter = Clue::FILTER_BLACKLIST;
+        $clue6->type = Clue::IS_BLACKLIST;
         $clue6->setD(1);
 
         $clue7 = new Clue;
-        $clue7->filter = Clue::FILTER_BLACKLIST;
+        $clue7->type = Clue::IS_BLACKLIST;
         $clue7->setD(30);
 
         $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
@@ -361,7 +361,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue2->setM(10);
 
         $clue3 = new Clue;
-        $clue3->filter = Clue::FILTER_BLACKLIST;
+        $clue3->type = Clue::IS_BLACKLIST;
         $clue3->setD(14);
 
         $clue4 = new Clue;
@@ -383,15 +383,15 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $clue1->setY(2001);
 
         $clue2 = new Clue;
-        $clue2->filter = Clue::FILTER_BLACKLIST;
+        $clue2->type = Clue::IS_BLACKLIST;
         $clue2->setM(10);
 
         $clue3 = new Clue;
-        $clue3->filter = Clue::FILTER_BLACKLIST;
+        $clue3->type = Clue::IS_BLACKLIST;
         $clue3->setN(6);
 
         $clue4 = new Clue;
-        $clue4->filter = Clue::FILTER_BLACKLIST;
+        $clue4->type = Clue::IS_BLACKLIST;
         $clue4->setN(7);
 
         $this->assertEquals($this->sut, $this->sut->setClues([$clue1, $clue2, $clue3, $clue4]));
@@ -507,11 +507,11 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $clue2 = new Clue;
         $clue2->setM(5);
-        $clue2->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue2->type = Clue::IS_BEFOREEQUALS;
 
         $clue3 = new Clue;
         $clue3->setD(10);
-        $clue3->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue3->type = Clue::IS_BEFOREEQUALS;
 
         $this->sut->setClues([$clue1, $clue2, $clue3]);
 
@@ -559,31 +559,31 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
     {
         $clue1 = new Clue;
         $clue1->setY(1960);
-        $clue1->filter = Clue::FILTER_WHITELIST;
+        $clue1->type = Clue::IS_WHITELIST;
 
         $clue2 = new Clue;
         $clue2->setM(2);
-        $clue2->filter = Clue::FILTER_WHITELIST;
+        $clue2->type = Clue::IS_WHITELIST;
 
         $clue3 = new Clue;
         $clue3->setM(3);
-        $clue3->filter = Clue::FILTER_WHITELIST;
+        $clue3->type = Clue::IS_WHITELIST;
 
         $clue4 = new Clue;
         $clue4->setD(28);
-        $clue4->filter = Clue::FILTER_AFTEREQUALS;
+        $clue4->type = Clue::IS_AFTEREQUALS;
 
         $clue5 = new Clue;
         $clue5->setD(3);
-        $clue5->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue5->type = Clue::IS_BEFOREEQUALS;
 
         $clue6 = new Clue;
         $clue6->setH(8);
-        $clue6->filter = Clue::FILTER_AFTEREQUALS;
+        $clue6->type = Clue::IS_AFTEREQUALS;
 
         $clue7 = new Clue;
         $clue7->setH(18);
-        $clue7->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue7->type = Clue::IS_BEFOREEQUALS;
 
         $this->sut->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
 
@@ -627,12 +627,12 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $clue1 = new Clue;
         $clue1->setY(2004);
-        $clue1->filter = Clue::FILTER_WHITELIST;
+        $clue1->type = Clue::IS_WHITELIST;
 
         $clue2 = new Clue;
         $clue2->setM(2);
         $clue2->setD(29);
-        $clue2->filter = Clue::FILTER_BEFOREEQUALS;
+        $clue2->type = Clue::IS_BEFOREEQUALS;
 
         $this->sut->setClues([$clue1, $clue2]);
 
@@ -657,13 +657,13 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         return;
 
         $clue1 = new Clue;
-        $clue1->filter = Clue::FILTER_WHITELIST;
+        $clue1->type = Clue::IS_WHITELIST;
         $clue1->setY(2007);
         $clue1->setM(10);
         $clue1->setD(30);
 
         $clue2 = new Clue;
-        $clue2->filter = Clue::FILTER_WHITELIST;
+        $clue2->type = Clue::IS_WHITELIST;
         $clue2->setH(9);
         $clue2->setI(37);
         $clue2->setS(14);
