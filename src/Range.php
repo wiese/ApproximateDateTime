@@ -68,7 +68,7 @@ class Range
     {
         $ranges = new Ranges();
 
-        $targetUnit = $this->start->getNextUnit();
+        $targetUnit = $this->start->getHighestUnit();
 
         for ($value = $this->start->get($targetUnit); $value <= $this->end->get($targetUnit); $value++) {
             $range = clone $this;

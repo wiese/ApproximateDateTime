@@ -151,12 +151,11 @@ class DateTimeData extends Vehicle
      *
      * @return string
      */
-    public function getNextUnit() : string
+    public function getHighestUnit() : ? string
     {
         $targetUnit = null;
-        $properties = get_object_vars($this);
-        foreach ($properties as $unit => $value) {
-            if (is_null($value)) {
+        foreach (static::$options as $unit) {
+            if (is_null($this->{$unit})) {
                 break;
             }
             $targetUnit = $unit;

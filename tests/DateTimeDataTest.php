@@ -133,4 +133,22 @@ class DateTimeDataTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(4, $sut->getI());
         $this->assertEquals(3, $sut->getS());
     }
+
+    public function testGetHighestUnit() : void
+    {
+        $sut = new DateTimeData();
+
+        $this->assertNull($sut->getHighestUnit());
+
+        $sut->setY(333);
+        $this->assertEquals('y', $sut->getHighestUnit());
+
+        $sut->setM(7);
+        $this->assertEquals('m', $sut->getHighestUnit());
+
+        $sut = new DateTimeData();
+        $sut->setY(null); // a constallation that should not really happen in DateTimeData but to be seen in Clue
+        $sut->setM(3);
+        $this->assertNull($sut->getHighestUnit());
+    }
 }
