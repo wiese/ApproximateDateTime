@@ -216,6 +216,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $filterFactory = new FilterFactory($this->manager);
         foreach ($this->config->compoundUnits as $unit => $filter) {
+
+            $this->log->debug('+++ ' . $unit);
+
             $filter = $filterFactory->produce($filter);
             $filter->setUnit($unit);
             $filter->setClues($this->clues);
@@ -223,7 +226,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
             $ranges = $filter($ranges);
 
-            $this->log->debug('+++ ' . $unit . ' complete. ranges:', [count($ranges)]);
+            $this->log->debug('resulting ranges', [count($ranges)]);
         }
 
         // @todo remove specific times (compound units)
