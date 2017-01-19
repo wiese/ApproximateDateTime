@@ -66,7 +66,7 @@ class Config
     public $logChannel = 'ApproximateDateTime';
 
     public $logHandler = 'Monolog\\Handler\\NullHandler';
-    //public static $logHandler = null;
+    //public $logHandler = null;
 
     /**
      * Get the minimum valid value for the given unit
