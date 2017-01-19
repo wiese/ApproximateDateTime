@@ -138,7 +138,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         return $this;
     }
 
-    public function getClues(): Clues
+    public function getClues() : Clues
     {
         return $this->clues;
     }
