@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Data;
 
-use wiese\ApproximateDateTime\Config;
+use InvalidArgumentException;
+use LogicException;
 
 /**
  * @todo use a trait instead? inheritance between unrelated objects seems off.
@@ -221,7 +222,7 @@ abstract class Vehicle
      *
      * @param self $other
      * @return int -1|0|1
-     * @throws \Exception
+     * @throws LogicException
      */
     public function compareTo(self $other) : int
     {
@@ -230,7 +231,7 @@ abstract class Vehicle
             $there = $other->get($unit);
 
             if (is_int($here) && is_null($there) || is_int($there) && is_null($here)) {
-                throw new \Exception('Can not compare objects with different units set.');
+                throw new LogicException('Can not compare objects with different units set.');
             } elseif (is_int($here) && is_int($there) && $here !== $there) {  // equality leads to continued check
                 return ($here < $there) ? -1 : 1;
             }
@@ -303,12 +304,12 @@ abstract class Vehicle
 
     /**
      * @param string $unit
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function assertUnit(string $unit) : void
     {
         if (!in_array($unit, static::$options)) {
-            throw new \InvalidArgumentException('Unknow date unit ' . $unit);
+            throw new InvalidArgumentException('Unknow date unit ' . $unit);
         }
     }
 }
