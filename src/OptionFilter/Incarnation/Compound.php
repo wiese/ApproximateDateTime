@@ -52,6 +52,8 @@ class Compound extends Base
     {
         $newRanges = new Ranges();
 
+        $this->log->debug('after bound', [$clue->getSetUnits()]);
+
         foreach ($ranges as $range) {
             /**
              * @var $range Range
@@ -61,7 +63,7 @@ class Compound extends Base
                 continue;
             } elseif ($range->getEnd()->isSmaller($clue)) { // completely earlier
                 break; // ignore all following, as ranges should be in order
-            } else { // overlapping
+            } else { // intersecting
                 $newRange = clone $range;
                 $start = $range->getStart();
                 foreach ($clue->getSetUnits() as $unit) {
@@ -81,6 +83,10 @@ class Compound extends Base
     {
         $newRanges = new Ranges();
 
+        $setUnits = $clue->getSetUnits();
+
+        $this->log->debug('before bound', [$setUnits]);
+
         foreach ($ranges as $range) {
             /**
              * @var $range Range
@@ -90,10 +96,10 @@ class Compound extends Base
                 continue;
             } elseif ($range->getStart()->isBigger($clue)) { // completely later
                 break; // ignore all following, as ranges should be in order
-            } else { // overlapping
+            } else { // intersecting
                 $newRange = clone $range;
                 $end = $range->getEnd();
-                foreach ($clue->getSetUnits() as $unit) {
+                foreach ($setUnits as $unit) {
                     $end->set($unit, $clue->get($unit));
                 }
                 $newRange->setEnd($end);
@@ -116,6 +122,8 @@ class Compound extends Base
     protected function applyWhitelist(Ranges $ranges, Clue $clue) : Ranges
     {
         $ranges = clone $ranges; // don't manipulate the input
+
+        $this->log->debug('whitelist bound', [$clue]);
 
         $setUnits = $clue->getSetUnits();
 
@@ -178,10 +186,10 @@ class Compound extends Base
                  */
                 $nextEnd = $next->getEnd();
                 if ($nextStart->isSmaller($currentEnd) || $nextStart->equals($currentEnd)) {
-                    $this->log->debug('overlapping ranges', [$nextStart->toString(), $currentEnd->toString()]);
                     $end = $currentEnd->isBigger($nextEnd) ? $currentEnd : $nextEnd;
                     $current->setEnd($end); // manipulate the current to merge current and next
                     $i++; // skip next as it is covered already
+                    $this->log->debug('overlapping ranges fixed', [$nextStart->toString(), $currentEnd->toString()]);
                 }
             }
 
@@ -201,6 +209,8 @@ class Compound extends Base
     protected function applyBlacklist(Ranges $ranges, Clue $clue) : Ranges
     {
         $newRanges = new Ranges();
+
+        $this->log->debug('blacklist bound', [$clue->getSetUnits()]);
 
         foreach ($ranges as $range) {
             /**
