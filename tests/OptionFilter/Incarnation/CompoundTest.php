@@ -8,7 +8,6 @@ use wiese\ApproximateDateTime\Tests\OptionFilter\ParentTest;
 use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\Clue;
-use wiese\ApproximateDateTime\Manager;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Compound;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
@@ -26,6 +25,34 @@ class CompoundTest extends ParentTest
         $this->sut = new Compound(new Config(), new NullLogger());
         $this->sut->setUnit($unit);
         $this->sut->setCalendar(CAL_GREGORIAN);
+    }
+
+    public function testNonMatchingCluesDontCauseOps() : void
+    {
+        $this->sut = $this->getMockBuilder('wiese\ApproximateDateTime\OptionFilter\Incarnation\Compound')
+            ->disableOriginalConstructor()
+            ->setMethods(['applyBefore', 'applyAfter', 'applyWhitelist', 'applyBlacklist'])
+            ->getMock();
+        $this->sut->setUnit('m-d');
+
+        $this->sut->expects($this->never())->method('applyBefore');
+        $this->sut->expects($this->never())->method('applyAfter');
+        $this->sut->expects($this->never())->method('applyWhitelist');
+        $this->sut->expects($this->never())->method('applyBlacklist');
+
+        $clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
+            ->setMethods(['getBefore', 'getAfter', 'getWhitelist', 'getBlacklist'])
+            ->getMock();
+
+        $clues->expects($this->once())->method('getBefore');
+        $clues->expects($this->once())->method('getAfter');
+        $clues->expects($this->once())->method('getWhitelist');
+        $clues->expects($this->once())->method('getBlacklist');
+        $this->sut->setClues($clues);
+
+        $ranges = new Ranges();
+
+        $this->sut->__invoke($ranges);
     }
 
     public function testEmptyClues() : void
@@ -181,11 +208,67 @@ class CompoundTest extends ParentTest
         $this->assertEquals(26, $ranges[0]->getEnd()->getD());
     }
 
-    public function testWhitelistMerge() : void
+    public function testWhitelistYearMonthFromEmptyRanges() : void
     {
         $this->init('y-m');
 
-        // @todo also start with empty ranges once
+        $ranges = new Ranges();
+
+        $clues = new Clues();
+
+        $clue = new Clue();
+        $clue->setY(1975);
+        $clue->setM(9);
+        $clue->type = Clue::IS_WHITELIST;
+        $clues->append($clue);
+
+        $this->sut->setClues($clues);
+
+        $newRanges = $this->sut->__invoke($ranges);
+
+        $this->assertCount(1, $newRanges);
+
+        $this->assertEquals(1975, $newRanges[0]->getStart()->getY());
+        $this->assertEquals(9, $newRanges[0]->getStart()->getM());
+        $this->assertNull($newRanges[0]->getStart()->getD());
+        $this->assertEquals(1975, $newRanges[0]->getEnd()->getY());
+        $this->assertEquals(9, $newRanges[0]->getEnd()->getM());
+        $this->assertNull($newRanges[0]->getEnd()->getD());
+    }
+
+
+    public function testWhitelistYearMonthDayFromEmptyRanges() : void
+    {
+        $this->init('y-m-d');
+
+        $ranges = new Ranges();
+
+        $clues = new Clues();
+
+        $clue = new Clue();
+        $clue->setY(47);
+        $clue->setM(3);
+        $clue->setD(14);
+        $clue->type = Clue::IS_WHITELIST;
+        $clues->append($clue);
+
+        $this->sut->setClues($clues);
+
+        $newRanges = $this->sut->__invoke($ranges);
+
+        $this->assertCount(1, $newRanges);
+
+        $this->assertEquals(47, $newRanges[0]->getStart()->getY());
+        $this->assertEquals(3, $newRanges[0]->getStart()->getM());
+        $this->assertEquals(14, $newRanges[0]->getStart()->getD());
+        $this->assertEquals(47, $newRanges[0]->getEnd()->getY());
+        $this->assertEquals(3, $newRanges[0]->getEnd()->getM());
+        $this->assertEquals(14, $newRanges[0]->getEnd()->getD());
+    }
+
+    public function testWhitelistMerge() : void
+    {
+        $this->init('y-m');
 
         $ranges = new Ranges();
         $range = new Range();
@@ -217,8 +300,6 @@ class CompoundTest extends ParentTest
     public function testWhitelistMergeTouching() : void
     {
         $this->init('y-m');
-
-        // @todo also start with empty ranges once
 
         $ranges = new Ranges();
         $range = new Range();
@@ -296,8 +377,6 @@ class CompoundTest extends ParentTest
     {
         $this->init('y-m');
 
-        // @todo also start with empty ranges once
-
         $ranges = new Ranges();
         $range = new Range();
         $start = new DateTimeData();
@@ -329,6 +408,26 @@ class CompoundTest extends ParentTest
         $this->assertEquals(10, $newRanges[1]->getStart()->getM());
         $this->assertEquals(1976, $newRanges[1]->getEnd()->getY());
         $this->assertEquals(12, $newRanges[1]->getEnd()->getM());
+    }
+
+    public function testBlacklistEmptyRanges() : void
+    {
+        $this->init('y-m-d');
+
+        $ranges = new Ranges();
+
+        $clues = new Clues();
+        $clue = new Clue();
+        $clue->setY(1975);
+        $clue->setM(4);
+        $clue->setD(30);
+        $clue->type = Clue::IS_BLACKLIST;
+        $clues->append($clue);
+        $this->sut->setClues($clues);
+
+        $newRanges = $this->sut->__invoke($ranges);
+
+        $this->assertEmpty($newRanges);
     }
 
     public function testMix() : void
