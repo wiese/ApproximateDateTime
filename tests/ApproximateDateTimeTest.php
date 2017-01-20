@@ -622,8 +622,53 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(59, $actualInterval->s);
     }
 
+    public function testPayday() : void
+    {
+        $clue1 = new Clue;
+        $clue1->setY(2007);
+
+        $clue2 = new Clue;
+        $clue2->setD(15);
+
+        $this->setClues([$clue1, $clue2]);
+        $this->assertCount(12, $this->sut->getPeriods());
+    }
+
+    /**
+     * bugged tests below
+     */
+
+    public function testCompoundYMwl() : void
+    {
+        // @fixme Endless run time and dies. Silent LogicException in Vehicle::compareTo()?
+        $this->markTestIncomplete();
+        return;
+
+        $clue1 = new Clue;
+        $clue1->setY(2001);
+        $clue1->setM(10);
+        $clue1->type = Clue::IS_WHITELIST;
+
+        $this->setClues([$clue1]);
+
+        $actualPeriods = $this->sut->getPeriods();
+
+        $this->assertCount(1, $actualPeriods);
+
+        $this->assertEquals(new DateTime('2004-10-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
+        $actualInterval = $actualPeriods[0]->getDateInterval();
+
+        $this->assertEquals(0, $actualInterval->y);
+        $this->assertEquals(0, $actualInterval->m);
+        $this->assertEquals(30, $actualInterval->d);
+        $this->assertEquals(23, $actualInterval->h);
+        $this->assertEquals(59, $actualInterval->i);
+        $this->assertEquals(59, $actualInterval->s);
+    }
+
     public function testAfterDayInMonth() : void
     {
+        // @fixme
         $this->markTestIncomplete();
         return;
 
@@ -672,13 +717,19 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->setClues([$clue1, $clue2]);
 
+        $periods = $this->sut->getPeriods();
+
         $this->assertEquals(
             [
                 new DatePeriod(new DateTime('2007-10-30 09:37:14', $this->tz), new DateInterval('PT0S'), 1),
             ],
-            $this->sut->getPeriods()
+            $periods
         );
     }
+
+    /**
+     * Visionary features
+     */
 
     public function testWinterHolidayPicture() : void
     {
@@ -703,18 +754,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertCount(6, $this->sut->getClues());
         $this->assertEquals(new DateTime('2016-02-05 00:00:00', $this->tz), $this->sut->getEarliest());
         $this->assertEquals(new DateTime('2016-13-31 23:59:59', $this->tz), $this->sut->getLatest());
-    }
-
-    public function testPayday() : void
-    {
-        $clue1 = new Clue;
-        $clue1->setY(2007);
-
-        $clue2 = new Clue;
-        $clue2->setD(15);
-
-        $this->setClues([$clue1, $clue2]);
-        $this->assertCount(12, $this->sut->getPeriods());
     }
 
     /**
