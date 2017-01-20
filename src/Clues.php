@@ -195,7 +195,8 @@ class Clues extends ArrayObject
         array_walk($this->blacklists, [$this, 'listSanitizingCallback']);
 
         // @todo what if default year is blacklisted?
-        if (empty($this->whitelists['y'])) {
+        // @todo Deduct valid ranges from fully qualified before and after, too
+        if (empty($this->whitelists['y']) && empty($this->whitelists['y-m']) && empty($this->whitelists['y-m-d'])) {
             $yClue = new Clue();
             $yClue->setY($this->defaultYear);
 
