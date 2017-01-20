@@ -638,7 +638,7 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
      * bugged tests below
      */
 
-    public function testCompoundYMwl() : void
+    public function testCompoundYearMonthWhitelist() : void
     {
         // @fixme Endless run time and dies. Silent LogicException in Vehicle::compareTo()?
         $this->markTestIncomplete();
