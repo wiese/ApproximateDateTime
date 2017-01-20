@@ -216,7 +216,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
         $filterFactory = new FilterFactory($this->manager);
         foreach ($this->config->compoundUnits as $unit => $filter) {
-
             $this->log->debug('+++ ' . $unit);
 
             $filter = $filterFactory->produce($filter);
