@@ -159,7 +159,12 @@ class Clues extends ArrayObject
         $this->whitelists = $this->blacklists = $this->before = $this->after = [];
 
         foreach ($this as $clue) {
+            /**
+             * @var Clue $clue
+             */
+
             // @todo validate value
+            // - value combination has to be logical (e.g. not y & s, not n & something else)
 
             $typeId = implode('-', $clue->getSetUnits());
 
@@ -176,13 +181,13 @@ class Clues extends ArrayObject
                     }
                     $this->blacklists[$typeId][] = $clue;
                     break;
-                case Clue::IS_BEFOREEQUALS:
+                case Clue::IS_BEFOREEQUALS: // don't store anything but the smallest value for before
                     if (!isset($this->before[$typeId])) {
                         $this->before[$typeId] = null;
                     }
                     $this->before[$typeId] = $this->getSmallerClueValue($this->before[$typeId], $clue);
                     break;
-                case Clue::IS_AFTEREQUALS:
+                case Clue::IS_AFTEREQUALS: // don't store anything but the biggest value for after
                     if (!isset($this->after[$typeId])) {
                         $this->after[$typeId] = null;
                     }
