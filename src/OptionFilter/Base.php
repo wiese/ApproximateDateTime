@@ -149,14 +149,8 @@ abstract class Base implements OptionFilterInterface
     {
         $results = [];
 
-        if (!empty($clues)) {
-            foreach ($clues as $clue) {
-                if ($clue->getSetUnits() !== [$unit]) {
-                    throw new LogicException('A Clue was not fit for this simplification');
-                }
-
-                $results[] = $clue->get($unit);
-            }
+        foreach ($clues as $clue) {
+            $results[] = $this->getNumericClueValue($clue, $unit);
         }
 
         return $results;
