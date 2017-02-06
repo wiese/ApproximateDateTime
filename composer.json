@@ -1,7 +1,10 @@
 {
     "name": "wiese/approximate-datetime",
-    "description": "Handle dates that are not precisely defined",
     "type": "library",
+    "description": "Handle dates that are not precisely defined",
+    "keywords": ["date", "time", "timezone"],
+    "homepage": "https://github.com/wiese/ApproximateDateTime",
+    "license": "MIT",
     "require": {
         "php": "^7.1",
         "ext-calendar": "*",
@@ -20,7 +23,5 @@
         "psr-4": {
             "wiese\\ApproximateDateTime\\Tests\\": "tests/"
         }
-    },
-    "license": "MIT",
-    "minimum-stability": "dev"
+    }
 }
