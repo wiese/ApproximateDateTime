@@ -236,6 +236,67 @@ class CompoundTest extends ParentTest
         $this->assertNull($newRanges[0]->getEnd()->getD());
     }
 
+    public function testWhitelistMonthDayOnYear() : void
+    {
+        $this->init('m-d');
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData();
+        $start->setY(1930);
+        $range->setStart($start);
+        $end = new DateTimeData();
+        $end->setY(1931);
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $clues = new Clues();
+
+        $clue = new Clue();
+        $clue->setM(3);
+        $clue->setD(14);
+        $clue->type = Clue::IS_WHITELIST;
+        $clues->append($clue);
+        $clue = new Clue();
+        $clue->setM(6);
+        $clue->setD(12);
+        $clue->type = Clue::IS_WHITELIST;
+        $clues->append($clue);
+
+        $this->sut->setClues($clues);
+
+        $newRanges = $this->sut->__invoke($ranges);
+
+        $this->assertCount(4, $newRanges);
+
+        $this->assertEquals(1930, $newRanges[0]->getStart()->getY());
+        $this->assertEquals(3, $newRanges[0]->getStart()->getM());
+        $this->assertEquals(14, $newRanges[0]->getStart()->getD());
+        $this->assertEquals(1930, $newRanges[0]->getEnd()->getY());
+        $this->assertEquals(3, $newRanges[0]->getEnd()->getM());
+        $this->assertEquals(14, $newRanges[0]->getEnd()->getD());
+
+        $this->assertEquals(1930, $newRanges[1]->getStart()->getY());
+        $this->assertEquals(6, $newRanges[1]->getStart()->getM());
+        $this->assertEquals(12, $newRanges[1]->getStart()->getD());
+        $this->assertEquals(1930, $newRanges[1]->getEnd()->getY());
+        $this->assertEquals(6, $newRanges[1]->getEnd()->getM());
+        $this->assertEquals(12, $newRanges[1]->getEnd()->getD());
+
+        $this->assertEquals(1931, $newRanges[2]->getStart()->getY());
+        $this->assertEquals(3, $newRanges[2]->getStart()->getM());
+        $this->assertEquals(14, $newRanges[2]->getStart()->getD());
+        $this->assertEquals(1931, $newRanges[2]->getEnd()->getY());
+        $this->assertEquals(3, $newRanges[2]->getEnd()->getM());
+        $this->assertEquals(14, $newRanges[2]->getEnd()->getD());
+
+        $this->assertEquals(1931, $newRanges[3]->getStart()->getY());
+        $this->assertEquals(6, $newRanges[3]->getStart()->getM());
+        $this->assertEquals(12, $newRanges[3]->getStart()->getD());
+        $this->assertEquals(1931, $newRanges[3]->getEnd()->getY());
+        $this->assertEquals(6, $newRanges[3]->getEnd()->getM());
+        $this->assertEquals(12, $newRanges[3]->getEnd()->getD());
+    }
 
     public function testWhitelistYearMonthDayFromEmptyRanges() : void
     {
@@ -371,6 +432,11 @@ class CompoundTest extends ParentTest
         $this->assertEquals(9, $newRanges[1]->getStart()->getM());
         $this->assertEquals(1976, $newRanges[1]->getEnd()->getY());
         $this->assertEquals(9, $newRanges[1]->getEnd()->getM());
+    }
+
+    public function testWhitelistMultiple() : void
+    {
+        $this->markTestIncomplete();
     }
 
     public function testBlacklist() : void
