@@ -7,9 +7,9 @@ use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
 use DateTimeZone;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class RangesTest extends PHPUnit_Framework_TestCase
+class RangesTest extends TestCase
 {
 
     /**

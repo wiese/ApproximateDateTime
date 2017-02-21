@@ -5,9 +5,9 @@ namespace wiese\ApproximateDateTime\Tests;
 
 use wiese\ApproximateDateTime\DateTimeData;
 use wiese\ApproximateDateTime\Range;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class RangeTest extends PHPUnit_Framework_TestCase
+class RangeTest extends TestCase
 {
     public function testFiletYears() : void
     {

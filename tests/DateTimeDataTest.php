@@ -6,9 +6,9 @@ namespace wiese\ApproximateDateTime\Tests;
 use wiese\ApproximateDateTime\DateTimeData;
 use DateTime;
 use DateTimeZone;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class DateTimeDataTest extends PHPUnit_Framework_TestCase
+class DateTimeDataTest extends TestCase
 {
     public function testMerge(): void
     {

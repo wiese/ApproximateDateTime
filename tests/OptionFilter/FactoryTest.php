@@ -5,9 +5,9 @@ namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
 use wiese\ApproximateDateTime\Manager;
 use wiese\ApproximateDateTime\OptionFilter\Factory;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class FactoryTest extends PHPUnit_Framework_TestCase
+class FactoryTest extends TestCase
 {
     public function testProduce() : void
     {

@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
-use PHPUnit_Framework_TestCase;
 use wiese\ApproximateDateTime\Clue;
+use PHPUnit\Framework\TestCase;
 
-abstract class ParentTest extends PHPUnit_Framework_TestCase
+abstract class ParentTest extends TestCase
 {
 
     /**

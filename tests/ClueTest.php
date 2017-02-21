@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime\Tests;
 
 use wiese\ApproximateDateTime\Clue;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class ClueTest extends PHPUnit_Framework_TestCase
+class ClueTest extends TestCase
 {
     public function testFromArray() : void
     {

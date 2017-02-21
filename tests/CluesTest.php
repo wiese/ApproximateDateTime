@@ -5,9 +5,9 @@ namespace wiese\ApproximateDateTime\Tests;
 
 use wiese\ApproximateDateTime\Clue;
 use wiese\ApproximateDateTime\Clues;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class CluesTest extends PHPUnit_Framework_TestCase
+class CluesTest extends TestCase
 {
 
     /**

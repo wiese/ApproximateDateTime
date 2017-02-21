@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime\Tests\Data;
 
 use wiese\ApproximateDateTime\Data\Vehicle;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class VehicleTest extends PHPUnit_Framework_TestCase
+class VehicleTest extends TestCase
 {
 
     /**

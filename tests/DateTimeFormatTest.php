@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests;
 
-use PHPUnit_Framework_TestCase;
 use wiese\ApproximateDateTime\DateTimeFormat;
+use PHPUnit\Framework\TestCase;
 
-class DateTimeFormatTest extends PHPUnit_Framework_TestCase
+class DateTimeFormatTest extends TestCase
 {
     public function testConstants() : void
     {

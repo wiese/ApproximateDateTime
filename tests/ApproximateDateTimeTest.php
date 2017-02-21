@@ -11,9 +11,9 @@ use DateInterval;
 use DatePeriod;
 use DateTime;
 use DateTimeZone;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
+class ApproximateDateTimeTest extends TestCase
 {
 
     /**
