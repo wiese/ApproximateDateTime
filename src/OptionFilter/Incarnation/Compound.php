@@ -265,7 +265,7 @@ class Compound extends Base
             $maxValue = $this->config->getMax($unit);
 
             if ($unit === 'd') {
-                $maxValue = cal_days_in_month(CAL_GREGORIAN, $data->getM(), $data->getY());
+                $maxValue = cal_days_in_month($this->calendar, $data->getM(), $data->getY());
             }
 
             $currentValue = $data->get($unit);
@@ -303,7 +303,7 @@ class Compound extends Base
                         $y = $data->getY() - 1;
                         $m = $mMin;
                     }
-                    $maxValue = cal_days_in_month(CAL_GREGORIAN, $m, $y);
+                    $maxValue = cal_days_in_month($this->calendar, $m, $y);
                 } else {
                     $maxValue = $this->config->getMax($unit);
                 }
