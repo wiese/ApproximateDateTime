@@ -262,6 +262,16 @@ class CompoundTest extends ParentTest
         $clue->setD(12);
         $clue->type = Clue::IS_WHITELIST;
         $clues->append($clue);
+        $clue = new Clue();
+        $clue->setM(6);
+        $clue->setD(25);
+        $clue->type = Clue::IS_WHITELIST;
+        $clues->append($clue);
+        $clue = new Clue();
+        $clue->setM(6);
+        $clue->setD(25);
+        $clue->type = Clue::IS_BLACKLIST;
+        $clues->append($clue);
 
         $this->sut->setClues($clues);
 
