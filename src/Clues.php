@@ -200,7 +200,6 @@ class Clues extends ArrayObject
         array_walk($this->blacklists, [$this, 'listSanitizingCallback']);
 
         if (empty($this->whitelists['y']) && empty($this->whitelists['y-m']) && empty($this->whitelists['y-m-d'])) {
-
             if (!empty($this->blacklists['y'])) {
                 foreach ($this->blacklists['y'] as $blacklistClue) {
                     if ($blacklistClue->getY() === $this->defaultYear) {

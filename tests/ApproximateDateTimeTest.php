@@ -67,7 +67,9 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->sut->setClues($clues);
 
         $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Tried applying the default year, but it is blacklisted. Please, whitelist a year.');
+        $this->expectExceptionMessage(
+            'Tried applying the default year, but it is blacklisted. Please, whitelist a year.'
+        );
 
         $this->sut->getPeriods();
     }
