@@ -53,6 +53,25 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(new DateTime('333-12-31 23:59:59', $europeTz), $this->sut->getLatest());
     }
 
+    public function testDefaultYearBlacklisted() : void
+    {
+        $clues = new Clues();
+
+        $clues->setDefaultYear(77);
+
+        $clue = new Clue;
+        $clue->setY(77);
+        $clue->type = Clue::IS_BLACKLIST;
+        $clues->append($clue);
+
+        $this->sut->setClues($clues);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Tried applying the default year, but it is blacklisted. Please, whitelist a year.');
+
+        $this->sut->getPeriods();
+    }
+
     public function testOneLeapYear() : void
     {
         // '2016-??-??T??-??-??'
@@ -62,10 +81,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->setClues([$clue]);
         $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $this->sut->getEarliest());
         $this->assertEquals(new DateTime('2016-12-31 23:59:59', $this->tz), $this->sut->getLatest());
-
-        $luckyShot = $this->sut->getLuckyShot();
-        $this->assertEquals(new DateTime('2016-01-01 00:00:00', $this->tz), $luckyShot);
-        $this->assertTrue($this->sut->isPossible($luckyShot));
 
         $this->assertTrue($this->sut->isPossible(new DateTime('2016-04-03', $this->tz)));
         $this->assertTrue($this->sut->isPossible(new DateTime('2016-02-29', $this->tz)));
@@ -100,10 +115,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(new DateTime('1985-01-01 00:00:00', $this->tz), $this->sut->getEarliest());
         $this->assertEquals(new DateTime('1986-12-31 23:59:59', $this->tz), $this->sut->getLatest());
-
-        $luckyShot = $this->sut->getLuckyShot();
-        $this->assertEquals(new DateTime('1985-01-01 00:00:00', $this->tz), $luckyShot);
-        $this->assertTrue($this->sut->isPossible($luckyShot));
 
         $this->assertTrue($this->sut->isPossible(new DateTime('1985-04-03', $this->tz)));
         $this->assertTrue($this->sut->isPossible(new DateTime('1986-12-31', $this->tz)));
@@ -632,146 +643,6 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
 
         $this->setClues([$clue1, $clue2]);
         $this->assertCount(12, $this->sut->getPeriods());
-    }
-
-    /**
-     * bugged tests below
-     */
-
-    public function testCompoundYearMonthWhitelist() : void
-    {
-        // @fixme Endless run time and dies. Silent LogicException in Vehicle::compareTo()?
-        $this->markTestIncomplete();
-        return;
-
-        $clue1 = new Clue;
-        $clue1->setY(2001);
-        $clue1->setM(10);
-        $clue1->type = Clue::IS_WHITELIST;
-
-        $this->setClues([$clue1]);
-
-        $actualPeriods = $this->sut->getPeriods();
-
-        $this->assertCount(1, $actualPeriods);
-
-        $this->assertEquals(new DateTime('2004-10-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
-        $actualInterval = $actualPeriods[0]->getDateInterval();
-
-        $this->assertEquals(0, $actualInterval->y);
-        $this->assertEquals(0, $actualInterval->m);
-        $this->assertEquals(30, $actualInterval->d);
-        $this->assertEquals(23, $actualInterval->h);
-        $this->assertEquals(59, $actualInterval->i);
-        $this->assertEquals(59, $actualInterval->s);
-    }
-
-    public function testCompoundWhitelistOnDefaultYear() : void
-    {
-        $this->markTestIncomplete();
-
-        $clue1 = new Clue;
-        $clue1->setM(5);
-        $clue1->setD(10);
-        $clue1->type = Clue::IS_WHITELIST;
-
-        $this->setClues([$clue1]);
-
-        $actualPeriods = $this->sut->getPeriods();
-
-        $this->assertCount(1, $actualPeriods);
-
-        $this->assertEquals(new DateTime(date('Y') . '-05-10 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
-    }
-
-    public function testAfterDayInMonth() : void
-    {
-        // @fixme
-        $this->markTestIncomplete();
-        return;
-
-        $clue1 = new Clue;
-        $clue1->setY(2004);
-        $clue1->type = Clue::IS_WHITELIST;
-
-        $clue2 = new Clue;
-        $clue2->setM(2);
-        $clue2->setD(29);
-        $clue2->type = Clue::IS_BEFOREEQUALS;
-
-        $this->setClues([$clue1, $clue2]);
-
-        $actualPeriods = $this->sut->getPeriods();
-
-        $this->assertCount(1, $actualPeriods);
-
-        $this->assertEquals(new DateTime('2004-01-01 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
-        $actualInterval = $actualPeriods[0]->getDateInterval();
-
-        $this->assertEquals(0, $actualInterval->y);
-        $this->assertEquals(1, $actualInterval->m);
-        $this->assertEquals(28, $actualInterval->d);
-        $this->assertEquals(23, $actualInterval->h);
-        $this->assertEquals(59, $actualInterval->i);
-        $this->assertEquals(59, $actualInterval->s);
-    }
-
-    public function testCompoundUnits() : void
-    {
-        $this->markTestIncomplete();
-        return;
-
-        $clue1 = new Clue;
-        $clue1->type = Clue::IS_WHITELIST;
-        $clue1->setY(2007);
-        $clue1->setM(10);
-        $clue1->setD(30);
-
-        $clue2 = new Clue;
-        $clue2->type = Clue::IS_WHITELIST;
-        $clue2->setH(9);
-        $clue2->setI(37);
-        $clue2->setS(14);
-
-        $this->setClues([$clue1, $clue2]);
-
-        $periods = $this->sut->getPeriods();
-
-        $this->assertEquals(
-            [
-                new DatePeriod(new DateTime('2007-10-30 09:37:14', $this->tz), new DateInterval('PT0S'), 1),
-            ],
-            $periods
-        );
-    }
-
-    /**
-     * Visionary features
-     */
-
-    public function testWinterHolidayPicture() : void
-    {
-        $this->markTestIncomplete();
-        return;
-
-        $parser = new ClueParser();
-        // '2016-??-??T??-??-??'
-        $parser->addClue('2016');
-        // '????-??-??T(12,13,14,15,16,17,18)-??-??'
-        $parser->addClue('afternoon');
-        // '????-(01,02,03)-??T??-??-??'
-        $parser->addClue('<April');
-        // '????-02-04T??-??-??'
-        $parser->addClue('>February-04');
-        $parser->addClue('!2016-03-14');
-        $parser->addClue('Weekend'); // boo - needs extended calendar definition
-        $parser->addClue('Summer'); // boo - needs geo-awareness
-
-
-        $this->setClues($parser->getProcessedClues());
-        $this->assertCount(6, $this->sut->getClues());
-        $this->assertEquals(new DateTime('2016-02-05 00:00:00', $this->tz), $this->sut->getEarliest());
-        $this->assertEquals(new DateTime('2016-13-31 23:59:59', $this->tz), $this->sut->getLatest());
     }
 
     /**

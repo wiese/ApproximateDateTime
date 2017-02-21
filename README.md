@@ -32,8 +32,7 @@ simulatanously and will be prioritized accordingly.
 By default, if no year is explicitly *whitelist*ed, the current year will be used.
 
 ### Clue precedence
-Clues with higher precision (i.e. more detailed units set) overrule the one with lower precision.
-Within the same clue precision the following clue precedence is applied
+The following clue precedence is applied (higher beats lower)
 1. Blacklist
 2. Whitelist
   1. Plain whitelist data points — surely, multiple can be specified
@@ -41,9 +40,8 @@ Within the same clue precision the following clue precedence is applied
   3. After — if multiple specified, the latest is taken, i.e. the biggest time span
 
 #### Examples
-* whitelisting *1975*, *1976*, and *February* (the Februaries of both years) is unlike whitelisting *1975*, and *February 1976* (the whole of 1975 and the February of 1976)
+* whitelisting *1975*, *1976*, and *February* results in the Februaries of both years
 * whitelisting *1975* but blacklisting *February* results in the remaining 11 months of 1975
-* blacklisting *February* but whitelisting *February 14* however, also yields Valentine's day. **Does it?**
 
 ## Installation
 

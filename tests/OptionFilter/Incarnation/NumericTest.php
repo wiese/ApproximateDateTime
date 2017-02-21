@@ -89,6 +89,26 @@ class NumericTest extends ParentTest
 
     public function testBeforeAndAfter() : void
     {
-        $this->markTestIncomplete('no before and after tests, yet! methods on clues not mocked either...');
+        $this->sut->setUnit('m');
+
+        $this->mockClues(2, 7, [], []);
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData();
+        $start->setY(1995);
+        $range->setStart($start);
+        $end = new DateTimeData();
+        $end->setY(1995);
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $ranges = $this->sut->__invoke($ranges);
+
+        $this->assertCount(1, $ranges);
+        $this->assertEquals(1995, $ranges[0]->getStart()->getY());
+        $this->assertEquals(2, $ranges[0]->getStart()->getM());
+        $this->assertEquals(1995, $ranges[0]->getEnd()->getY());
+        $this->assertEquals(7, $ranges[0]->getEnd()->getM());
     }
 }

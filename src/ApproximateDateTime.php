@@ -199,15 +199,6 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     }
 
     /**
-     * {@inheritDoc}
-     * @see ApproximateDateTimeInterface::getLuckyShot()
-     */
-    public function getLuckyShot() : DateTimeInterface
-    {
-        return $this->getEarliest();
-    }
-
-    /**
      * Use all filters to calculate the ranges
      */
     protected function calculateBoundaries() : void
@@ -215,7 +206,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         $ranges = new Ranges();
 
         $filterFactory = new FilterFactory($this->manager);
-        foreach ($this->config->compoundUnits as $unit => $filter) {
+        foreach ($this->config->units as $unit => $filter) {
             $this->log->debug('+++ ' . $unit);
 
             $filter = $filterFactory->produce($filter);

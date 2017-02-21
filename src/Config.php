@@ -47,20 +47,14 @@ class Config
     /**
      * @var array
      */
-    public $compoundUnits = [
+    public $units = [
         'y' => 'Numeric',
         'm' => 'Numeric',
-        'y-m' => 'Compound',
         'd' => 'Day',
-        'm-d' => 'Compound',
-        'y-m-d' => 'Compound',
         'n' => 'Weekday',
         'h' => 'Numeric',
         'i' => 'Numeric',
-        'h-i' => 'Compound',
         's' => 'Numeric',
-        'i-s' => 'Compound',
-        'h-i-s' => 'Compound',
     ];
 
     public $logChannel = 'ApproximateDateTime';

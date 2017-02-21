@@ -51,11 +51,4 @@ interface ApproximateDateTimeInterface
      * @return bool
      */
     public function isPossible(DateTimeInterface $scrutinize) : bool;
-
-    /**
-     * Make an educated guess for a respresentative of all possible moments
-     *
-     * @return DateTimeInterface
-     */
-    public function getLuckyShot() : DateTimeInterface;
 }

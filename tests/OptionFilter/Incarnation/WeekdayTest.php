@@ -89,6 +89,24 @@ class WeekdayTest extends ParentTest
 
     public function testBeforeAndAfter() : void
     {
-        $this->markTestIncomplete('no before and after tests, yet!');
+        $this->mockClues(1, 5, [], []);
+
+        $ranges = new Ranges();
+        $range = new Range();
+        $start = new DateTimeData();
+        $start->setY(2017);
+        $start->setM(2);
+        $start->setD(3);
+        $range->setStart($start);
+        $end = new DateTimeData();
+        $end->setY(2017);
+        $end->setM(3);
+        $end->setD(4);
+        $range->setEnd($end);
+        $ranges->append($range);
+
+        $ranges = $this->sut->__invoke($ranges);
+
+        $this->assertCount(5, $ranges);
     }
 }

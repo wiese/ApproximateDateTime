@@ -126,8 +126,6 @@ class Day extends Base
      *
      * @todo Scientifically wrong in early years AD? http://php.net/manual/de/function.cal-days-in-month.php#41554
      *
-     * @todo redundantly in Compound::incrementDataVehicle(). mv into Base?
-     *
      * @param DateTimeData $data
      * @return int
      * @throws \UnexpectedValueException
