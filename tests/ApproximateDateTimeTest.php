@@ -666,6 +666,24 @@ class ApproximateDateTimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(59, $actualInterval->s);
     }
 
+    public function testCompoundWhitelistOnDefaultYear() : void
+    {
+        $this->markTestIncomplete();
+
+        $clue1 = new Clue;
+        $clue1->setM(5);
+        $clue1->setD(10);
+        $clue1->type = Clue::IS_WHITELIST;
+
+        $this->setClues([$clue1]);
+
+        $actualPeriods = $this->sut->getPeriods();
+
+        $this->assertCount(1, $actualPeriods);
+
+        $this->assertEquals(new DateTime(date('Y') . '-05-10 00:00:00', $this->tz), $actualPeriods[0]->getStartDate());
+    }
+
     public function testAfterDayInMonth() : void
     {
         // @fixme
