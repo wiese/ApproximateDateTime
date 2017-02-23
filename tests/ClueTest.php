@@ -38,6 +38,19 @@ class ClueTest extends TestCase
     public function testProperties() : void
     {
         $sut = new Clue();
-        $sut->type = Clue::IS_AFTEREQUALS;
+
+        $this->assertObjectHasAttribute('type', $sut);
+        $this->assertObjectHasAttribute('y', $sut);
+        $this->assertObjectHasAttribute('m', $sut);
+        $this->assertObjectHasAttribute('d', $sut);
+        $this->assertObjectHasAttribute('h', $sut);
+        $this->assertObjectHasAttribute('i', $sut);
+        $this->assertObjectHasAttribute('s', $sut);
+        $this->assertObjectHasAttribute('n', $sut);
+
+        $this->assertInternalType('int', Clue::IS_WHITELIST);
+        $this->assertInternalType('int', Clue::IS_BLACKLIST);
+        $this->assertInternalType('int', Clue::IS_BEFOREEQUALS);
+        $this->assertInternalType('int', Clue::IS_AFTEREQUALS);
     }
 }
