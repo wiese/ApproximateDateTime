@@ -11,7 +11,7 @@ use LogicException;
  *
  * @package wiese\ApproximateDateTime\Data
  */
-abstract class Vehicle
+abstract class Vehicle implements ComparableInterface
 {
 
     /**
@@ -216,15 +216,12 @@ abstract class Vehicle
     }
 
     /**
-     * Check how another instance compares to this one
+     * {@inheritDoc}
+     * @see ComparableInterface::compareTo()
      *
-     * @tutorial Implements Comparable interface
-     *
-     * @param self $other
-     * @return int -1|0|1
      * @throws LogicException
      */
-    public function compareTo(self $other) : int
+    public function compareTo(ComparableInterface $other) : int
     {
         foreach (static::$options as $unit) {
             $here = $this->get($unit);
@@ -241,34 +238,28 @@ abstract class Vehicle
     }
 
     /**
-     * Check if another instance is considered bigger
-     *
-     * @param self $other
-     * @return bool
+     * {@inheritDoc}
+     * @see ComparableInterface::isBigger()
      */
-    public function isBigger(self $other) : bool
+    public function isBigger(ComparableInterface $other) : bool
     {
         return $this->compareTo($other) === 1;
     }
 
     /**
-     * Check if another instance is considered smaller
-     *
-     * @param self $other
-     * @return bool
+     * {@inheritDoc}
+     * @see ComparableInterface::isSmaller()
      */
-    public function isSmaller(self $other) : bool
+    public function isSmaller(ComparableInterface $other) : bool
     {
         return $this->compareTo($other) === -1;
     }
 
     /**
-     * Check if another instance is considered equal
-     *
-     * @param self $other
-     * @return bool
+     * {@inheritDoc}
+     * @see ComparableInterface::equals()
      */
-    public function equals(self $other) : bool
+    public function equals(ComparableInterface $other) : bool
     {
         return $this->compareTo($other) === 0;
     }
