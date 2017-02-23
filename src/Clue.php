@@ -25,13 +25,6 @@ class Clue extends Vehicle
     public $type = self::IS_WHITELIST;
 
     /**
-     * Value as provided by user (ClueParser)
-     *
-     * @var mixed
-     */
-    public $rawValue;
-
-    /**
      * Numeric representation of a weekday, Monday through Sunday
      *
      * @example 1 | 7

@@ -38,7 +38,6 @@ class ClueTest extends TestCase
     public function testProperties() : void
     {
         $sut = new Clue();
-        $sut->rawValue = 'not implemented';
         $sut->type = Clue::IS_AFTEREQUALS;
     }
 }
