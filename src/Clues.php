@@ -8,6 +8,7 @@ use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\DateTimeFormat;
 use ArrayObject;
 use DateTime;
+use UnexpectedValueException;
 
 /**
  * @todo implement ArrayAccess interface instead
@@ -199,24 +200,31 @@ class Clues extends ArrayObject
         array_walk($this->whitelists, [$this, 'listSanitizingCallback']);
         array_walk($this->blacklists, [$this, 'listSanitizingCallback']);
 
-        if (empty($this->whitelists['y']) && empty($this->whitelists['y-m']) && empty($this->whitelists['y-m-d'])) {
-            if (!empty($this->blacklists['y'])) {
-                foreach ($this->blacklists['y'] as $blacklistClue) {
-                    if ($blacklistClue->getY() === $this->defaultYear) {
-                        throw new \RuntimeException(
-                            'Tried applying the default year, but it is blacklisted. Please, whitelist a year.'
-                        );
-                    }
-                }
-            }
-
-            $yClue = new Clue();
-            $yClue->setY($this->defaultYear);
-
-            $this->whitelists['y'][] = $yClue;
-        }
+        $this->guaranteeDefaultClue();
 
         $this->cachedFilterLists = true;
+    }
+
+    protected function guaranteeDefaultClue() : void
+    {
+        if (!empty($this->whitelists['y']) || !empty($this->whitelists['y-m']) || !empty($this->whitelists['y-m-d'])) {
+            return;
+        }
+
+        if (!empty($this->blacklists['y'])) {
+            foreach ($this->blacklists['y'] as $blacklistClue) {
+                if ($blacklistClue->getY() === $this->defaultYear) {
+                    throw new UnexpectedValueException(
+                        'Tried applying the default year, but it is blacklisted. Please, whitelist a year.'
+                    );
+                }
+            }
+        }
+
+        $yClue = new Clue();
+        $yClue->setY($this->defaultYear);
+
+        $this->whitelists['y'][] = $yClue;
     }
 
     protected function getSmallerClueValue(Clue $existing = null, Clue $new) : Clue
