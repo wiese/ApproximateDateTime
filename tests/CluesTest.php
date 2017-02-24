@@ -47,19 +47,19 @@ class CluesTest extends TestCase
 
     public function testBlackAndWhitelist() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(1954);
         $this->sut->append($clue1);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(7);
         $this->sut->append($clue2);
 
-        $clue3 = new Clue;
+        $clue3 = new Clue();
         $clue3->setD(24);
         $this->sut->append($clue3);
 
-        $clue4 = new Clue;
+        $clue4 = new Clue();
         $clue4->setD(26);
         $this->sut->append($clue4);
 
@@ -76,19 +76,19 @@ class CluesTest extends TestCase
         $this->assertEquals([], $this->sut->getWhitelist('s'));
         $this->assertEquals([], $this->sut->getBlacklist('s'));
 
-        $clue5 = new Clue;
+        $clue5 = new Clue();
         $clue5->setH(9);
         $this->sut->append($clue5);
 
-        $clue6 = new Clue;
+        $clue6 = new Clue();
         $clue6->setI(2);
         $this->sut->append($clue6);
 
-        $clue7 = new Clue;
+        $clue7 = new Clue();
         $clue7->setI(1); // i values in "wrong" order
         $this->sut->append($clue7);
 
-        $clue8 = new Clue;
+        $clue8 = new Clue();
         $clue8->setS(33);
         $this->sut->append($clue8);
 
@@ -105,9 +105,8 @@ class CluesTest extends TestCase
         $this->assertEquals([$clue8], $this->sut->getWhitelist('s'));
         $this->assertEquals([], $this->sut->getBlacklist('s'));
 
-        $clue9 = new Clue;
+        $clue9 = new Clue(Clue::IS_BLACKLIST);
         $clue9->setI(1);
-        $clue9->type = Clue::IS_BLACKLIST;
         $this->sut->append($clue9);
 
         $this->assertEquals([$clue1], $this->sut->getWhitelist('y'));

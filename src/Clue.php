@@ -6,6 +6,7 @@ namespace wiese\ApproximateDateTime;
 use wiese\ApproximateDateTime\Data\Type\ClueData as Data;
 use wiese\ApproximateDateTime\Data\DataCarrier;
 use wiese\ApproximateDateTime\Data\DateTimeDataAccessors;
+use UnexpectedValueException;
 
 class Clue
 {
@@ -26,17 +27,34 @@ class Clue
     public const IS_AFTEREQUALS = 8;
 
     /**
-     * The type of decription desired (inclusive, exclusive, comparison, ...)
+     * The type of description desired (inclusive, exclusive, comparison, ...)
      *
      * @tutorial Defaults to whitelist - it's most likely, hence convenience
      *
      * @var int
      */
-    public $type = self::IS_WHITELIST;
+    protected $type = self::IS_WHITELIST;
 
-    public function __construct()
+    /**
+     * @param int $type The type of description desired (inclusive, exclusive, comparison, ...)
+     */
+    public function __construct(int $type = self::IS_WHITELIST)
     {
+        if (!in_array($type, [self::IS_WHITELIST, self::IS_BLACKLIST, self::IS_BEFOREEQUALS, self::IS_AFTEREQUALS])) {
+            throw new UnexpectedValueException('Bad Clue type given: ' . $type);
+        }
+
+        $this->type = $type;
+
         $this->data = new Data();
+    }
+
+    /**
+     * @return int
+     */
+    public function getType() : int
+    {
+        return $this->type;
     }
 
     /**

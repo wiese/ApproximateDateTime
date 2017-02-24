@@ -59,9 +59,8 @@ class ApproximateDateTimeTest extends TestCase
 
         $clues->setDefaultYear(77);
 
-        $clue = new Clue;
+        $clue = new Clue(Clue::IS_BLACKLIST);
         $clue->setY(77);
-        $clue->type = Clue::IS_BLACKLIST;
         $clues->append($clue);
 
         $this->sut->setClues($clues);
@@ -77,7 +76,7 @@ class ApproximateDateTimeTest extends TestCase
     public function testOneLeapYear() : void
     {
         // '2016-??-??T??-??-??'
-        $clue = new Clue;
+        $clue = new Clue();
         $clue->setY(2016);
 
         $this->setClues([$clue]);
@@ -107,10 +106,10 @@ class ApproximateDateTimeTest extends TestCase
     {
         // '1985-??-??T??-??-??'
         // '1986-??-??T??-??-??'
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(1985);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setY(1986);
 
         $this->setClues([$clue1, $clue2]);
@@ -138,13 +137,13 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testSimpleRealworldExample() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2001);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(3);
 
-        $clue3 = new Clue;
+        $clue3 = new Clue();
         $clue3->setM(4);
 
         $this->setClues([$clue1, $clue2, $clue3]);
@@ -166,16 +165,16 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testRealworldExample() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2010);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(3);
 
-        $clue3 = new Clue;
+        $clue3 = new Clue();
         $clue3->setD(28);
 
-        $clue4 = new Clue;
+        $clue4 = new Clue();
         $clue4->setD(30);
 
         $this->setClues([$clue1, $clue2, $clue3, $clue4]);
@@ -194,19 +193,19 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testRealworldExampleConsecutiveMonth() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2010);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(3);
 
-        $clue3 = new Clue;
+        $clue3 = new Clue();
         $clue3->setM(4);
 
-        $clue4 = new Clue;
+        $clue4 = new Clue();
         $clue4->setD(28);
 
-        $clue5 = new Clue;
+        $clue5 = new Clue();
         $clue5->setD(30);
 
         $this->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]);
@@ -225,22 +224,22 @@ class ApproximateDateTimeTest extends TestCase
     public function testNotSoApproximate() : void
     {
         // '1985-01-23T07-11-32'
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(1985);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(1);
 
-        $clue3 = new Clue;
+        $clue3 = new Clue();
         $clue3->setD(23);
 
-        $clue4 = new Clue;
+        $clue4 = new Clue();
         $clue4->setH(7);
 
-        $clue5 = new Clue;
+        $clue5 = new Clue();
         $clue5->setI(11);
 
-        $clue6 = new Clue;
+        $clue6 = new Clue();
         $clue6->setS(32);
 
         $this->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6]);
@@ -258,25 +257,25 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testMiniExample() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2007);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(8);
 
-        $clue3 = new Clue;
+        $clue3 = new Clue();
         $clue3->setD(15);
 
-        $clue4 = new Clue;
+        $clue4 = new Clue();
         $clue4->setH(9);
 
-        $clue5 = new Clue;
+        $clue5 = new Clue();
         $clue5->setI(36);
 
-        $clue6 = new Clue;
+        $clue6 = new Clue();
         $clue6->setI(34);
 
-        $clue7 = new Clue;
+        $clue7 = new Clue();
         $clue7->setI(39);
 
         $this->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
@@ -293,7 +292,7 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testMiniExampleWithDefaultYear() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setM(7);
 
         $this->setClues([$clue1]);
@@ -313,14 +312,13 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testBlacklist() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2012);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(7);
 
-        $clue3 = new Clue;
-        $clue3->type = Clue::IS_BLACKLIST;
+        $clue3 = new Clue(Clue::IS_BLACKLIST);
         $clue3->setD(1);
 
         $this->setClues([$clue1, $clue2, $clue3]);
@@ -333,28 +331,25 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testComplexBlacklist() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2018);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(7);
 
-        $clue3 = new Clue;
+        $clue3 = new Clue();
         $clue3->setM(8);
 
-        $clue4 = new Clue;
+        $clue4 = new Clue();
         $clue4->setM(9);
 
-        $clue5 = new Clue;
-        $clue5->type = Clue::IS_BLACKLIST;
+        $clue5 = new Clue(Clue::IS_BLACKLIST);
         $clue5->setM(8);
 
-        $clue6 = new Clue;
-        $clue6->type = Clue::IS_BLACKLIST;
+        $clue6 = new Clue(Clue::IS_BLACKLIST);
         $clue6->setD(1);
 
-        $clue7 = new Clue;
-        $clue7->type = Clue::IS_BLACKLIST;
+        $clue7 = new Clue(Clue::IS_BLACKLIST);
         $clue7->setD(30);
 
         $this->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
@@ -369,17 +364,16 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testWeekday() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2017);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(10);
 
-        $clue3 = new Clue;
-        $clue3->type = Clue::IS_BLACKLIST;
+        $clue3 = new Clue(Clue::IS_BLACKLIST);
         $clue3->setD(14);
 
-        $clue4 = new Clue;
+        $clue4 = new Clue();
         $clue4->setN(6);
 
         $this->setClues([$clue1, $clue2, $clue3, $clue4]);
@@ -394,19 +388,16 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testWorkday() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2001);
 
-        $clue2 = new Clue;
-        $clue2->type = Clue::IS_BLACKLIST;
+        $clue2 = new Clue(Clue::IS_BLACKLIST);
         $clue2->setM(10);
 
-        $clue3 = new Clue;
-        $clue3->type = Clue::IS_BLACKLIST;
+        $clue3 = new Clue(Clue::IS_BLACKLIST);
         $clue3->setN(6);
 
-        $clue4 = new Clue;
-        $clue4->type = Clue::IS_BLACKLIST;
+        $clue4 = new Clue(Clue::IS_BLACKLIST);
         $clue4->setN(7);
 
         $this->setClues([$clue1, $clue2, $clue3, $clue4]);
@@ -419,19 +410,19 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testTrickyWeekdays() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2001);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(3);
 
-        $clue3 = new Clue;
+        $clue3 = new Clue();
         $clue3->setN(5);
 
-        $clue4 = new Clue;
+        $clue4 = new Clue();
         $clue4->setN(6);
 
-        $clue5 = new Clue;
+        $clue5 = new Clue();
         $clue5->setN(7);
 
         $this->setClues([$clue1, $clue2, $clue3, $clue4, $clue5]);
@@ -468,12 +459,12 @@ class ApproximateDateTimeTest extends TestCase
     {
         $clues = [];
 
-        $clue = new Clue;
+        $clue = new Clue();
         $clue->setY(2016);
         $clues[] = $clue;
 
         foreach (range(1, 12) as $month) {
-            $clue = new Clue;
+            $clue = new Clue();
             $clue->setM($month);
             $clues[] = $clue;
         }
@@ -484,7 +475,7 @@ class ApproximateDateTimeTest extends TestCase
         $this->assertCount(1, $actualPeriods, 'after month whitelist');
 
         foreach (range(1, 31) as $day) {
-            $clue = new Clue;
+            $clue = new Clue();
             $clue->setD($day);
             $clues[] = $clue;
         }
@@ -494,7 +485,7 @@ class ApproximateDateTimeTest extends TestCase
         $this->assertCount(1, $actualPeriods, 'after day whitelist');
 
         foreach (range(1, 7) as $weekday) {
-            $clue = new Clue;
+            $clue = new Clue();
             $clue->setN($weekday);
             $clues[] = $clue;
         }
@@ -517,16 +508,14 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testBeforeDay() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(1954);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue(Clue::IS_BEFOREEQUALS);
         $clue2->setM(5);
-        $clue2->type = Clue::IS_BEFOREEQUALS;
 
-        $clue3 = new Clue;
+        $clue3 = new Clue(Clue::IS_BEFOREEQUALS);
         $clue3->setD(10);
-        $clue3->type = Clue::IS_BEFOREEQUALS;
 
         $this->setClues([$clue1, $clue2, $clue3]);
 
@@ -572,33 +561,26 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testComplexBeforeAndAfter() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(1960);
-        $clue1->type = Clue::IS_WHITELIST;
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setM(2);
-        $clue2->type = Clue::IS_WHITELIST;
 
-        $clue3 = new Clue;
+        $clue3 = new Clue();
         $clue3->setM(3);
-        $clue3->type = Clue::IS_WHITELIST;
 
-        $clue4 = new Clue;
+        $clue4 = new Clue(Clue::IS_AFTEREQUALS);
         $clue4->setD(28);
-        $clue4->type = Clue::IS_AFTEREQUALS;
 
-        $clue5 = new Clue;
+        $clue5 = new Clue(Clue::IS_BEFOREEQUALS);
         $clue5->setD(3);
-        $clue5->type = Clue::IS_BEFOREEQUALS;
 
-        $clue6 = new Clue;
+        $clue6 = new Clue(Clue::IS_AFTEREQUALS);
         $clue6->setH(8);
-        $clue6->type = Clue::IS_AFTEREQUALS;
 
-        $clue7 = new Clue;
+        $clue7 = new Clue(Clue::IS_BEFOREEQUALS);
         $clue7->setH(18);
-        $clue7->type = Clue::IS_BEFOREEQUALS;
 
         $this->setClues([$clue1, $clue2, $clue3, $clue4, $clue5, $clue6, $clue7]);
 
@@ -637,10 +619,10 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testPayday() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2007);
 
-        $clue2 = new Clue;
+        $clue2 = new Clue();
         $clue2->setD(15);
 
         $this->setClues([$clue1, $clue2]);
@@ -649,7 +631,7 @@ class ApproximateDateTimeTest extends TestCase
 
     public function testMultipleClueValuesNotAllowed() : void
     {
-        $clue1 = new Clue;
+        $clue1 = new Clue();
         $clue1->setY(2007);
         $clue1->setD(27);
 

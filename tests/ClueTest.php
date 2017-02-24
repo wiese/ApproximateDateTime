@@ -8,6 +8,30 @@ use PHPUnit\Framework\TestCase;
 
 class ClueTest extends TestCase
 {
+
+    public function testConstruct() : void
+    {
+        $sut = new Clue(Clue::IS_WHITELIST);
+        $this->assertEquals(Clue::IS_WHITELIST, $sut->getType());
+
+        $sut = new Clue(Clue::IS_BLACKLIST);
+        $this->assertEquals(Clue::IS_BLACKLIST, $sut->getType());
+
+        $sut = new Clue(Clue::IS_BEFOREEQUALS);
+        $this->assertEquals(Clue::IS_BEFOREEQUALS, $sut->getType());
+
+        $sut = new Clue(Clue::IS_AFTEREQUALS);
+        $this->assertEquals(Clue::IS_AFTEREQUALS, $sut->getType());
+    }
+
+    public function testBadConstruct() : void
+    {
+        $this->expectException('UnexpectedValueException');
+        $this->expectExceptionMessage('Bad Clue type given: 11');
+
+        new Clue(11);
+    }
+
     public function testProperties() : void
     {
         $this->assertInternalType('int', Clue::IS_WHITELIST);

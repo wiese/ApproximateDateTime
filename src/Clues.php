@@ -170,7 +170,7 @@ class Clues extends ArrayObject
 
             $typeId = $this->getTypeId($clue);
 
-            switch ($clue->type) {
+            switch ($clue->getType()) {
                 case Clue::IS_WHITELIST:
                     if (!isset($this->whitelists[$typeId]) || !is_array($this->whitelists[$typeId])) {
                         $this->whitelists[$typeId] = [];
