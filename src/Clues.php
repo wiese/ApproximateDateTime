@@ -159,13 +159,14 @@ class Clues extends ArrayObject
 
         $this->whitelists = $this->blacklists = $this->before = $this->after = [];
 
+        $validator = new ClueValidator();
+
         foreach ($this as $clue) {
             /**
              * @var Clue $clue
              */
 
-            // @todo validate value
-            // - value combination has to be logical (e.g. not y & s, not n & something else)
+            $validator->validate($clue);
 
             $typeId = $this->getTypeId($clue);
 

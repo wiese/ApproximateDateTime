@@ -647,6 +647,20 @@ class ApproximateDateTimeTest extends TestCase
         $this->assertCount(12, $this->sut->getPeriods());
     }
 
+    public function testMultipleClueValuesNotAllowed() : void
+    {
+        $clue1 = new Clue;
+        $clue1->setY(2007);
+        $clue1->setD(27);
+
+        $this->setClues([$clue1]);
+
+        $this->expectException('UnexpectedValueException');
+        $this->expectExceptionMessage('Clues can only carry on piece of information. Given: y, d');
+
+        $this->sut->getPeriods();
+    }
+
     /**
      * Utility function to set Clues on ApproximateDateTime
      *

@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use DateInterval;
-use DateTime;
+use DatePeriod;
 use DateTimeInterface;
+use RuntimeException;
 
 interface ApproximateDateTimeInterface
 {
@@ -26,12 +26,16 @@ interface ApproximateDateTimeInterface
     /**
      * Get the first valid moment described by the clues
      *
+     * @throws RuntimeException
+     *
      * @return DateTimeInterface
      */
     public function getEarliest() : ? DateTimeInterface;
 
     /**
      * Get the last valid moment described by the clues
+     *
+     * @throws RuntimeException
      *
      * @return DateTimeInterface
      */
@@ -40,12 +44,16 @@ interface ApproximateDateTimeInterface
     /**
      * Get all valid periods, i.e. start & interval, matching the clues
      *
+     * @throws RuntimeException
+     *
      * @return DatePeriod[]
      */
     public function getPeriods() : array;
 
     /**
      * Check if the given DateTime is within the allowable range described
+     *
+     * @throws RuntimeException
      *
      * @param DateTimeInterface $scrutinize
      * @return bool
