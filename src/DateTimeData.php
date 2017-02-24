@@ -26,7 +26,7 @@ class DateTimeData
      */
     protected $data;
 
-    const TO_STRING_FORMAT = '%d-%02d-%02dT%02d:%02d:%02d';
+    protected const TO_STRING_FORMAT = '%d-%02d-%02dT%02d:%02d:%02d';
 
     /**
      * Indicator if the day (d) is the last one in the month (m) & year (y) - to avoid recomputation

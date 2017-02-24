@@ -12,11 +12,11 @@ namespace wiese\ApproximateDateTime;
  */
 interface DateTimeFormat
 {
-    const YEAR = 'Y';
-    const MONTH = 'n';
-    const DAY = 'j';
-    const HOUR = 'G';
-    const MINUTE = 'i';
-    const SECOND = 's';
-    const WEEKDAY = 'N';
+    public const YEAR = 'Y';
+    public const MONTH = 'n';
+    public const DAY = 'j';
+    public const HOUR = 'G';
+    public const MINUTE = 'i';
+    public const SECOND = 's';
+    public const WEEKDAY = 'N';
 }
