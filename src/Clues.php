@@ -197,8 +197,12 @@ class Clues extends ArrayObject
             }
         }
 
-        array_walk($this->whitelists, [$this, 'listSanitizingCallback']);
-        array_walk($this->blacklists, [$this, 'listSanitizingCallback']);
+        $sanitizeList = function (array & $arrayValue) {
+            array_unique($arrayValue, SORT_REGULAR);
+            sort($arrayValue); // list in order of values
+        };
+        array_walk($this->whitelists, $sanitizeList);
+        array_walk($this->blacklists, $sanitizeList);
 
         $this->guaranteeDefaultClue();
 
@@ -257,16 +261,5 @@ class Clues extends ArrayObject
         }
 
         return $new->isBigger($existing) ? $new : $existing;
-    }
-
-    /**
-     * Sanitize the (cache) lists of clue information - avoid redundancy, ...
-     *
-     * @param $arrayValue
-     */
-    protected function listSanitizingCallback(& $arrayValue)
-    {
-        array_unique($arrayValue, SORT_REGULAR);
-        sort($arrayValue); // list in order of values
     }
 }
