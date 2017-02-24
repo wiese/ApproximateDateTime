@@ -245,6 +245,13 @@ class Clues extends ArrayObject
         $this->whitelists['y'][] = $yClue;
     }
 
+    /**
+     * Get the clue with the smaller value
+     *
+     * @param Clue|null $existing
+     * @param Clue $new
+     * @return Clue
+     */
     protected function getSmallerClueValue(Clue $existing = null, Clue $new) : Clue
     {
         if (is_null($existing)) {
@@ -254,6 +261,13 @@ class Clues extends ArrayObject
         return $new->isSmaller($existing) ? $new : $existing;
     }
 
+    /**
+     * Get the clue with the bigger value
+     *
+     * @param Clue|null $existing
+     * @param Clue $new
+     * @return Clue
+     */
     protected function getBiggerClueValue(Clue $existing = null, Clue $new) : Clue
     {
         if (is_null($existing)) {
