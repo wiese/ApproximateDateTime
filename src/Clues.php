@@ -167,7 +167,7 @@ class Clues extends ArrayObject
             // @todo validate value
             // - value combination has to be logical (e.g. not y & s, not n & something else)
 
-            $typeId = implode('-', $clue->getSetUnits());
+            $typeId = $this->getTypeId($clue);
 
             switch ($clue->type) {
                 case Clue::IS_WHITELIST:
@@ -203,6 +203,17 @@ class Clues extends ArrayObject
         $this->guaranteeDefaultClue();
 
         $this->cachedFilterLists = true;
+    }
+
+    /**
+     * Build the identifier describing the units a clue hints on
+     *
+     * @param Clue $clue
+     * @return string
+     */
+    protected function getTypeId(Clue $clue) : string
+    {
+        return implode('-', $clue->getSetUnits());
     }
 
     protected function guaranteeDefaultClue() : void
