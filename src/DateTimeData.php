@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use wiese\ApproximateDateTime\Data\Vehicle;
+use wiese\ApproximateDateTime\Data\DataCarrier;
+use wiese\ApproximateDateTime\Data\DateTimeDataAccessors;
+use wiese\ApproximateDateTime\Data\Type\DateTimeData as Data;
 use wiese\ApproximateDateTime\DateTimeFormat;
 use DateTime;
 use DateTimeInterface;
@@ -11,21 +13,34 @@ use DateTimeZone;
 use LogicException;
 
 /**
- * A data vehicle for partially known information about a DateTime.
+ * Partially known information about a DateTime.
  * Typically information gets added from greater to smaller unit, adding precision.
  */
-class DateTimeData extends Vehicle
+class DateTimeData
 {
+    use DataCarrier;
+    use DateTimeDataAccessors;
+
+    /**
+     * @var Data
+     */
+    protected $data;
+
     const TO_STRING_FORMAT = '%d-%02d-%02dT%02d:%02d:%02d';
 
     /**
      * Indicator if the day (d) is the last one in the month (m) & year (y) - to avoid recomputation
      *
-     * @todo Can we lose this?
+     * @todo How can we lose this?
      *
      * @var bool
      */
     public $dayIsLastInMonth = false;
+
+    public function __construct()
+    {
+        $this->data = new Data();
+    }
 
     /**
      * Convert current information into a DateTime object.
@@ -36,17 +51,17 @@ class DateTimeData extends Vehicle
      */
     public function toDateTime(DateTimeZone $timezone) : DateTimeInterface
     {
-        if (!is_int($this->y) || !is_int($this->m) || !is_int($this->d)) {
+        if (!is_int($this->data->y) || !is_int($this->data->m) || !is_int($this->data->d)) {
             throw new LogicException('DateTime can not be created from incompletely populated DateTimeData.');
         }
 
         $datetime = new DateTime();
         $datetime->setTimezone($timezone);
-        $datetime->setDate($this->y, $this->m, $this->d);
+        $datetime->setDate($this->data->y, $this->data->m, $this->data->d);
         $datetime->setTime(0, 0, 0);
 
-        if (is_int($this->h) && is_int($this->i) && is_int($this->s)) {
-            $datetime->setTime($this->h, $this->i, $this->s);
+        if (is_int($this->data->h) && is_int($this->data->i) && is_int($this->data->s)) {
+            $datetime->setTime($this->data->h, $this->data->i, $this->data->s);
         }
 
         return $datetime;
@@ -61,12 +76,12 @@ class DateTimeData extends Vehicle
     {
         return sprintf(
             self::TO_STRING_FORMAT,
-            $this->y,
-            $this->m,
-            $this->d,
-            $this->h,
-            $this->i,
-            $this->s
+            $this->data->y,
+            $this->data->m,
+            $this->data->d,
+            $this->data->h,
+            $this->data->i,
+            $this->data->s
         );
     }
 
@@ -78,14 +93,11 @@ class DateTimeData extends Vehicle
      */
     public function merge(self $other) : self
     {
-        $properties = get_object_vars($other);
-        foreach ($properties as $property => $value) {
-            if ($property === 'dayIsLastInMonth') {
-                continue;
-            }
-
+        $units = $other->getUnits();
+        foreach ($units as $unit) {
+            $value = $other->get($unit);
             if (!is_null($value)) {
-                $this->{$property} = $value;
+                $this->data->{$unit} = $value;
             }
         }
 
@@ -102,9 +114,9 @@ class DateTimeData extends Vehicle
      */
     public function setDate(int $year, int $month, int $day) : self
     {
-        $this->y = $year;
-        $this->m = $month;
-        $this->d = $day;
+        $this->data->y = $year;
+        $this->data->m = $month;
+        $this->data->d = $day;
 
         return $this;
     }
@@ -119,9 +131,9 @@ class DateTimeData extends Vehicle
      */
     public function setTime(int $hour, int $minute, int $second) : self
     {
-        $this->h = $hour;
-        $this->i = $minute;
-        $this->s = $second;
+        $this->data->h = $hour;
+        $this->data->i = $minute;
+        $this->data->s = $second;
 
         return $this;
     }
@@ -136,12 +148,12 @@ class DateTimeData extends Vehicle
     {
         $instance = new self;
 
-        $instance->y = (int) $dateTime->format(DateTimeFormat::YEAR);
-        $instance->m = (int) $dateTime->format(DateTimeFormat::MONTH);
-        $instance->d = (int) $dateTime->format(DateTimeFormat::DAY);
-        $instance->h = (int) $dateTime->format(DateTimeFormat::HOUR);
-        $instance->i = (int) $dateTime->format(DateTimeFormat::MINUTE);
-        $instance->s = (int) $dateTime->format(DateTimeFormat::SECOND);
+        $instance->data->y = (int) $dateTime->format(DateTimeFormat::YEAR);
+        $instance->data->m = (int) $dateTime->format(DateTimeFormat::MONTH);
+        $instance->data->d = (int) $dateTime->format(DateTimeFormat::DAY);
+        $instance->data->h = (int) $dateTime->format(DateTimeFormat::HOUR);
+        $instance->data->i = (int) $dateTime->format(DateTimeFormat::MINUTE);
+        $instance->data->s = (int) $dateTime->format(DateTimeFormat::SECOND);
 
         return $instance;
     }
@@ -153,9 +165,10 @@ class DateTimeData extends Vehicle
      */
     public function getHighestUnit() : ? string
     {
+        $units = $this->getUnits();
         $targetUnit = null;
-        foreach (static::$options as $unit) {
-            if (is_null($this->{$unit})) {
+        foreach ($units as $unit) {
+            if (is_null($this->data->{$unit})) {
                 break;
             }
             $targetUnit = $unit;

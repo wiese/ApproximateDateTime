@@ -3,10 +3,20 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use wiese\ApproximateDateTime\Data\Vehicle;
+use wiese\ApproximateDateTime\Data\Type\ClueData as Data;
+use wiese\ApproximateDateTime\Data\DataCarrier;
+use wiese\ApproximateDateTime\Data\DateTimeDataAccessors;
 
-class Clue extends Vehicle
+class Clue
 {
+    use DataCarrier;
+    use DateTimeDataAccessors;
+
+    /**
+     * @var Data
+     */
+    protected $data;
+
     /**
      * Options describing the effect of the clue (in $type)
      */
@@ -24,23 +34,17 @@ class Clue extends Vehicle
      */
     public $type = self::IS_WHITELIST;
 
-    /**
-     * Numeric representation of a weekday, Monday through Sunday
-     *
-     * @example 1 | 7
-     *
-     * @var int|null
-     */
-    protected $n;
-
-    protected static $options = ['y', 'm', 'd', 'n', 'h', 'i', 's'];
+    public function __construct()
+    {
+        $this->data = new Data();
+    }
 
     /**
      * @return int|null
      */
     public function getN() : ? int
     {
-        return $this->n;
+        return $this->data->n;
     }
 
     /**
@@ -50,6 +54,25 @@ class Clue extends Vehicle
      */
     public function setN(int $n = null) : void
     {
-        $this->n = $n;
+        $this->data->n = $n;
+    }
+
+    /**
+     * Get the units with non-null values
+     *
+     * @return array
+     */
+    public function getSetUnits() : array
+    {
+        $units = $this->getUnits();
+
+        $set = [];
+        foreach ($units as $unit) {
+            if (!is_null($this->data->{$unit})) {
+                $set[] = $unit;
+            }
+        }
+
+        return $set;
     }
 }
