@@ -216,6 +216,9 @@ class Clues extends ArrayObject
         return implode('-', $clue->getSetUnits());
     }
 
+    /**
+     * Make sure the default year is used in the absence of other clues
+     */
     protected function guaranteeDefaultClue() : void
     {
         if (!empty($this->whitelists['y']) || !empty($this->whitelists['y-m']) || !empty($this->whitelists['y-m-d'])) {
