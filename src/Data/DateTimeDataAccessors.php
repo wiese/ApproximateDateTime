@@ -74,7 +74,6 @@ trait DateTimeDataAccessors
      * Set the representation of an hour
      *
      * @param int|null $h The hour, e.g. 23
-     * @return self
      */
     public function setH(int $h = null) : void
     {
