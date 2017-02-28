@@ -10,7 +10,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 
-class ApproximateDateTime implements ApproximateDateTimeInterface
+class ApproximateDateTime
 {
 
     /**
@@ -85,9 +85,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * @param DateTimeZone $timezone
-     * @return ApproximateDateTimeInterface
+     * @return self
      */
-    public function setTimezone(DateTimeZone $timezone) : ApproximateDateTimeInterface
+    public function setTimezone(DateTimeZone $timezone) : self
     {
         $this->timezone = $timezone;
 
@@ -104,9 +104,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
 
     /**
      * @param int $calendar
-     * @return ApproximateDateTimeInterface
+     * @return self
      */
-    public function setCalendar(int $calendar) : ApproximateDateTimeInterface
+    public function setCalendar(int $calendar) : self
     {
         $this->calendar = $calendar;
 
@@ -117,9 +117,9 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
      * Set the default year used when no respective clue given
      *
      * @param int $year
-     * @return ApproximateDateTimeInterface
+     * @return self
      */
-    public function setDefaultYear(int $year) : ApproximateDateTimeInterface
+    public function setDefaultYear(int $year) : self
     {
         $this->clues->setDefaultYear($year);
 
@@ -127,48 +127,72 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     }
 
     /**
-     * Set the clues to digest
+     * Set the clues to describe the date and time
      *
      * @param Clues $clues
-     * @return ApproximateDateTimeInterface
+     * @return self
      */
-    public function setClues(Clues $clues) : ApproximateDateTimeInterface
+    public function setClues(Clues $clues) : self
     {
         $this->clues = $clues;
 
         return $this;
     }
 
+    /**
+     * @return Clues
+     */
     public function getClues() : Clues
     {
         return $this->clues;
     }
 
     /**
-     * {@inheritDoc}
-     * @see ApproximateDateTimeInterface::getEarliest()
+     * Get the first valid moment described by the clues
+     *
+     * @throws RuntimeException
+     *
+     * @return DateTimeInterface
      */
     public function getEarliest() : ? DateTimeInterface
     {
         $this->calculateBoundaries();
 
-        return $this->ranges[0]->getStart()->toDateTime($this->timezone);
+        if (!$this->ranges) {
+            return null;
+        }
+
+        $earliest = $this->ranges[0]->getStart()->toDateTime($this->timezone);
+
+        return DateTimeImmutable::createFromMutable($earliest);
     }
 
     /**
-     * {@inheritDoc}
-     * @see ApproximateDateTimeInterface::getLatest()
+     * Get the last valid moment described by the clues
+     *
+     * @throws RuntimeException
+     *
+     * @return DateTimeInterface
      */
     public function getLatest() : ? DateTimeInterface
     {
         $this->calculateBoundaries();
 
-        return $this->ranges[$this->ranges->count() - 1]->getEnd()->toDateTime($this->timezone);
+        if (!$this->ranges) {
+            return null;
+        }
+
+        $latest = $this->ranges[$this->ranges->count() - 1]->getEnd()->toDateTime($this->timezone);
+
+        return DateTimeImmutable::createFromMutable($latest);
     }
 
     /**
-     * {@inheritDoc}
-     * @see ApproximateDateTimeInterface::getPeriods()
+     * Get all valid periods, i.e. start & interval, matching the clues
+     *
+     * @throws RuntimeException
+     *
+     * @return DatePeriod[]
      */
     public function getPeriods() : array
     {
@@ -191,8 +215,12 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     }
 
     /**
-     * {@inheritDoc}
-     * @see ApproximateDateTimeInterface::isPossible()
+     * Check if the given DateTime is within the allowable range(s) described
+     *
+     * @throws RuntimeException
+     *
+     * @param DateTimeInterface $scrutinize
+     * @return bool
      */
     public function isPossible(DateTimeInterface $scrutinize) : bool
     {

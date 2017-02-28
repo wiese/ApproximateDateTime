@@ -5,7 +5,6 @@ namespace wiese\ApproximateDateTime\Tests;
 
 use wiese\ApproximateDateTime\ApproximateDateTime;
 use wiese\ApproximateDateTime\Clue;
-use wiese\ApproximateDateTime\ClueParser;
 use wiese\ApproximateDateTime\Clues;
 use DateInterval;
 use DatePeriod;
@@ -68,6 +67,9 @@ class ApproximateDateTimeTest extends TestCase
             $this->assertInstanceOf('DateTimeImmutable', $day);
             break; // point made if we've done this once
         }
+
+        $this->assertInstanceOf('DateTimeImmutable', $this->sut->getEarliest());
+        $this->assertInstanceOf('DateTimeImmutable', $this->sut->getLatest());
     }
 
     public function testDefaultYearBlacklisted() : void
