@@ -47,9 +47,9 @@ class DateTimeData
      * Incomplete time values yield 00:00:00
      *
      * @param DateTimeZone $timezone
-     * @return DateTimeInterface
+     * @return DateTime
      */
-    public function toDateTime(DateTimeZone $timezone) : DateTimeInterface
+    public function toDateTime(DateTimeZone $timezone) : DateTime
     {
         if (!is_int($this->data->y) || !is_int($this->data->m) || !is_int($this->data->d)) {
             throw new LogicException('DateTime can not be created from incompletely populated DateTimeData.');
