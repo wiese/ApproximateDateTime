@@ -5,6 +5,9 @@ namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
 use wiese\ApproximateDateTime\Manager;
 use wiese\ApproximateDateTime\OptionFilter\Factory;
+use wiese\ApproximateDateTime\OptionFilter\Incarnation\Numeric;
+use wiese\ApproximateDateTime\OptionFilter\Incarnation\Day;
+use wiese\ApproximateDateTime\OptionFilter\Incarnation\Weekday;
 use PHPUnit\Framework\TestCase;
 
 class FactoryTest extends TestCase
@@ -12,9 +15,9 @@ class FactoryTest extends TestCase
     public function testProduce() : void
     {
         $sut = new Factory(new Manager());
-        $this->assertInstanceOf('wiese\ApproximateDateTime\OptionFilter\Incarnation\Numeric', $sut->produce('Numeric'));
-        $this->assertInstanceOf('wiese\ApproximateDateTime\OptionFilter\Incarnation\Day', $sut->produce('Day'));
-        $this->assertInstanceOf('wiese\ApproximateDateTime\OptionFilter\Incarnation\Weekday', $sut->produce('Weekday'));
+        $this->assertInstanceOf(Numeric::class, $sut->produce('Numeric'));
+        $this->assertInstanceOf(Day::class, $sut->produce('Day'));
+        $this->assertInstanceOf(Weekday::class, $sut->produce('Weekday'));
     }
 
     public function testProduceException() : void

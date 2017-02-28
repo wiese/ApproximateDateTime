@@ -3,20 +3,19 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
+use wiese\ApproximateDateTime\Config;
+use wiese\ApproximateDateTime\OptionFilter\Base;
+use wiese\ApproximateDateTime\Clues;
 use Psr\Log\NullLogger;
 use ReflectionMethod;
-use wiese\ApproximateDateTime\Config;
 
 class BaseTest extends ParentTest
 {
 
     public function setUp() : void
     {
-        $this->sut = $this->getMockForAbstractClass(
-            'wiese\ApproximateDateTime\OptionFilter\Base',
-            [new Config(), new NullLogger()]
-        );
-        $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
+        $this->sut = $this->getMockForAbstractClass(Base::class, [new Config(), new NullLogger()]);
+        $this->clues = $this->getMockBuilder(Clues::class)
             // methods that are mocked; results can be manipulated later
             ->setMethods(['getWhitelist', 'getBlacklist', 'getBefore', 'getAfter'])
             ->getMock();

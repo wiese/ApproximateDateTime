@@ -3,14 +3,14 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter\Incarnation;
 
-use Psr\Log\NullLogger;
-use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\Tests\OptionFilter\ParentTest;
+use wiese\ApproximateDateTime\Config;
+use wiese\ApproximateDateTime\Clues;
 use wiese\ApproximateDateTime\DateTimeData;
-use wiese\ApproximateDateTime\Manager;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Day;
 use wiese\ApproximateDateTime\Range;
 use wiese\ApproximateDateTime\Ranges;
+use Psr\Log\NullLogger;
 
 class DayTest extends ParentTest
 {
@@ -26,7 +26,7 @@ class DayTest extends ParentTest
         $this->sut->setUnit('d');
         $this->sut->setCalendar(CAL_GREGORIAN);
         // keep a reference for modification during individual tests
-        $this->clues = $this->getMockBuilder('wiese\ApproximateDateTime\Clues')
+        $this->clues = $this->getMockBuilder(Clues::class)
             // methods that are mocked; results can be manipulated later
             ->setMethods(['getWhitelist', 'getBlacklist', 'getAfter', 'getBefore'])
             ->getMock();
