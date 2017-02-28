@@ -10,6 +10,9 @@ use wiese\ApproximateDateTime\Data\Type\DateTimeData;
 class DataCarrierTest extends TestCase
 {
 
+    /**
+     * @var DataCarrier
+     */
     protected $sut;
 
     public function setUp() : void
@@ -47,7 +50,7 @@ class DataCarrierTest extends TestCase
     public function testSetBadUnit() : void
     {
         $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Unknow date unit f');
+        $this->expectExceptionMessage('Unknown date unit f');
 
         $this->sut->set('f', 13);
     }
@@ -55,7 +58,7 @@ class DataCarrierTest extends TestCase
     public function testGetBadUnit() : void
     {
         $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Unknow date unit b');
+        $this->expectExceptionMessage('Unknown date unit b');
 
         $this->sut->get('b');
     }
@@ -139,7 +142,7 @@ class DataCarrierTest extends TestCase
         $this->assertFalse($one->isSmaller($two));
     }
 
-    public function testCompareToUncomparable() : void
+    public function testCompareToIncomparable() : void
     {
         $this->expectException('Exception');
         $this->expectExceptionMessage('Can not compare objects with different units set.');

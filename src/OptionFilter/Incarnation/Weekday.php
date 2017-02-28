@@ -48,7 +48,7 @@ class Weekday extends Base
     }
 
     /**
-     * Add allowabled dates (defined by) $options from $range to $ranges
+     * Add allowable dates (defined by) $options from $range to $ranges
      *
      * @tutorial We take a detour from DataTimeData to DateTime and back to calculate the weekdays.
      * Weekday should not depend on timezone so we can work w/ a dummy timezone (UTC)

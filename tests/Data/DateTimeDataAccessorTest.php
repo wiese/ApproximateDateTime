@@ -10,6 +10,9 @@ use PHPUnit\Framework\TestCase;
 class DateTimeDataAccessorsTest extends TestCase
 {
 
+    /**
+     * @var DateTimeDataAccessors
+     */
     protected $sut;
 
     public function setUp() : void

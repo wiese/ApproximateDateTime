@@ -99,7 +99,7 @@ trait DataCarrier
     protected function assertUnit(string $unit) : void
     {
         if (!in_array($unit, $this->getUnits())) {
-            throw new InvalidArgumentException('Unknow date unit ' . $unit);
+            throw new InvalidArgumentException('Unknown date unit ' . $unit);
         }
     }
 
