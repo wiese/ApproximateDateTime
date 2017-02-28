@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use wiese\ApproximateDateTime\Range;
 use ArrayObject;
 
 class Ranges extends ArrayObject

@@ -3,9 +3,6 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use wiese\ApproximateDateTime\Clue;
-use wiese\ApproximateDateTime\Config;
-use wiese\ApproximateDateTime\DateTimeFormat;
 use ArrayObject;
 use DateTime;
 use UnexpectedValueException;

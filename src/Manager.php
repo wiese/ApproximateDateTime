@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use wiese\ApproximateDateTime\Config;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 

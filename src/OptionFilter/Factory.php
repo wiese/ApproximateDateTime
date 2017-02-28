@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace wiese\ApproximateDateTime\OptionFilter;
 
 use wiese\ApproximateDateTime\Manager;
-use wiese\ApproximateDateTime\OptionFilter\OptionFilterInterface;
 use UnexpectedValueException;
 
 class Factory

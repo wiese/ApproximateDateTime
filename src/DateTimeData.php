@@ -6,7 +6,6 @@ namespace wiese\ApproximateDateTime;
 use wiese\ApproximateDateTime\Data\DataCarrier;
 use wiese\ApproximateDateTime\Data\DateTimeDataAccessors;
 use wiese\ApproximateDateTime\Data\Type\DateTimeData as Data;
-use wiese\ApproximateDateTime\DateTimeFormat;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;

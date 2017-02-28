@@ -3,9 +3,6 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use wiese\ApproximateDateTime\DateTimeData;
-use wiese\ApproximateDateTime\Ranges;
-
 class Range
 {
 

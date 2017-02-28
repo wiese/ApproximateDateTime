@@ -6,7 +6,6 @@ namespace wiese\ApproximateDateTime;
 use Psr\Log\LoggerInterface;
 use wiese\ApproximateDateTime\OptionFilter\Factory as FilterFactory;
 use DatePeriod;
-use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 
