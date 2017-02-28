@@ -152,7 +152,7 @@ class ApproximateDateTime
      *
      * @throws RuntimeException
      *
-     * @return DateTimeInterface
+     * @return null|DateTimeInterface
      */
     public function getEarliest() : ? DateTimeInterface
     {
@@ -172,7 +172,7 @@ class ApproximateDateTime
      *
      * @throws RuntimeException
      *
-     * @return DateTimeInterface
+     * @return null|DateTimeInterface
      */
     public function getLatest() : ? DateTimeInterface
     {
