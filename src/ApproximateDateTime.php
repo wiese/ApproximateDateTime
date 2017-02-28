@@ -55,10 +55,10 @@ class ApproximateDateTime
     protected $manager;
 
     /**
-     * @param string $timezone
-     * @param int    $calendar
+     * @param DateTimeZone $timezone
+     * @param int          $calendar
      */
-    public function __construct(? string $timezone = null, ? int $calendar = null)
+    public function __construct(? DateTimeZone $timezone = null, ? int $calendar = null)
     {
         $this->manager = new Manager();
 
@@ -66,11 +66,14 @@ class ApproximateDateTime
         $this->log = $this->manager->log;
 
         if (is_null($timezone)) {
-            $this->setTimezone(new DateTimeZone($this->config->defaultTimezone));
+            $timezone = new DateTimeZone($this->config->defaultTimezone);
         }
+        $this->setTimezone($timezone);
+
         if (is_null($calendar)) {
-            $this->setCalendar($this->config->defaultCalendar);
+            $calendar = $this->config->defaultCalendar;
         }
+        $this->setCalendar($calendar);
 
         $this->setClues(new Clues());
     }

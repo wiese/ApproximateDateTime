@@ -33,6 +33,16 @@ class ApproximateDateTimeTest extends TestCase
         $this->sut = new ApproximateDateTime();
     }
 
+    public function testConstruct() : void
+    {
+        $tz = new DateTimeZone('Indian/Maldives');
+
+        $sut = new ApproximateDateTime($tz, CAL_JEWISH);
+
+        $this->assertEquals($tz, $sut->getTimezone());
+        $this->assertEquals(CAL_JEWISH, $sut->getCalendar());
+    }
+
     public function testDefault() : void
     {
         $this->assertEquals($this->tz, $this->sut->getTimezone());
