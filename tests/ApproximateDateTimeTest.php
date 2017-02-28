@@ -643,6 +643,25 @@ class ApproximateDateTimeTest extends TestCase
         $this->sut->getPeriods();
     }
 
+    public function testIsPossible() : void
+    {
+        $clue1 = new Clue();
+        $clue1->setY(2005);
+
+        $clue2 = new Clue(Clue::IS_BLACKLIST);
+        $clue2->setM(6);
+
+        $this->setClues([$clue1, $clue2]);
+
+        $this->assertTrue($this->sut->isPossible(new DateTime('2005-05-31 23:59:59', $this->tz)));
+        $this->assertFalse($this->sut->isPossible(new DateTime('2005-06-01 00:00:00', $this->tz)));
+        $this->assertFalse($this->sut->isPossible(new DateTime('2005-06-15 12:13:14', $this->tz)));
+        $this->assertFalse($this->sut->isPossible(new DateTime('2005-06-30 23:59:59', $this->tz)));
+        $this->assertTrue($this->sut->isPossible(new DateTime('2005-07-01 00:00:00', $this->tz)));
+        $continentalTime = new DateTimeZone('Europe/Berlin');
+        $this->assertFalse($this->sut->isPossible(new DateTime('2005-07-01 00:30:00', $continentalTime)));
+    }
+
     /**
      * Utility function to set Clues on ApproximateDateTime
      *

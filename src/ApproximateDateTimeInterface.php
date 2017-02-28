@@ -51,7 +51,7 @@ interface ApproximateDateTimeInterface
     public function getPeriods() : array;
 
     /**
-     * Check if the given DateTime is within the allowable range described
+     * Check if the given DateTime is within the allowable range(s) described
      *
      * @throws RuntimeException
      *

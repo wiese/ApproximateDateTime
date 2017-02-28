@@ -6,6 +6,7 @@ namespace wiese\ApproximateDateTime;
 use Psr\Log\LoggerInterface;
 use wiese\ApproximateDateTime\OptionFilter\Factory as FilterFactory;
 use DatePeriod;
+use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 
@@ -186,16 +187,21 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     }
 
     /**
-     * @todo So far only works with one single, consecutive interval
-     *
      * {@inheritDoc}
      * @see ApproximateDateTimeInterface::isPossible()
      */
     public function isPossible(DateTimeInterface $scrutinize) : bool
     {
-        $verdict = ($scrutinize >= $this->getEarliest() && $scrutinize <= $this->getLatest());
+        $periods = $this->getPeriods();
+        foreach ($periods as $period) {
+            $end = clone $period->getStartDate();
+            $end->add($period->getDateInterval());
+            if ($scrutinize >= $period->getStartDate() && $scrutinize <= $end) {
+                return true;
+            }
+        }
 
-        return $verdict;
+        return false;
     }
 
     /**
