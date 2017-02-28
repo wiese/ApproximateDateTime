@@ -160,7 +160,7 @@ class DateTimeData
     /**
      * Get the highest level unit with an unset value
      *
-     * @return string
+     * @return string|null
      */
     public function getHighestUnit() : ? string
     {

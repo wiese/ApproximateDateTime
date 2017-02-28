@@ -132,6 +132,13 @@ abstract class Base implements OptionFilterInterface
         return $options;
     }
 
+    /**
+     * Get the value of the given unit of the given clue
+     *
+     * @param Clue|null $clue
+     * @param string $unit
+     * @return int|null
+     */
     protected function getNumericClueValue(? Clue $clue, string $unit) : ? int
     {
         if (is_null($clue)) {
@@ -145,6 +152,13 @@ abstract class Base implements OptionFilterInterface
         return $clue->get($unit);
     }
 
+    /**
+     * Get the values of the given unit of the given clues
+     *
+     * @param Clue[] $clues
+     * @param string $unit
+     * @return array
+     */
     protected function getNumericCluesValues(array $clues, string $unit) : array
     {
         $results = [];

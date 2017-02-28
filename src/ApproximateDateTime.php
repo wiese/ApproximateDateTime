@@ -55,8 +55,8 @@ class ApproximateDateTime
     protected $manager;
 
     /**
-     * @param DateTimeZone $timezone
-     * @param int          $calendar
+     * @param DateTimeZone|null $timezone
+     * @param int|null $calendar
      */
     public function __construct(? DateTimeZone $timezone = null, ? int $calendar = null)
     {
@@ -79,7 +79,7 @@ class ApproximateDateTime
     }
 
     /**
-     * @return \DateTimeZone
+     * @return DateTimeZone
      */
     public function getTimezone() : DateTimeZone
     {
@@ -155,7 +155,7 @@ class ApproximateDateTime
      *
      * @throws RuntimeException
      *
-     * @return null|DateTimeInterface
+     * @return DateTimeInterface|null
      */
     public function getEarliest() : ? DateTimeInterface
     {
@@ -175,7 +175,7 @@ class ApproximateDateTime
      *
      * @throws RuntimeException
      *
-     * @return null|DateTimeInterface
+     * @return DateTimeInterface|null
      */
     public function getLatest() : ? DateTimeInterface
     {
