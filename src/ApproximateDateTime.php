@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime;
 
-use Psr\Log\LoggerInterface;
 use wiese\ApproximateDateTime\OptionFilter\Factory as FilterFactory;
+use Psr\Log\LoggerInterface;
 use DatePeriod;
+use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 
@@ -177,9 +178,13 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
         foreach ($this->ranges as $range) {
             $start = $range->getStart()->toDateTime($this->timezone);
             $end = $range->getEnd()->toDateTime($this->timezone);
-            $periods[] = new DatePeriod($start, $start->diff($end), 1);
+            $periods[] = new DatePeriod(
+                DateTimeImmutable::createFromMutable($start),
+                $start->diff($end),
+                DateTimeImmutable::createFromMutable($end)
+            );
 
-            // @todo identify patterns, set recurrences correctly, and avoid redundancy
+            // @todo identify patterns, set recurrences, and avoid redundancy
         }
 
         return $periods;
@@ -193,9 +198,7 @@ class ApproximateDateTime implements ApproximateDateTimeInterface
     {
         $periods = $this->getPeriods();
         foreach ($periods as $period) {
-            $end = clone $period->getStartDate();
-            $end->add($period->getDateInterval());
-            if ($scrutinize >= $period->getStartDate() && $scrutinize <= $end) {
+            if ($scrutinize >= $period->getStartDate() && $scrutinize <= $period->getEndDate()) {
                 return true;
             }
         }
