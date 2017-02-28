@@ -638,7 +638,7 @@ class ApproximateDateTimeTest extends TestCase
         $this->setClues([$clue1]);
 
         $this->expectException('UnexpectedValueException');
-        $this->expectExceptionMessage('Clues can only carry on piece of information. Given: y, d');
+        $this->expectExceptionMessage('Clues can only carry one piece of information. Given: y, d');
 
         $this->sut->getPeriods();
     }
