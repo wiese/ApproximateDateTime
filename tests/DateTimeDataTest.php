@@ -147,7 +147,7 @@ class DateTimeDataTest extends TestCase
         $this->assertEquals('m', $sut->getHighestUnit());
 
         $sut = new DateTimeData();
-        $sut->setY(null); // a constallation that should not really happen in DateTimeData but to be seen in Clue
+        $sut->setY(null); // a constellation that should not really happen in DateTimeData but to be seen in Clue
         $sut->setM(3);
         $this->assertNull($sut->getHighestUnit());
     }

@@ -55,8 +55,11 @@ class ApproximateDateTime
     protected $manager;
 
     /**
-     * @param DateTimeZone|null $timezone
-     * @param int|null $calendar
+     * @see https://secure.php.net/manual/en/class.datetimezone.php
+     * @see https://secure.php.net/manual/en/calendar.constants.php
+     *
+     * @param DateTimeZone|null $timezone The timezone to operate in (e.g. timezone of returned DateTime objects)
+     * @param int|null $calendar Calendar to use for calculation (e.g. number of days in month)
      */
     public function __construct(? DateTimeZone $timezone = null, ? int $calendar = null)
     {
@@ -75,7 +78,7 @@ class ApproximateDateTime
         }
         $this->setCalendar($calendar);
 
-        $this->setClues(new Clues());
+        $this->clues = new Clues();
     }
 
     /**
@@ -132,22 +135,14 @@ class ApproximateDateTime
     /**
      * Set the clues to describe the date and time
      *
-     * @param Clues $clues
+     * @param Clue $clue
      * @return self
      */
-    public function setClues(Clues $clues) : self
+    public function addClue(Clue $clue) : self
     {
-        $this->clues = $clues;
+        $this->clues->append($clue);
 
         return $this;
-    }
-
-    /**
-     * @return Clues
-     */
-    public function getClues() : Clues
-    {
-        return $this->clues;
     }
 
     /**
