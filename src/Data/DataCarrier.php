@@ -25,7 +25,7 @@ trait DataCarrier
      * @param string $unit
      * @param int|null $value
      */
-    public function set(string $unit, int $value = null) : void
+    public function set(string $unit, ? int $value) : void
     {
         $this->assertUnit($unit);
 

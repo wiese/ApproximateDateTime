@@ -77,7 +77,7 @@ class Clue
      *
      * @param int|null $n The week. 1 for Monday through 7 for Sunday
      */
-    public function setN(int $n = null) : void
+    public function setN(? int $n) : void
     {
         $this->data->n = $n;
     }

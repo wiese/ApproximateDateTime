@@ -75,10 +75,10 @@ abstract class Base implements OptionFilterInterface
     /**
      * Determine the range of allowable values from all clues, and limits
      *
-     * @param int $overrideMax
+     * @param int|null $overrideMax
      * @return int[]
      */
-    protected function getAllowableOptions(int $overrideMax = null) : array
+    protected function getAllowableOptions(? int $overrideMax = null) : array
     {
         $this->log->debug('getAllowableOptions', [$this->unit, $overrideMax]);
 

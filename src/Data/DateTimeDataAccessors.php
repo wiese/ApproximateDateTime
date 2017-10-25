@@ -21,7 +21,7 @@ trait DateTimeDataAccessors
      *
      * @param int|null $y The year, e.g. 2016
      */
-    public function setY(int $y = null) : void
+    public function setY(? int $y) : void
     {
         $this->data->y = $y;
     }
@@ -39,7 +39,7 @@ trait DateTimeDataAccessors
      *
      * @param int|null $m The month, e.g. 4
      */
-    public function setM(int $m = null) : void
+    public function setM(? int $m) : void
     {
         $this->data->m = $m;
     }
@@ -57,7 +57,7 @@ trait DateTimeDataAccessors
      *
      * @param int|null $d The day, e.g. 29
      */
-    public function setD(int $d = null) : void
+    public function setD(? int $d) : void
     {
         $this->data->d = $d;
     }
@@ -75,7 +75,7 @@ trait DateTimeDataAccessors
      *
      * @param int|null $h The hour, e.g. 23
      */
-    public function setH(int $h = null) : void
+    public function setH(? int $h) : void
     {
         $this->data->h = $h;
     }
@@ -93,7 +93,7 @@ trait DateTimeDataAccessors
      *
      * @param int|null $i The minute, e.g. 59
      */
-    public function setI(int $i = null) : void
+    public function setI(? int $i) : void
     {
         $this->data->i = $i;
     }
@@ -111,7 +111,7 @@ trait DateTimeDataAccessors
      *
      * @param int|null $s The second, e.g. 59
      */
-    public function setS(int $s = null) : void
+    public function setS(? int $s) : void
     {
         $this->data->s = $s;
     }
