@@ -229,6 +229,9 @@ class Clues extends ArrayObject
 
         if (!empty($this->blacklists['y'])) {
             foreach ($this->blacklists['y'] as $blacklistClue) {
+                /**
+                 * @var $blacklistClue Clue
+                 */
                 if ($blacklistClue->getY() === $this->defaultYear) {
                     throw new UnexpectedValueException(
                         'Tried applying the default year, but it is blacklisted. Please, whitelist a year.'

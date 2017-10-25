@@ -128,7 +128,7 @@ class Day extends Base
      *
      * @param DateTimeData $data
      * @return int
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
      */
     private function daysInMonth(DateTimeData $data)
     {

@@ -148,7 +148,9 @@ class ApproximateDateTime
     /**
      * Get the first valid moment described by the clues
      *
-     * @throws RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \UnexpectedValueException
+     * @throws \LogicException
      *
      * @return DateTimeInterface|null
      */
@@ -168,7 +170,9 @@ class ApproximateDateTime
     /**
      * Get the last valid moment described by the clues
      *
-     * @throws RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \UnexpectedValueException
+     * @throws \LogicException
      *
      * @return DateTimeInterface|null
      */
@@ -188,7 +192,9 @@ class ApproximateDateTime
     /**
      * Get all valid periods, i.e. start & interval, matching the clues
      *
-     * @throws RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \UnexpectedValueException
+     * @throws \LogicException
      *
      * @return DatePeriod[]
      */
@@ -198,6 +204,9 @@ class ApproximateDateTime
 
         $periods = [];
         foreach ($this->ranges as $range) {
+            /**
+             * @var Range $range
+             */
             $start = $range->getStart()->toDateTime($this->timezone);
             $end = $range->getEnd()->toDateTime($this->timezone);
             $periods[] = new DatePeriod(
@@ -215,7 +224,9 @@ class ApproximateDateTime
     /**
      * Check if the given DateTime is within the allowable range(s) described
      *
-     * @throws RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \UnexpectedValueException
+     * @throws \LogicException
      *
      * @param DateTimeInterface $scrutinize
      * @return bool
@@ -254,7 +265,7 @@ class ApproximateDateTime
         }
 
         // @todo remove specific times (compound units)
-        // @todo what about time lost/inexisting due to daylight saving time?
+        // @todo what about time lost/non-existing due to daylight saving time?
 
         // @fixme sort by range start - do we have to?
         //sort($ranges);

@@ -57,7 +57,7 @@ class Range
     }
 
     /**
-     * Disect the range into individual ranges of the most detailed unit set
+     * Dissect the range into individual ranges of the most detailed unit set
      *
      * @return Ranges
      */
