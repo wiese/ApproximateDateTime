@@ -26,6 +26,13 @@ class Clue
     public const IS_BEFOREEQUALS = 4;
     public const IS_AFTEREQUALS = 8;
 
+    private const VALID_TYPES = [
+        self::IS_WHITELIST,
+        self::IS_BLACKLIST,
+        self::IS_BEFOREEQUALS,
+        self::IS_AFTEREQUALS
+    ];
+
     /**
      * The type of description desired (inclusive, exclusive, comparison, ...)
      *
@@ -40,7 +47,7 @@ class Clue
      */
     public function __construct(int $type = self::IS_WHITELIST)
     {
-        if (!in_array($type, [self::IS_WHITELIST, self::IS_BLACKLIST, self::IS_BEFOREEQUALS, self::IS_AFTEREQUALS])) {
+        if (!in_array($type, self::VALID_TYPES)) {
             throw new UnexpectedValueException('Bad Clue type given: ' . $type);
         }
 
