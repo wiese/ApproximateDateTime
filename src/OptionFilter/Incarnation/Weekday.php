@@ -57,7 +57,7 @@ class Weekday extends Base
      * @param Range $range The existing to check for matching weekdays
      * @param array $options Allowable weekdays
      */
-    protected function patchRanges(Ranges & $ranges, Range $range, array $options) : void
+    private function patchRanges(Ranges & $ranges, Range $range, array $options) : void
     {
         $dayIterationInterval = new DateInterval('P1D');
         $timezone = new DateTimeZone('UTC');

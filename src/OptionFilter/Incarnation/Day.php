@@ -41,7 +41,7 @@ class Day extends Base
      * @param Ranges $ranges
      * @return Ranges
      */
-    protected function applyWithoutRestrictions(Ranges $ranges) : Ranges
+    private function applyWithoutRestrictions(Ranges $ranges) : Ranges
     {
         foreach ($ranges as & $range) {
             $range->getStart()->setD($this->config->getMin($this->unit));
@@ -57,7 +57,7 @@ class Day extends Base
      * @param Ranges $ranges
      * @return Ranges
      */
-    protected function applyWithRestrictions(Ranges $ranges) : Ranges
+    private function applyWithRestrictions(Ranges $ranges) : Ranges
     {
         $newRanges = new Ranges();
         $newRange = null;
@@ -130,7 +130,7 @@ class Day extends Base
      * @return int
      * @throws \UnexpectedValueException
      */
-    protected function daysInMonth(DateTimeData $data)
+    private function daysInMonth(DateTimeData $data)
     {
         if (!is_int($data->getY()) || !is_int($data->getM())) {
             throw new UnexpectedValueException('Can not calculate days in month on DateTimeData without y or m.');

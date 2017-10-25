@@ -23,9 +23,9 @@ class DateTimeData
     /**
      * @var Data
      */
-    protected $data;
+    private $data;
 
-    protected const TO_STRING_FORMAT = '%d-%02d-%02dT%02d:%02d:%02d';
+    private const TO_STRING_FORMAT = '%d-%02d-%02dT%02d:%02d:%02d';
 
     /**
      * Indicator if the day (d) is the last one in the month (m) & year (y) - to avoid recomputation

@@ -6,7 +6,7 @@ namespace wiese\ApproximateDateTime\Data;
 trait DateTimeDataAccessors
 {
 
-    protected $data;
+    private $data;
 
     /**
      * @return int|null

@@ -15,7 +15,7 @@ class RangesTest extends TestCase
     /**
      * @var DateTimeZone
      */
-    protected $timezone;
+    private $timezone;
 
     public function setUp() : void
     {

@@ -15,11 +15,6 @@ use Psr\Log\NullLogger;
 class DayTest extends ParentTest
 {
 
-    /**
-     * @var Day
-     */
-    protected $sut;
-
     public function setUp() : void
     {
         $this->sut = new Day(new Config(), new NullLogger());

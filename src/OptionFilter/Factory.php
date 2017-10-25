@@ -9,7 +9,7 @@ use UnexpectedValueException;
 class Factory
 {
 
-    protected $manager;
+    private $manager;
 
     public function __construct(Manager $manager)
     {

@@ -9,12 +9,12 @@ class Range
     /**
      * @var DateTimeData
      */
-    protected $start;
+    private $start;
 
     /**
      * @var DateTimeData
      */
-    protected $end;
+    private $end;
 
     /**
      * Get the start of the range

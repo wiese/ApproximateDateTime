@@ -13,7 +13,7 @@ class CluesTest extends TestCase
     /**
      * @var Clues
      */
-    protected $sut;
+    private $sut;
 
     public function setUp() : void
     {

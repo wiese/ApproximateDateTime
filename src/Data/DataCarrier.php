@@ -9,7 +9,7 @@ use LogicException;
 trait DataCarrier
 {
 
-    protected $data;
+    private $data;
 
     /**
      * Make sure children are not manipulated via references in copies. ImmutableDateTimeData containers as alternative?
@@ -96,7 +96,7 @@ trait DataCarrier
      * @param string $unit
      * @throws InvalidArgumentException
      */
-    protected function assertUnit(string $unit) : void
+    private function assertUnit(string $unit) : void
     {
         if (!in_array($unit, $this->getUnits())) {
             throw new InvalidArgumentException('Unknown date unit ' . $unit);
@@ -110,7 +110,7 @@ trait DataCarrier
      *
      * @return array
      */
-    protected function getUnits() : array
+    private function getUnits() : array
     {
         return array_keys(get_object_vars($this->data));
     }

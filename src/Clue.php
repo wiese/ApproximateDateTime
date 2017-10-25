@@ -16,7 +16,7 @@ class Clue
     /**
      * @var Data
      */
-    protected $data;
+    private $data;
 
     /**
      * Options describing the effect of the clue (in $type)
@@ -33,7 +33,7 @@ class Clue
      *
      * @var int
      */
-    protected $type = self::IS_WHITELIST;
+    private $type = self::IS_WHITELIST;
 
     /**
      * @param int $type The type of description desired (inclusive, exclusive, comparison, ...)

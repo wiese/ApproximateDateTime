@@ -13,11 +13,11 @@ class DataCarrierTest extends TestCase
     /**
      * @var DataCarrier
      */
-    protected $sut;
+    private $sut;
 
     public function setUp() : void
     {
-        $this->sut = $this->getMockForTrait(DataCarrier::class);
+        $this->sut = $this->getObjectForTrait(DataCarrier::class);
         $dataProperty = new \ReflectionProperty($this->sut, 'data');
         $dataProperty->setAccessible(true);
         $dataProperty->setValue($this->sut, new DateTimeData());

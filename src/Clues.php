@@ -18,32 +18,32 @@ class Clues extends ArrayObject
      *
      * @var int
      */
-    protected $defaultYear;
+    private $defaultYear;
 
     /**
      * @var array Combined clue information on whitelisted dates
      */
-    protected $whitelists = [];
+    private $whitelists = [];
 
     /**
      * @var array Combined clue information on blacklisted dates
      */
-    protected $blacklists = [];
+    private $blacklists = [];
 
     /**
      * @var array Combined clue information on "before" values for individual units
      */
-    protected $before = [];
+    private $before = [];
 
     /**
      * @var array Combined clue information on "after" values for individual units
      */
-    protected $after = [];
+    private $after = [];
 
     /**
      * @var bool Flag to avoid repeated runs of self::generateFilterLists()
      */
-    protected $cachedFilterLists = false;
+    private $cachedFilterLists = false;
 
     public function __construct()
     {
@@ -148,7 +148,7 @@ class Clues extends ArrayObject
         $this->cachedFilterLists = false;
     }
 
-    protected function generateFilterLists() : void
+    private function generateFilterLists() : void
     {
         if ($this->cachedFilterLists) {
             return;
@@ -213,7 +213,7 @@ class Clues extends ArrayObject
      * @param Clue $clue
      * @return string
      */
-    protected function getTypeId(Clue $clue) : string
+    private function getTypeId(Clue $clue) : string
     {
         return implode('-', $clue->getSetUnits());
     }
@@ -221,7 +221,7 @@ class Clues extends ArrayObject
     /**
      * Make sure the default year is used in the absence of other clues
      */
-    protected function guaranteeDefaultClue() : void
+    private function guaranteeDefaultClue() : void
     {
         if (!empty($this->whitelists['y']) || !empty($this->whitelists['y-m']) || !empty($this->whitelists['y-m-d'])) {
             return;
@@ -250,7 +250,7 @@ class Clues extends ArrayObject
      * @param Clue $new
      * @return Clue
      */
-    protected function getSmallerClueValue(Clue $existing = null, Clue $new) : Clue
+    private function getSmallerClueValue(Clue $existing = null, Clue $new) : Clue
     {
         if (is_null($existing)) {
             return $new;
@@ -266,7 +266,7 @@ class Clues extends ArrayObject
      * @param Clue $new
      * @return Clue
      */
-    protected function getBiggerClueValue(Clue $existing = null, Clue $new) : Clue
+    private function getBiggerClueValue(Clue $existing = null, Clue $new) : Clue
     {
         if (is_null($existing)) {
             return $new;

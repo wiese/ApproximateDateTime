@@ -18,41 +18,41 @@ class ApproximateDateTime
      *
      * @var DateTimeZone
      */
-    protected $timezone;
+    private $timezone;
 
     /**
      * Calendar to base date calculation on
      *
      * @var int
      */
-    protected $calendar;
+    private $calendar;
 
     /**
      * @var Clues
      */
-    protected $clues;
+    private $clues;
 
     /**
      * Calculated matching ranges
      *
      * @var Ranges
      */
-    protected $ranges;
+    private $ranges;
 
     /**
      * @var Config
      */
-    protected $config;
+    private $config;
 
     /**
      * @var LoggerInterface
      */
-    protected $log;
+    private $log;
 
     /**
      * @var Manager
      */
-    protected $manager;
+    private $manager;
 
     /**
      * @see https://secure.php.net/manual/en/class.datetimezone.php
@@ -235,7 +235,7 @@ class ApproximateDateTime
     /**
      * Use all filters to calculate the ranges
      */
-    protected function calculateBoundaries() : void
+    private function calculateBoundaries() : void
     {
         $ranges = new Ranges();
 

@@ -19,12 +19,12 @@ class ApproximateDateTimeTest extends TestCase
     /**
      * @var DateTimeZone
      */
-    protected $tz;
+    private $tz;
 
     /**
      * @var ApproximateDateTime
      */
-    protected $sut;
+    private $sut;
 
     public function setUp() : void
     {

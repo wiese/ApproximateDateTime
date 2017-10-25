@@ -15,11 +15,6 @@ use Psr\Log\NullLogger;
 class WeekdayTest extends ParentTest
 {
 
-    /**
-     * @var Weekday
-     */
-    protected $sut;
-
     public function setUp() : void
     {
         $this->sut = new Weekday(new Config(), new NullLogger());
