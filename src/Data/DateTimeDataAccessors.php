@@ -37,7 +37,7 @@ trait DateTimeDataAccessors
     /**
      * Set the representation of a month
      *
-     * @param int|null $m The month, e.g. 47
+     * @param int|null $m The month, e.g. 4
      */
     public function setM(int $m = null) : void
     {

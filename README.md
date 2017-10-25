@@ -84,6 +84,6 @@ submitting changes.
 
     [me@localhost ApproximateDateTime]$ docker run -v $(pwd):/app -w /app --rm wiese/php7.1-approximatedatetime ./vendor/bin/phpcs
 
-##Thanks
+## Thanks
 
 To Charlie, Great Sun ⊕

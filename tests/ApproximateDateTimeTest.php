@@ -266,9 +266,9 @@ class ApproximateDateTimeTest extends TestCase
                     new DateTimeImmutable('2010-04-28 23:59:59', $this->tz)
                 ),
                 new DatePeriod(
-                    new DateTime('2010-04-30 00:00:00', $this->tz),
+                    new DateTimeImmutable('2010-04-30 00:00:00', $this->tz),
                     new DateInterval('PT23H59M59S'),
-                    new DateTime('2010-04-30 23:59:59', $this->tz)
+                    new DateTimeImmutable('2010-04-30 23:59:59', $this->tz)
                 ),
             ],
             $this->sut->getPeriods()
