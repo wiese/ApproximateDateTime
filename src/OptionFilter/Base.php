@@ -139,7 +139,7 @@ abstract class Base implements OptionFilterInterface
      * @param string $unit
      * @return int|null
      */
-    protected function getNumericClueValue(? Clue $clue, string $unit) : ? int
+    private function getNumericClueValue(? Clue $clue, string $unit) : ? int
     {
         if (is_null($clue)) {
             return null;
@@ -159,7 +159,7 @@ abstract class Base implements OptionFilterInterface
      * @param string $unit
      * @return array
      */
-    protected function getNumericCluesValues(array $clues, string $unit) : array
+    private function getNumericCluesValues(array $clues, string $unit) : array
     {
         $results = [];
 
