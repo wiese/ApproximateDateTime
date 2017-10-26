@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\Data;
 
+use Exception;
+use InvalidArgumentException;
 use wiese\ApproximateDateTime\Data\DataCarrier;
 use PHPUnit\Framework\TestCase;
 use wiese\ApproximateDateTime\Data\Type\DateTimeData;
@@ -49,7 +51,7 @@ class DataCarrierTest extends TestCase
 
     public function testSetBadUnit() : void
     {
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Unknown date unit f');
 
         $this->sut->set('f', 13);
@@ -57,7 +59,7 @@ class DataCarrierTest extends TestCase
 
     public function testGetBadUnit() : void
     {
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Unknown date unit b');
 
         $this->sut->get('b');
@@ -144,7 +146,7 @@ class DataCarrierTest extends TestCase
 
     public function testCompareToIncomparable() : void
     {
-        $this->expectException('Exception');
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Can not compare objects with different units set.');
 
         $one = clone $this->sut;

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests;
 
+use LogicException;
 use wiese\ApproximateDateTime\DateTimeData;
 use DateTime;
 use DateTimeZone;
@@ -86,7 +87,7 @@ class DateTimeDataTest extends TestCase
 
     public function testToDateTimeException(): void
     {
-        $this->expectException('LogicException');
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage('DateTime can not be created from incompletely populated DateTimeData.');
 
         $tz = new DateTimeZone('Europe/Berlin');

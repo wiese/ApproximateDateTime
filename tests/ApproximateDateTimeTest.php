@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests;
 
+use UnexpectedValueException;
 use wiese\ApproximateDateTime\ApproximateDateTime;
 use wiese\ApproximateDateTime\Clue;
 use wiese\ApproximateDateTime\Clues;
@@ -88,7 +89,7 @@ class ApproximateDateTimeTest extends TestCase
         $clue->setY((int) date('Y'));
         $this->sut->addClue($clue);
 
-        $this->expectException('UnexpectedValueException');
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage(
             'Tried applying the default year, but it is blacklisted. Please, whitelist a year.'
         );
@@ -733,7 +734,7 @@ class ApproximateDateTimeTest extends TestCase
         $clue1->setD(27);
         $this->sut->addClue($clue1);
 
-        $this->expectException('UnexpectedValueException');
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Clues can only carry one piece of information. Given: y, d');
 
         $this->sut->getPeriods();

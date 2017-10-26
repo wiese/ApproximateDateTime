@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests;
 
+use UnexpectedValueException;
 use wiese\ApproximateDateTime\Clue;
 use PHPUnit\Framework\TestCase;
 
@@ -26,7 +27,7 @@ class ClueTest extends TestCase
 
     public function testBadConstruct() : void
     {
-        $this->expectException('UnexpectedValueException');
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Bad Clue type given: 11');
 
         new Clue(11);

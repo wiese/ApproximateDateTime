@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter;
 
+use UnexpectedValueException;
 use wiese\ApproximateDateTime\Manager;
 use wiese\ApproximateDateTime\OptionFilter\Factory;
 use wiese\ApproximateDateTime\OptionFilter\Incarnation\Numeric;
@@ -22,7 +23,7 @@ class FactoryTest extends TestCase
 
     public function testProduceException() : void
     {
-        $this->expectException('UnexpectedValueException');
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Filter type bogus not implemented.');
 
         $sut = new Factory(new Manager());

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wiese\ApproximateDateTime\Tests\OptionFilter\Incarnation;
 
+use UnexpectedValueException;
 use wiese\ApproximateDateTime\Tests\OptionFilter\ParentTest;
 use wiese\ApproximateDateTime\Config;
 use wiese\ApproximateDateTime\Clues;
@@ -466,7 +467,7 @@ class DayTest extends ParentTest
 
     public function testDaysInMonthException() : void
     {
-        $this->expectException('UnexpectedValueException');
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Can not calculate days in month on DateTimeData without y or m.');
 
         $ranges = new Ranges();
